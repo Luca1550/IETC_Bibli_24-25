@@ -172,3 +172,9 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# test files
+/app/test_luca.py
+
+# database files
+/database/*
