@@ -24,6 +24,11 @@ class ThemeService :
             return f"Error adding theme: {name}"
         
     def delete_theme(self,name):
+        """
+        Deletes a theme with the given name.
+        :param name: The name of the theme to delete.
+        :return: A message indicating the result of the deletion.
+        """
         if self.theme_repo.delete_theme(name):
             print(f"Le theme : {name} a été supprimé")
             return f"Le theme : {name} a été supprimé"

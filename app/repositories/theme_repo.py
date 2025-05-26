@@ -29,6 +29,13 @@ class ThemeRepo:
         JsonStorage.save_all(self.PATH_THEME_JSON,self.theme_json)
         
     def delete_theme(self,name:str):
+        """
+        Deletes a theme by its name from the repository.
+        Args:
+            name (str): The name of the theme to be deleted.
+        Returns:
+            bool: True if the theme was found and deleted, False otherwise.
+        """
         for theme in self.theme_json:
             if theme.name == name:
                 self.theme_json.remove(theme)
