@@ -28,3 +28,10 @@ class ThemeRepo:
         self.theme_json.append(Theme(id = None,name = name))
         JsonStorage.save_all(self.PATH_THEME_JSON,self.theme_json)
         
+    def delete_theme(self,name:str):
+        for theme in self.theme_json:
+            if theme.name == name:
+                self.theme_json.remove(theme)
+                JsonStorage.save_all(self.PATH_THEME_JSON, self.theme_json)
+                return True
+            return False

@@ -22,3 +22,11 @@ class ThemeService :
         except:
             print(f"Error adding theme: {name}")
             return f"Error adding theme: {name}"
+        
+    def delete_theme(self,name):
+        if self.theme_repo.delete_theme(name):
+            print(f"Le theme : {name} a été supprimé")
+            return f"Le theme : {name} a été supprimé"
+        else:
+            print(f"Le theme : {name} n'existe pas")
+            return f"Le theme : {name} n'existe pas"
