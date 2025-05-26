@@ -41,4 +41,26 @@ class ThemeRepo:
                 self.theme_json.remove(theme)
                 JsonStorage.save_all(self.PATH_THEME_JSON, self.theme_json)
                 return True
-            return False
+        return False
+
+    def get_by_theme (self,name:str):
+        """
+        Retrieves a theme by its name from the repository.
+        Args:
+            name (str): The name of the theme to be retrieved.
+        Returns:
+            Theme: The theme object if found, None otherwise.
+        """
+        for theme in self.theme_json:
+            if theme.name == name:
+                return theme
+        return None
+        
+    def get_by_id (self,id:int):
+        for theme in self.theme_json:
+            if theme.id == id:
+                return theme
+        return None
+        
+    def get_all(self):
+        return self.theme_json
