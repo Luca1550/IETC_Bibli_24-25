@@ -42,3 +42,39 @@ class MenuNavigation(ctk.CTkFrame):
                 self.current_active = btn
             else:
                 btn.configure(fg_color=self.default_color)
+
+class LoginPage(ctk.CTkFrame):
+    def __init__(self, parent, on_login, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
+
+        self.on_login = on_login  # callback après connexion réussie
+
+        self.grid_columnconfigure(0, weight=1)
+
+        ctk.CTkLabel(self, text="Connexion", font=ctk.CTkFont(size=24, weight="bold")).grid(row=0, column=0, pady=(20, 10))
+
+        self.username_entry = ctk.CTkEntry(self, placeholder_text="Nom d'utilisateur")
+        self.username_entry.grid(row=1, column=0, padx=40, pady=10)
+
+        self.password_entry = ctk.CTkEntry(self, placeholder_text="Mot de passe", show="*")
+        self.password_entry.grid(row=2, column=0, padx=40, pady=10)
+
+        self.login_button = ctk.CTkButton(self, text="Se connecter", command=self.attempt_login)
+        self.login_button.grid(row=3, column=0, padx=40, pady=20)
+
+        self.error_label = ctk.CTkLabel(self, text="", text_color="red")
+        self.error_label.grid(row=4, column=0)
+
+    def attempt_login(self):
+        userTest = "admin"
+        passwordTest = "admin"
+
+        username = self.username_entry.get()
+        password = self.password_entry.get()
+
+        # Exemple simple : login = admin, mdp = 1234
+        if username == userTest and password == passwordTest :
+            self.error_label.configure(text="")
+            self.on_login()  # Appel du callback
+        else:
+            self.error_label.configure(text="Identifiants incorrects")

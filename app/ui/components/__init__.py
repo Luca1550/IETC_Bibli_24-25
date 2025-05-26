@@ -1,1 +1,1 @@
-from .layout import MenuNavigation
+from .layout import MenuNavigation, LoginPage
