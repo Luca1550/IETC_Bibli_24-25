@@ -53,3 +53,27 @@ class CollectionService :
         :return: A list of all collections.
         """
         return self.collection_repo.get_all()
+    
+    def update_collection_by_id(self,id:int,name:str):
+        """
+        Updates the name of a collection by its ID.
+        :param id: The ID of the collection to update.
+        :param name: The new name for the collection.
+        :return: A message indicating the result of the update.
+        """
+        if self.collection_repo.update_collection_by_id(id,name):
+            return f"collection avec ID {id} mis à jour : {name}"
+        else:
+            return f"collection avec ID {id} non trouvé"
+        
+    def update_collection_by_name(self,name:str,new_name:str):
+        """
+        Updates the name of a collection by its current name.
+        :param name: The current name of the collection to update.
+        :param new_name: The new name for the collection.
+        :return: A message indicating the result of the update.
+        """
+        if self.collection_repo.update_collection_by_name(name,new_name):
+            return f"collection {name} mis à jour en {new_name}"
+        else:
+            return f"collection {name} non trouvé"

@@ -9,7 +9,7 @@ class CollectionRepo:
     Attributes:
         PATH_COLLECTIOB_JSON (pathlib.Path): Path to the JSON file storing collections.
     """
-    PATH_COLLECTIOB_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "collection.json"
+    PATH_COLLECTION_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "collection.json"
     
     def __init__(self):
         """
@@ -26,7 +26,7 @@ class CollectionRepo:
             name (str): The name of the collection to be added.
         """
         self.collection_json.append(Collection(id = None,name = name))
-        JsonStorage.save_all(self.PATH_COLLECTIOB_JSON,self.collection_json)
+        JsonStorage.save_all(self.PATH_COLLECTION_JSON,self.collection_json)
     
     def get_by_collection(self,name:str):
         """
@@ -61,3 +61,35 @@ class CollectionRepo:
             list[Collection]: A list of all collection objects.
         """
         return self.collection_json
+    
+    def update_collection_by_id(self,id:int,name:str):
+        """
+        Updates the name of a collection by its ID.
+        Args:
+            id (int): The ID of the collection to be updated.
+            name (str): The new name for the collection.
+        Returns:
+            bool: True if the collection was found and updated, False otherwise.
+        """
+        for collection in self.collection_json:
+            if collection.id == id:
+                collection.name = name
+                JsonStorage.save_all(self.PATH_COLLECTION_JSON, self.collection_json)
+                return True
+        return False
+    
+    def update_collection_by_name(self,name:str,new_name:str):
+        """
+        Updates the name of a collection by its current name.
+        Args:
+            name (str): The current name of the collection to be updated.
+            new_name (str): The new name for the collection.
+        Returns:
+            bool: True if the collection was found and updated, False otherwise.
+        """
+        for collection in self.collection_json:
+            if collection.name == name:
+                collection.name = new_name
+                JsonStorage.save_all(self.PATH_COLLECTION_JSON, self.collection_json)
+                return True
+        return False
