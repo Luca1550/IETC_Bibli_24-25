@@ -18,7 +18,7 @@ class CollectionRepo:
         """
         self.collection_json : list[Collection] = JsonStorage.load_all(self.PATH_COLLECTIOB_JSON)
     
-    def add_theme(self,name:str):
+    def add_collection(self,name:str):
         """
         Adds a new collection with the specified name to the repository.
         The new collection is assigned a unique ID based on the current maximum ID in the repository.
@@ -27,3 +27,37 @@ class CollectionRepo:
         """
         self.collection_json.append(Collection(id = None,name = name))
         JsonStorage.save_all(self.PATH_COLLECTIOB_JSON,self.collection_json)
+    
+    def get_by_collection(self,name:str):
+        """
+        Retrieves a collection by its name from the repository.
+        Args:
+            name (str): The name of the collection to be retrieved.
+        Returns:
+            Collection: The collection object if found, None otherwise.
+        """
+        for collection in self.collection_json:
+            if collection.name == name:
+                return collection
+        return None
+        
+    def get_by_id (self,id:int):
+        """
+        Retrieves a collection by its ID from the repository.
+        Args:
+            id (int): The ID of the collection to be retrieved.
+        Returns:
+            Collection: The collection object if found, None otherwise.
+        """
+        for collection in self.collection_json:
+            if collection.id == id:
+                return collection
+        return None
+        
+    def get_all(self):
+        """
+        Retrieves all collections from the repository.
+        Returns:
+            list[Collection]: A list of all collection objects.
+        """
+        return self.collection_json
