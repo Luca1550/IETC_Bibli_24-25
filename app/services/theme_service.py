@@ -66,3 +66,27 @@ class ThemeService :
         :return: A list of all theme objects.
         """
         return self.theme_repo.get_all()
+    
+    def update_theme_by_id(self,id:int,name:str):
+        """
+        Updates the name of a theme by its ID.
+        :param id: The ID of the theme to update.
+        :param name: The new name for the theme.
+        :return: A message indicating the result of the update.
+        """
+        if self.theme_repo.update_theme_by_id(id,name):
+            return f"Theme avec ID {id} mis à jour : {name}"
+        else:
+            return f"Theme avec ID {id} non trouvé"
+        
+    def update_theme_by_name(self,name:str,new_name:str):
+        """
+        Updates the name of a theme by its current name.
+        :param name: The current name of the theme to update.
+        :param new_name: The new name for the theme.
+        :return: A message indicating the result of the update.
+        """
+        if self.theme_repo.update_theme_by_name(name,new_name):
+            return f"Theme {name} mis à jour en {new_name}"
+        else:
+            return f"Theme {name} non trouvé"
