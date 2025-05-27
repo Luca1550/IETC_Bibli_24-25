@@ -16,7 +16,7 @@ class CollectionRepo:
         Initializes the CollectionRepo instance.
         Loads existing collections from the JSON file into the collection_json attribute.
         """
-        self.collection_json : list[Collection] = JsonStorage.load_all(self.PATH_COLLECTIOB_JSON)
+        self.collection_json : list[Collection] = JsonStorage.load_all(self.PATH_COLLECTION_JSON)
     
     def add_collection(self,name:str):
         """
