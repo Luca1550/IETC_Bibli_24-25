@@ -93,3 +93,18 @@ class CollectionRepo:
                 JsonStorage.save_all(self.PATH_COLLECTION_JSON, self.collection_json)
                 return True
         return False
+    
+    def delete_collection(self,name:str):
+        """
+        Deletes a collection by its name from the repository.
+        Args:
+            name (str): The name of the collection to be deleted.
+        Returns:
+            bool: True if the collection was found and deleted, False otherwise.
+        """
+        for collection in self.collection_json:
+            if collection.name == name:
+                self.collection_json.remove(collection)
+                JsonStorage.save_all(self.PATH_COLLECTION_JSON, self.collection_json)
+                return True
+        return False
