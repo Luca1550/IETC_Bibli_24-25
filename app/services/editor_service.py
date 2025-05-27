@@ -68,3 +68,16 @@ class EditorService :
             return f"Editor {name} mis à jour en {new_name}"
         else:
             return f"Editor {name} non trouvé"
+    
+    def delete_editor(self,name):
+        """
+        Deletes a editor with the given name.
+        :param name: The name of the editor to delete.
+        :return: A message indicating the result of the deletion.
+        """
+        if self.editor_repo.delete_editor(name):
+            print(f"Le editor : {name} a été supprimé")
+            return f"Le editor : {name} a été supprimé"
+        else:
+            print(f"Le editor : {name} n'existe pas")
+            return f"Le editor : {name} n'existe pas"

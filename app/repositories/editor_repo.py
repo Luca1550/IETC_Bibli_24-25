@@ -93,3 +93,18 @@ class EditorRepo:
                 JsonStorage.save_all(self.PATH_EDITOR_JSON, self.editor_json)
                 return True
         return False
+    
+    def delete_editor(self,name:str):
+        """
+        Deletes a editor by its name from the repository.
+        Args:
+            name (str): The name of the editor to be deleted.
+        Returns:
+            bool: True if the editor was found and deleted, False otherwise.
+        """
+        for editor in self.editor_json:
+            if editor.name == name:
+                self.editor_json.remove(editor)
+                JsonStorage.save_all(self.PATH_EDITOR_JSON, self.editor_json)
+                return True
+        return False
