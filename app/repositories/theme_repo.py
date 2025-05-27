@@ -57,10 +57,22 @@ class ThemeRepo:
         return None
         
     def get_by_id (self,id:int):
+        """
+        Retrieves a theme by its ID from the repository.
+        Args:
+            id (int): The ID of the theme to be retrieved.
+        Returns:
+            Theme: The theme object if found, None otherwise.
+        """
         for theme in self.theme_json:
             if theme.id == id:
                 return theme
         return None
         
     def get_all(self):
+        """
+        Retrieves all themes from the repository.
+        Returns:
+            list[Theme]: A list of all theme objects.
+        """
         return self.theme_json

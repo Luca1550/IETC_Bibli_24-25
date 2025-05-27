@@ -49,6 +49,11 @@ class ThemeService :
             return "Theme non trouvé"
     
     def get_by_id(self,id):
+        """
+        Retrieves a theme by its ID.
+        :param id: The ID of the theme to retrieve.
+        :return: The theme object if found, None otherwise.
+        """
         theme = self.theme_repo.get_by_id(id)
         if theme:
             return f"Theme : {theme.name}"
@@ -56,4 +61,8 @@ class ThemeService :
             return "Theme non trouvé"
     
     def get_all(self):
+        """
+        Retrieves all themes.
+        :return: A list of all theme objects.
+        """
         return self.theme_repo.get_all()
