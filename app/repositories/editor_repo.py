@@ -27,3 +27,37 @@ class EditorRepo:
         """
         self.editor_json.append(Editor(id = None,name = name))
         JsonStorage.save_all(self.PATH_EDITOR_JSON,self.editor_json)
+    
+    def get_by_editor(self,name:str):
+        """
+        Retrieves a editor by its name from the repository.
+        Args:
+            name (str): The name of the editor to be retrieved.
+        Returns:
+            Editor: The Editor object if found, None otherwise.
+        """
+        for editor in self.editor_json:
+            if editor.name == name:
+                return editor
+        return None
+        
+    def get_by_id (self,id:int):
+        """
+        Retrieves a editor by its ID from the repository.
+        Args:
+            id (int): The ID of the editor to be retrieved.
+        Returns:
+            Editor: The editor object if found, None otherwise.
+        """
+        for editor in self.editor_json:
+            if editor.id == id:
+                return editor
+        return None
+        
+    def get_all(self):
+        """
+        Retrieves all editors from the repository.
+        Returns:
+            list[Editor]: A list of all editor objects.
+        """
+        return self.editor_json
