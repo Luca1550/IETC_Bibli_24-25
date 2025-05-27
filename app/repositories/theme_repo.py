@@ -28,3 +28,51 @@ class ThemeRepo:
         self.theme_json.append(Theme(id = None,name = name))
         JsonStorage.save_all(self.PATH_THEME_JSON,self.theme_json)
         
+    def delete_theme(self,name:str):
+        """
+        Deletes a theme by its name from the repository.
+        Args:
+            name (str): The name of the theme to be deleted.
+        Returns:
+            bool: True if the theme was found and deleted, False otherwise.
+        """
+        for theme in self.theme_json:
+            if theme.name == name:
+                self.theme_json.remove(theme)
+                JsonStorage.save_all(self.PATH_THEME_JSON, self.theme_json)
+                return True
+        return False
+
+    def get_by_theme (self,name:str):
+        """
+        Retrieves a theme by its name from the repository.
+        Args:
+            name (str): The name of the theme to be retrieved.
+        Returns:
+            Theme: The theme object if found, None otherwise.
+        """
+        for theme in self.theme_json:
+            if theme.name == name:
+                return theme
+        return None
+        
+    def get_by_id (self,id:int):
+        """
+        Retrieves a theme by its ID from the repository.
+        Args:
+            id (int): The ID of the theme to be retrieved.
+        Returns:
+            Theme: The theme object if found, None otherwise.
+        """
+        for theme in self.theme_json:
+            if theme.id == id:
+                return theme
+        return None
+        
+    def get_all(self):
+        """
+        Retrieves all themes from the repository.
+        Returns:
+            list[Theme]: A list of all theme objects.
+        """
+        return self.theme_json

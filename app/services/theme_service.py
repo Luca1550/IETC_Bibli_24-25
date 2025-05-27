@@ -22,3 +22,47 @@ class ThemeService :
         except:
             print(f"Error adding theme: {name}")
             return f"Error adding theme: {name}"
+        
+    def delete_theme(self,name):
+        """
+        Deletes a theme with the given name.
+        :param name: The name of the theme to delete.
+        :return: A message indicating the result of the deletion.
+        """
+        if self.theme_repo.delete_theme(name):
+            print(f"Le theme : {name} a été supprimé")
+            return f"Le theme : {name} a été supprimé"
+        else:
+            print(f"Le theme : {name} n'existe pas")
+            return f"Le theme : {name} n'existe pas"
+        
+    def get_by_theme(self,name):
+        """
+        Retrieves a theme by its name.
+        :param name: The name of the theme to retrieve.
+        :return: The theme object if found, None otherwise.
+        """
+        theme = self.theme_repo.get_by_theme(name)
+        if theme:
+            return f"Theme : {theme.name}"
+        else : 
+            return "Theme non trouvé"
+    
+    def get_by_id(self,id):
+        """
+        Retrieves a theme by its ID.
+        :param id: The ID of the theme to retrieve.
+        :return: The theme object if found, None otherwise.
+        """
+        theme = self.theme_repo.get_by_id(id)
+        if theme:
+            return f"Theme : {theme.name}"
+        else : 
+            return "Theme non trouvé"
+    
+    def get_all(self):
+        """
+        Retrieves all themes.
+        :return: A list of all theme objects.
+        """
+        return self.theme_repo.get_all()
