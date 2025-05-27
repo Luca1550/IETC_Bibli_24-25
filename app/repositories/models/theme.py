@@ -13,7 +13,7 @@ class Theme(Base):
         Initializes a new Theme instance with a unique ID and a name.
         If an ID is provided, it will be used; otherwise, a new unique ID is generated.
         Args:
-            id_theme (int | None): Unique identifier for the theme. If None, a new ID is generated.
+            id (int | None): Unique identifier for the theme. If None, a new ID is generated.
             name (str): Name of the theme.
         """
         super().__init__(id)
