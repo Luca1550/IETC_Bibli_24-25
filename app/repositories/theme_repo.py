@@ -64,3 +64,35 @@ class ThemeRepo:
         
     def get_all(self):
         return self.theme_json
+    
+    def update_theme_by_id(self,id:int,name:str):
+        """
+        Updates the name of a theme by its ID.
+        Args:
+            id (int): The ID of the theme to be updated.
+            name (str): The new name for the theme.
+        Returns:
+            bool: True if the theme was found and updated, False otherwise.
+        """
+        for theme in self.theme_json:
+            if theme.id == id:
+                theme.name = name
+                JsonStorage.save_all(self.PATH_THEME_JSON, self.theme_json)
+                return True
+        return False
+    
+    def update_theme_by_name(self,name:str,new_name:str):
+        """
+        Updates the name of a theme by its current name.
+        Args:
+            name (str): The current name of the theme to be updated.
+            new_name (str): The new name for the theme.
+        Returns:
+            bool: True if the theme was found and updated, False otherwise.
+        """
+        for theme in self.theme_json:
+            if theme.name == name:
+                theme.name = new_name
+                JsonStorage.save_all(self.PATH_THEME_JSON, self.theme_json)
+                return True
+        return False
