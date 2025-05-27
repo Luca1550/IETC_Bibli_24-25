@@ -1,25 +1,28 @@
 import customtkinter as ctk
-from ui import BOOKS
 from ui.components import MenuNavigation, LoginPage
 
 class MainApp(ctk.CTk):
+    """
+    Main application class that initializes the main window and handles login and page navigation.
+    It contains a login frame that transitions to a menu and page container upon successful login.
+    """
     def __init__(self):
+        """
+        Initializes the MainApp class, sets up the main window, and creates the login frame.
+        """
         super().__init__()
         self.title("BIBLIOTHEQUE")
-        self.geometry("1600x900")
+        self.geometry("1280x720")
 
         self.grid_rowconfigure(1, weight=1)  
         self.grid_columnconfigure(0, weight=1)
 
-        # Crée une frame qui prend tout l'écran
         self.login_container = ctk.CTkFrame(self)
         self.login_container.grid(row=0, column=0, rowspan=2, sticky="nsew")
 
-        # Crée une sous-frame dans login_container pour centrer LoginPage
         self.center_frame = ctk.CTkFrame(self.login_container)
         self.center_frame.pack(expand=True)
 
-        # LoginPage centré à l'intérieur
         self.login_frame = LoginPage(self.center_frame, on_login=self.login_success)
         self.login_frame.pack(padx=40, pady=40)
 
@@ -28,39 +31,61 @@ class MainApp(ctk.CTk):
         self.current_page = None
         
     def login_success(self):
+        """
+        Callback function that is called when the user successfully logs in.
+        It destroys the login frame and initializes the menu and page container.
+        """
         self.login_frame.destroy()
 
-        # Affiche le menu et la zone de page
-        self.menu = MenuNavigation(self, on_menu_select=self.change_page)
-        self.menu.grid(row=0, column=0, sticky="ew")
+        self.menu = MenuNavigation(self, on_menu_select=self.change_page,)
+        self.menu.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
 
         self.page_container = ctk.CTkFrame(self)
         self.page_container.grid(row=1, column=0, sticky="nsew", padx=10, pady=10)
 
-        self.change_page("home")
+        self.change_page("Accueil")
 
 
     def change_page(self, page_name):
+        """
+        Changes the current page displayed in the page container.
+        :param page_name: The name of the page to display.
+        """
         if self.current_page:
             self.current_page.destroy()
 
-        def home():
-            display = BOOKS()
-            return ctk.CTkLabel(self.page_container, text=display.display_books())
+        def page_Accueil():
+            return ctk.CTkLabel(self.page_container, text="Bienvenue dans la Bibliothèque")
 
-        def page1():
-            return ctk.CTkLabel(self.page_container, text="Contenu de la Page 1")
+        def page_Livres():
+            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Livres")
 
-        def page2():
-            return ctk.CTkLabel(self.page_container, text="Contenu de la Page 2")
+        def page_Réservation():
+            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Réservation")
+
+        def page_Emprunt():
+            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Emprunt")
+
+        def page_Membres():
+            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Membres")
+
+        def page_Config():
+            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Config")
+
+        def page_Employes():
+            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Employes")
 
         page_switch = {
-            "home": home,
-            "page1": page1,
-            "page2": page2,
+            "Accueil": page_Accueil,
+            "Livres": page_Livres,
+            "Réservation": page_Réservation,
+            "Emprunt":page_Emprunt,
+            "Membres":page_Membres,
+            "Config":page_Config,
+            "Employes":page_Employes
         }
 
-        # Appelle la fonction correspondant à la page, ou affiche une page vide si inconnue
+        
         self.current_page = page_switch.get(page_name, lambda: ctk.CTkLabel(self.page_container, text="Page inconnue"))()
         self.current_page.pack(expand=True)
  
