@@ -77,3 +77,16 @@ class CollectionService :
             return f"collection {name} mis à jour en {new_name}"
         else:
             return f"collection {name} non trouvé"
+    
+    def delete_collection(self,name):
+        """
+        Deletes a collection with the given name.
+        :param name: The name of the collection to delete.
+        :return: A message indicating the result of the deletion.
+        """
+        if self.collection_repo.delete_collection(name):
+            print(f"Le collection : {name} a été supprimé")
+            return f"Le collection : {name} a été supprimé"
+        else:
+            print(f"Le collection : {name} n'existe pas")
+            return f"Le collection : {name} n'existe pas"
