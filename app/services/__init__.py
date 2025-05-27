@@ -1,1 +1,2 @@
 from .theme_service import ThemeService
+from .collection_service import CollectionService
