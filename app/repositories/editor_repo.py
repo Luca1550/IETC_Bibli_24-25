@@ -61,3 +61,35 @@ class EditorRepo:
             list[Editor]: A list of all editor objects.
         """
         return self.editor_json
+    
+    def update_editor_by_id(self,id:int,name:str):
+        """
+        Updates the name of a editor by its ID.
+        Args:
+            id (int): The ID of the editor to be updated.
+            name (str): The new name for the editor.
+        Returns:
+            bool: True if the editor was found and updated, False otherwise.
+        """
+        for editor in self.editor_json:
+            if editor.id == id:
+                editor.name = name
+                JsonStorage.save_all(self.PATH_EDITOR_JSON, self.editor_json)
+                return True
+        return False
+    
+    def update_editor_by_name(self,name:str,new_name:str):
+        """
+        Updates the name of a editor by its current name.
+        Args:
+            name (str): The current name of the editor to be updated.
+            new_name (str): The new name for the editor.
+        Returns:
+            bool: True if the editor was found and updated, False otherwise.
+        """
+        for editor in self.editor_json:
+            if editor.name == name:
+                editor.name = new_name
+                JsonStorage.save_all(self.PATH_EDITOR_JSON, self.editor_json)
+                return True
+        return False

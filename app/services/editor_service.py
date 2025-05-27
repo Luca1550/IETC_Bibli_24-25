@@ -44,3 +44,27 @@ class EditorService :
     
     def get_all(self):
         return self.editor_repo.get_all()
+    
+    def update_editor_by_id(self,id:int,name:str):
+        """
+        Updates the name of a editor by its ID.
+        :param id: The ID of the editor to update.
+        :param name: The new name for the editor.
+        :return: A message indicating the result of the update.
+        """
+        if self.editor_repo.update_editor_by_id(id,name):
+            return f"Editor avec ID {id} mis à jour : {name}"
+        else:
+            return f"Editor avec ID {id} non trouvé"
+        
+    def update_editor_by_name(self,name:str,new_name:str):
+        """
+        Updates the name of a editor by its current name.
+        :param name: The current name of the editor to update.
+        :param new_name: The new name for the editor.
+        :return: A message indicating the result of the update.
+        """
+        if self.editor_repo.update_editor_by_name(name,new_name):
+            return f"Editor {name} mis à jour en {new_name}"
+        else:
+            return f"Editor {name} non trouvé"
