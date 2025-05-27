@@ -1,5 +1,5 @@
 import pathlib
-from models import Person
+from repositories.models import Person
 from tools import JsonStorage
 
 class PersonRepo:
@@ -36,3 +36,13 @@ class PersonRepo:
             self._save_all()
             return True
         return False
+    
+    def person_niss_exist(self, niss : str):
+        """
+        Checks if a Person with the given national number (NISS) exists in the repository.
+        arguments:
+        - niss: National number (NISS) to check for existence.
+        returns:
+        - True if a Person with the given NISS exists, False otherwise.
+        """
+        return any(person.national_number == niss for person in self._person_json)
