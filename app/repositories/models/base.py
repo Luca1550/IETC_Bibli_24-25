@@ -9,7 +9,7 @@ class Base:
     """
     _id_iter = itertools.count(1)
 
-    def __init__(self, id: int = None):
+    def __init__(self, id: int|None = None):
         """
         Initializes a new instance with a unique ID.
 
