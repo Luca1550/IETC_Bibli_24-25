@@ -20,7 +20,6 @@ class ThemeService :
         try:
             self.theme_repo.add_theme(name)
         except:
-            print(f"Error adding theme: {name}")
             return f"Error adding theme: {name}"
         
     def delete_theme(self,name):
@@ -30,11 +29,9 @@ class ThemeService :
         :return: A message indicating the result of the deletion.
         """
         if self.theme_repo.delete_theme(name):
-            print(f"Le theme : {name} a été supprimé")
-            return f"Le theme : {name} a été supprimé"
+            return f"Theme : {name} deleted"
         else:
-            print(f"Le theme : {name} n'existe pas")
-            return f"Le theme : {name} n'existe pas"
+            return f"Theme : {name} not found"
         
     def get_by_theme(self,name):
         """
@@ -46,7 +43,7 @@ class ThemeService :
         if theme:
             return f"Theme : {theme.name}"
         else : 
-            return "Theme non trouvé"
+            return "Theme not found"
     
     def get_by_id(self,id):
         """
@@ -58,7 +55,7 @@ class ThemeService :
         if theme:
             return f"Theme : {theme.name}"
         else : 
-            return "Theme non trouvé"
+            return "Theme not found"
     
     def get_all(self):
         """
@@ -75,9 +72,9 @@ class ThemeService :
         :return: A message indicating the result of the update.
         """
         if self.theme_repo.update_theme_by_id(id,name):
-            return f"Theme avec ID {id} mis à jour : {name}"
+            return f"Theme with ID {id} updated to {name}"
         else:
-            return f"Theme avec ID {id} non trouvé"
+            return f"Theme with ID {id} not found"
         
     def update_theme_by_name(self,name:str,new_name:str):
         """
@@ -87,6 +84,6 @@ class ThemeService :
         :return: A message indicating the result of the update.
         """
         if self.theme_repo.update_theme_by_name(name,new_name):
-            return f"Theme {name} mis à jour en {new_name}"
+            return f"Theme {name} updated to {new_name}"
         else:
-            return f"Theme {name} non trouvé"
+            return f"Theme {name} not found"
