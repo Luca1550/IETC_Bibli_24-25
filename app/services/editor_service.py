@@ -20,7 +20,6 @@ class EditorService :
         try:
             self.editor_repo.add_editor(name)
         except:
-            print(f"Error adding editor: {name}")
             return f"Error adding editor: {name}"
     
     def get_by_editor(self,name):
@@ -33,7 +32,7 @@ class EditorService :
         if editor:
             return f"Editor : {editor.name}"
         else : 
-            return "Editor non trouvé"
+            return "Editor not found"
     
     def get_by_id(self,id):
         """
@@ -45,7 +44,7 @@ class EditorService :
         if editor:
             return f"Editor : {editor.name}"
         else : 
-            return "Editor non trouvé"
+            return "Editor not found"
     
     def get_all(self):
         """
@@ -62,9 +61,9 @@ class EditorService :
         :return: A message indicating the result of the update.
         """
         if self.editor_repo.update_editor_by_id(id,name):
-            return f"Editor avec ID {id} mis à jour : {name}"
+            return f"Editor with ID {id} updated : {name}"
         else:
-            return f"Editor avec ID {id} non trouvé"
+            return f"Editor with ID {id} not found"
         
     def update_editor_by_name(self,name:str,new_name:str):
         """
@@ -74,9 +73,9 @@ class EditorService :
         :return: A message indicating the result of the update.
         """
         if self.editor_repo.update_editor_by_name(name,new_name):
-            return f"Editor {name} mis à jour en {new_name}"
+            return f"Editor {name} updated en {new_name}"
         else:
-            return f"Editor {name} non trouvé"
+            return f"Editor {name} not found"
     
     def delete_editor(self,name):
         """
@@ -85,8 +84,6 @@ class EditorService :
         :return: A message indicating the result of the deletion.
         """
         if self.editor_repo.delete_editor(name):
-            print(f"Le editor : {name} a été supprimé")
-            return f"Le editor : {name} a été supprimé"
+            return f"Editor : {name} deleted"
         else:
-            print(f"Le editor : {name} n'existe pas")
-            return f"Le editor : {name} n'existe pas"
+            return f"Editor : {name} not found"

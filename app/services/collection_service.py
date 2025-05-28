@@ -20,7 +20,6 @@ class CollectionService :
         try:
             self.collection_repo.add_collection(name)
         except:
-            print(f"Error adding collection: {name}")
             return f"Error adding collection: {name}"
     
     def get_by_collection(self,name):
@@ -33,7 +32,7 @@ class CollectionService :
         if collection:
             return f"Collection : {collection.name}"
         else : 
-            return "Collection non trouvé"
+            return "Collection not found"
     
     def get_by_id(self,id):
         """
@@ -45,7 +44,7 @@ class CollectionService :
         if collection:
             return f"Collection : {collection.name}"
         else : 
-            return "Collection non trouvé"
+            return "Collection not found"
     
     def get_all(self):
         """
@@ -62,9 +61,9 @@ class CollectionService :
         :return: A message indicating the result of the update.
         """
         if self.collection_repo.update_collection_by_id(id,name):
-            return f"collection avec ID {id} mis à jour : {name}"
+            return f"Collection with ID {id} updated to {name}"
         else:
-            return f"collection avec ID {id} non trouvé"
+            return f"Collection with ID {id} not found"
         
     def update_collection_by_name(self,name:str,new_name:str):
         """
@@ -74,9 +73,9 @@ class CollectionService :
         :return: A message indicating the result of the update.
         """
         if self.collection_repo.update_collection_by_name(name,new_name):
-            return f"collection {name} mis à jour en {new_name}"
+            return f"Collection {name} updated to {new_name}"
         else:
-            return f"collection {name} non trouvé"
+            return f"Collection {name} not found"
     
     def delete_collection(self,name):
         """
@@ -85,8 +84,6 @@ class CollectionService :
         :return: A message indicating the result of the deletion.
         """
         if self.collection_repo.delete_collection(name):
-            print(f"Le collection : {name} a été supprimé")
-            return f"Le collection : {name} a été supprimé"
+            return f"Collection : {name} deleted"
         else:
-            print(f"Le collection : {name} n'existe pas")
-            return f"Le collection : {name} n'existe pas"
+            return f"Collection : {name} not found"
