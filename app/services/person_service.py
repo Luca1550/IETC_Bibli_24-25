@@ -12,7 +12,7 @@ class PersonService:
         """
         self._person_repo : PersonRepo = PersonRepo()
     
-    def add_person(self, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str):
+    def add_person(self, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str) -> Person | str:
         """
         Adds a new person to the repository.
         arguments:
@@ -24,7 +24,7 @@ class PersonService:
         - cp: Postal code of the person's address.
         - city: City of the person's address.
         returns:
-        - Prints an error message if there was an issue adding the person.
+        - Returns an error message if there was an issue adding the person.
         """
         try:
             if not len(national_number) == 11 or not national_number.isnumeric():
@@ -35,8 +35,7 @@ class PersonService:
                 raise Exception("Invalid email format: Please enter a valid email address.")
             if not cp.isnumeric() or not len(cp) >= 4:
                 raise Exception("Invalid postal code format: It must be a numeric value with at least 4 digits.")
-            if self._person_repo.add_person(
-                Person(
+            new_person = Person(
                     id=None,
                     first_name=first_name,
                     last_name=last_name,
@@ -45,7 +44,8 @@ class PersonService:
                     street=street,
                     cp=cp,
                     city=city
-                )):
-                return f"Person {first_name} {last_name} added successfully. ✅"
+                )
+            if self._person_repo.add_person(new_person):
+                return new_person
         except Exception as e:
             return f"🛑 Error [{e}]"

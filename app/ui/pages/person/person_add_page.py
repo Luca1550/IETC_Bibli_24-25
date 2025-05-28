@@ -84,14 +84,17 @@ class PersonAddPage(ctk.CTkToplevel):
         If the person is added successfully, the page is closed.
         If there is an error, a pop-up message is displayed with the error details.
         """
-        if PopUpMessage.pop_up(self, self._person_service.add_person(
+        new_person = self._person_service.add_person(
             first_name=self.input_fisrt_name.get(),
             last_name=self.input_last_name.get(),
             national_number=self.input_national_number.get(), 
             email=self.input_email.get(),
             street=self.input_street.get(),
             cp=self.input_cp.get(),
-            city=self.input_city.get()
-        )):
+            city=self.input_city.get())
+        if isinstance(new_person, str):
+            PopUpMessage.pop_up(self, new_person)
+        else:
+            PopUpMessage.pop_up(self, f"Person {new_person.first_name} {new_person.last_name} added successfully. ✅")
             self.destroy()
         
