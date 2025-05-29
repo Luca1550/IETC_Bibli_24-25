@@ -37,6 +37,18 @@ class PersonRepo:
             return True
         return False
     
+    def get_person_by_id(self, id : int):
+        """
+        Retrieves a Person object by its ID.
+        arguments:
+        - id: ID of the Person to retrieve.
+        returns:
+        - Returns the Person object if found, otherwise returns False.
+        """
+        if id:
+            return next((p for p in self._person_json if p.id == id), None)
+        return False
+    
     def person_niss_exist(self, niss : str):
         """
         Checks if a Person with the given national number (NISS) exists in the repository.
