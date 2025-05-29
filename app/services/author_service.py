@@ -36,3 +36,14 @@ class AuthorService:
         person = self.person_repo.get_by_id(author.id_person)
 
         return AuthorDTO(id_author=author.id, person=person)
+    
+    def delete_author(self,id):
+        """
+        Deletes an author with the given name.
+        :param name: The name of the author to delete.
+        :return: A message indicating the result of the deletion.
+        """
+        if self.author_repo.delete_author(id):
+            return f"Author ID: {id} deleted"
+        else:
+            return f"Author ID: {id} not found"

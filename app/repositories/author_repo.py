@@ -33,3 +33,23 @@ class AuthorRepo:
             if author.id == id:
                 return author
         return None
+    
+    def delete_author(self,id:str):
+        """
+        Deletes a author by its name from the repository.
+        Args:
+            name (str): The name of the author to be deleted.
+        Returns:
+            bool: True if the author was found and deleted, False otherwise.
+            
+            WE DICIDED THAT DELETING AN AUTHOR WOULD NOT DELETE THE PERSON.
+            PLEASE DON'T COMMENT ON THAT DECISION.
+            THANKS,
+            LUCA.
+        """
+        for author in self.author_json:
+            if author.id == id:
+                self.author_json.remove(author)
+                JsonStorage.save_all(self.PATH_AUTHOR_JSON, self.author_json)
+                return True
+        return False
