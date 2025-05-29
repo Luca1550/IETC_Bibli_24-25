@@ -28,7 +28,7 @@ class CollectionRepo:
         self.collection_json.append(Collection(id = None,name = name))
         JsonStorage.save_all(self.PATH_COLLECTION_JSON,self.collection_json)
     
-    def get_by_collection(self,name:str):
+    def get_by_name(self,name:str):
         """
         Retrieves a collection by its name from the repository.
         Args:

@@ -11,3 +11,6 @@ class AuthorRepo:
     def add_author(self,author:Author):
         self.author_json.append(author)
         JsonStorage.save_all(self.PATH_AUTHOR_JSON,self.author_json)
+    
+    def get_author(self):
+        
