@@ -17,7 +17,7 @@ class Library(Base):
             borrow_delay (int): Allowed borrowing delay in days.
             url_logo (str): URL to the library's logo image.
         """
-        
+
         super().__init__(id)
         self.name = name
         self.fine_per_day = fine_per_day
