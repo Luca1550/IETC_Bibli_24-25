@@ -11,7 +11,7 @@ class AuthorService:
     def add_author(self,person:Person):
         try:
             if self.person_repo.add_person(person):
-                print(person.__dict__)
-                self.author_repo.add_author(person.id)
+                self.author_repo.add_author(Author(id=None,id_person=person.id))
         except:
+            self.person_repo.delete_person(person.id)
             return f"Error adding author: {person}"

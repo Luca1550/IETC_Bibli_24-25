@@ -8,6 +8,6 @@ class AuthorRepo:
     def __init__(self):
         self.author_json : list[Author] = JsonStorage.load_all(self.PATH_AUTHOR_JSON)
     
-    def add_author(self,id_person:int):
-        self.author_json.append(Author(id_person = id_person,id = None))
+    def add_author(self,author:Author):
+        self.author_json.append(author)
         JsonStorage.save_all(self.PATH_AUTHOR_JSON,self.author_json)
