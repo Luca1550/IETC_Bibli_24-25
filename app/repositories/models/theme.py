@@ -4,9 +4,6 @@ class Theme(Base):
     """
     Represents a theme with a unique ID and a name.
     Inherits from Base to ensure each theme has a unique identifier.
-    Attributes:
-        id_theme (int | None): Unique identifier for the theme.
-        name (str): Name of the theme.
     """
     def __init__(self,id:int | None,name : str):
         """
