@@ -4,9 +4,6 @@ class Collection(Base):
     """
     Represents a collection with a unique ID and a name.
     inherits from Base to ensure each collection has a unique identifier.
-    Attributes:
-        id (int | None): Unique identifier for the collection.
-        name (str): Name of the collection.
     """
     def __init__(self,id:int | None,name : str):
         """

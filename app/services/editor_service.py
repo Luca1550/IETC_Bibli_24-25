@@ -22,13 +22,13 @@ class EditorService :
         except:
             return f"Error adding editor: {name}"
     
-    def get_by_editor(self,name):
+    def get_by_name(self,name):
         """
         Retrieves a editor by its name.
         :param name: The name of the editor to retrieve.
         :return: The editor object if found, None otherwise.
         """
-        editor = self.editor_repo.get_by_editor(name)
+        editor = self.editor_repo.get_by_name(name)
         if editor:
             return f"Editor : {editor.name}"
         else : 

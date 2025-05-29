@@ -33,13 +33,13 @@ class ThemeService :
         else:
             return f"Theme : {name} not found"
         
-    def get_by_theme(self,name):
+    def get_by_name(self,name):
         """
         Retrieves a theme by its name.
         :param name: The name of the theme to retrieve.
         :return: The theme object if found, None otherwise.
         """
-        theme = self.theme_repo.get_by_theme(name)
+        theme = self.theme_repo.get_by_name(name)
         if theme:
             return f"Theme : {theme.name}"
         else : 

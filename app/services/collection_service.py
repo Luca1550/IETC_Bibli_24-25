@@ -22,13 +22,13 @@ class CollectionService :
         except:
             return f"Error adding collection: {name}"
     
-    def get_by_collection(self,name):
+    def get_by_name(self,name):
         """
         Retrieves a collection by its name.
         :param name: The name of the collection to retrieve.
         :return: The collection object if found, None otherwise.
         """
-        collection = self.collection_repo.get_by_collection(name)
+        collection = self.collection_repo.get_by_name(name)
         if collection:
             return f"Collection : {collection.name}"
         else : 

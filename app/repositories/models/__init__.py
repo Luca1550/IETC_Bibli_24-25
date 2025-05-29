@@ -4,3 +4,4 @@ from .theme import Theme
 from .collection import Collection
 from .editor import Editor
 from .book import Book
+from .author import Author
