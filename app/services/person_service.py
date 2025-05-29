@@ -59,7 +59,7 @@ class PersonService:
         - Returns the Person object if found, otherwise raises an exception.
         """
         try:
-            get_person = self._person_repo.get_person_by_id(id)
+            get_person = self._person_repo.get_by_id(id)
             if get_person:
                 return get_person
             else:
