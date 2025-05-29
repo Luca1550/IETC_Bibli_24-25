@@ -66,3 +66,19 @@ class PersonService:
                 raise Exception(f"Person with the given ID : {id} was not found.")
         except Exception as e:
             return f"🛑 Error [{e}]"
+        
+    def delete_person(self, id : int):
+        """
+        Deletes a person by their ID.
+        arguments:
+        - id: ID of the person to delete.
+        returns:
+        - True if the person was deleted successfully, False otherwise.
+        """
+        try:
+            person = self.get_by_id(id)
+            if isinstance(person, Person):
+                return self._person_repo.delete_person(person)
+            raise Exception(person)
+        except Exception as e:
+            return f"🛑 Error [{e}]"

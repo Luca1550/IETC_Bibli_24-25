@@ -31,7 +31,7 @@ class PersonRepo:
         returns:
         - True if the person was added successfully, False otherwise.
         """
-        if person:
+        if isinstance(person, Person):
             self._person_json.append(person)
             self._save_all()
             return True
@@ -47,6 +47,20 @@ class PersonRepo:
         """
         if id:
             return next((p for p in self._person_json if p.id == id), None)
+        return False
+    
+    def delete_person(self, person : Person):
+        """
+        Deletes a Person object from the repository and saves the changes to the JSON file.
+        arguments:
+        - person: Person object to be deleted.
+        returns:
+        - True if the person was deleted successfully, False otherwise.
+        """
+        if isinstance(person, Person):
+            self._person_json.remove(person)
+            self._save_all()
+            return True
         return False
     
     def person_niss_exist(self, niss : str):
