@@ -50,7 +50,7 @@ class PersonService:
         except Exception as e:
             return f"🛑 Error [{e}]"
         
-    def get_person_by_id(self, id : int):
+    def get_by_id(self, id : int):
         """
         Retrieves a person by their ID.
         arguments:

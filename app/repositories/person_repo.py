@@ -37,7 +37,7 @@ class PersonRepo:
             return True
         return False
     
-    def get_person_by_id(self, id : int):
+    def get_by_id(self, id : int):
         """
         Retrieves a Person object by its ID.
         arguments:
