@@ -1,5 +1,5 @@
 import re
-from repositories.models import Worker.
+from repositories.models import Worker
 from repositories.models import Person
 from repositories import WorkerRepo
 from repositories import PersonRepo
