@@ -32,5 +32,5 @@ class BookService:
             if editors:
                 for editor in editors:
                     self._book_editor_repo.add_book_editor(isbn,editor.id)
-        except ValueError:
-            return f"Erreur lors de l'ajout de {ValueError}"
+        except ValueError as e:
+            return f"Erreur : {e}"
