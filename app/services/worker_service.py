@@ -23,5 +23,4 @@ class WorkerService:
         if isinstance(worker, Worker):
             return self._worker_repo.update_worker(worker)
         return False
-    
-    
+        

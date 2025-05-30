@@ -38,4 +38,4 @@ class WorkerRepo:
                     self._save_all()
                     return True
         return False
-    
+
