@@ -12,6 +12,7 @@ class WorkerService:
         """
         self._worker_repo: WorkerRepo = WorkerRepo()
 
+
     def delete_worker(self, id: int) -> bool:
         """
         Deletes a worker by their ID.
@@ -30,3 +31,16 @@ class WorkerService:
         except Exception as e:
             print(f"🛑 Error [{e}]")
             return False
+
+    def update_worker(self, worker: Worker) -> bool:
+        """
+        Updates an existing worker in the repository.
+        arguments:
+        - worker: Worker object to be updated.
+        returns:
+        - True if the worker was updated successfully, otherwise returns False.
+        """
+        if isinstance(worker, Worker):
+            return self._worker_repo.update_worker(worker)
+        return False
+
