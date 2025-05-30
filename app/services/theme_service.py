@@ -41,7 +41,7 @@ class ThemeService :
         """
         theme = self.theme_repo.get_by_name(name)
         if theme:
-            return f"Theme : {theme.name}"
+            return theme
         else : 
             return "Theme not found"
     
@@ -53,7 +53,7 @@ class ThemeService :
         """
         theme = self.theme_repo.get_by_id(id)
         if theme:
-            return f"Theme : {theme.name}"
+            return theme
         else : 
             return "Theme not found"
     

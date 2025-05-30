@@ -30,7 +30,7 @@ class EditorService :
         """
         editor = self.editor_repo.get_by_name(name)
         if editor:
-            return f"Editor : {editor.name}"
+            return editor
         else : 
             return "Editor not found"
     
@@ -42,7 +42,7 @@ class EditorService :
         """
         editor = self.editor_repo.get_by_id(id)
         if editor:
-            return f"Editor : {editor.name}"
+            return editor
         else : 
             return "Editor not found"
     

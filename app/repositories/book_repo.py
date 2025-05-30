@@ -37,3 +37,14 @@ class BookRepo:
             self._save_all()
             return True
         return False
+    
+    def is_unique(self,attribute:str,value:object):
+        """
+        Checks if a book with a specific attribute and value is unique in the repository.
+        arguments:
+        - attribute: The attribute of the book to check (e.g., 'isbn', 'title').
+        - value: The value of the attribute to check for uniqueness.
+        returns:
+        - True if no book with the specified attribute and value exists, False otherwise.
+        """
+        return not any (getattr(isbn,attribute,None)== value for isbn in self.book_json)
