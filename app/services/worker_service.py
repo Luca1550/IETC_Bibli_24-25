@@ -12,17 +12,21 @@ class WorkerService:
         """
         self._worker_repo: WorkerRepo = WorkerRepo()
 
-    def add_worker(self, id_person: int, authorization: bool) -> Worker | str:
+    def delete_worker(self, id: int) -> bool:
         """
-        Adds a new Worker to the repository.
+        Deletes a worker by their ID.
         arguments:
-        - id_person: ID of the person associated with the worker.
-        - authorization: Boolean indicating if the worker has authorization.
+        - id: ID of the worker to delete.
         returns:
-        - Returns the newly created Worker object if successful, otherwise returns an error message.
+        - True if the worker was deleted successfully, False otherwise.
         """
-        new_worker = Worker(id=None, id_person=id_person, authorization=authorization)
-        if self._worker_repo.is_unique_worker(new_worker):
-            self._worker_repo.add_worker(new_worker)
-            return new_worker
-        return "Worker already exists."
+        try:
+            worker = self._worker_repo.get_by_id(id)
+            if worker:
+                self._worker_repo.delete_worker(worker)
+                return True
+            else:
+                raise Exception(f"Worker with the given ID : {id} was not found.")
+        except Exception as e:
+            print(f"🛑 Error [{e}]")
+            return False

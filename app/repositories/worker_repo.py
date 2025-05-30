@@ -37,4 +37,32 @@ class WorkerRepo:
             return True
         return False
     
+    def get_by_id(self, id : int) -> Worker | bool:
+        """
+        Retrieves a Worker object by its ID.
+        arguments:
+        - id: ID of the Worker to retrieve.
+        returns:
+        - Returns the Worker object if found, otherwise returns False.
+        """
+        if id:
+            return next((w for w in self._worker_json if w.id == id), None)
+        return False 
+    
+    def delete_worker(self, worker : Worker) -> bool:
+        """
+        Deletes a Worker object from the repository and saves the changes to the JSON file.
+        arguments:
+        - worker: Worker object to be deleted.
+        returns:
+        - True if the worker was deleted successfully, otherwise returns False.
+        """
+        if isinstance(worker, Worker):
+            self._worker_json = [w for w in self._worker_json if w.id != worker.id]
+            self._save_all()
+            return True
+        return False
+    
+    
+    
     
