@@ -113,6 +113,10 @@ Stockage structuré des informations sans nécessité d’un serveur SQL.
 
 > En partant des bonnes pratiques recommandées par le guide *["PEP 8 – Style Guide for Python Code"](https://peps.python.org/pep-0008/)*.
 
+## 📊 Diagrammes de classes (ébauche)
+![Diagramme de classes](Docs/Images/Diagramme_classes.svg)
+
+
 ## 🐍 Installation et Utilisation
 
 ### ℹ️ Remarque
