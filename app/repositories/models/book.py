@@ -9,9 +9,9 @@ class Book:
         date (datetime): Publication date of the book.
         price (float): Price of the book.
     """
-    def __init__(self,isbn:str,title:str,date:datetime,price:float):
+    def __init__(self,isbn:str,title:str,date:datetime,price:float,id_collection:int):
         self.isbn = isbn
         self.title = title
         self.date = date
         self.price = price
-        
+        self.id_collection = id_collection

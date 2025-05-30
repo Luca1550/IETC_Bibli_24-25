@@ -17,3 +17,23 @@ class BookRepo:
         Loads existing books from the JSON file into the book_json attribute.
         """
         self.book_json : list[Book] = JsonStorage.load_all(self.PATH_BOOK_JSON)
+    
+    def _save_all(self):
+        """
+        Saves all Person data to the JSON file.
+        """
+        JsonStorage.save_all(self.PATH_BOOK_JSON, self.book_json)
+    
+    def add_book(self,book:Book):
+        """
+        Adds a Book object to the repository and saves it to the JSON file.
+        arguments:
+        - book: Book object to be added.
+        returns:
+        - True if the book was added successfully, False otherwise.
+        """
+        if book:
+            self.book_json.append(book)
+            self._save_all()
+            return True
+        return False
