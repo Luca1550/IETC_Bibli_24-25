@@ -12,17 +12,16 @@ class WorkerService:
         """
         self._worker_repo: WorkerRepo = WorkerRepo()
 
-    def add_worker(self, id_person: int, authorization: bool) -> Worker | str:
+    def update_worker(self, worker: Worker) -> bool:
         """
-        Adds a new Worker to the repository.
+        Updates an existing worker in the repository.
         arguments:
-        - id_person: ID of the person associated with the worker.
-        - authorization: Boolean indicating if the worker has authorization.
+        - worker: Worker object to be updated.
         returns:
-        - Returns the newly created Worker object if successful, otherwise returns an error message.
+        - True if the worker was updated successfully, otherwise returns False.
         """
-        new_worker = Worker(id=None, id_person=id_person, authorization=authorization)
-        if self._worker_repo.is_unique_worker(new_worker):
-            self._worker_repo.add_worker(new_worker)
-            return new_worker
-        return "Worker already exists."
+        if isinstance(worker, Worker):
+            return self._worker_repo.update_worker(worker)
+        return False
+    
+    

@@ -23,18 +23,19 @@ class WorkerRepo:
         """
         JsonStorage.save_all(self.PATH_WORKER_JSON, self._worker_json)
 
-    def add_worker(self, worker : Worker) -> bool:
+    def update_worker(self, worker : Worker) -> bool:
         """
-        Adds a Worker object to the repository and saves it to the JSON file.
+        Updates an existing Worker object in the repository and saves the changes to the JSON file.
         arguments:
-        - worker: Worker object to be added.
+        - worker: Worker object to be updated.
         returns:
-        - True if the worker was added successfully, False otherwise.
+        - True if the worker was updated successfully, otherwise returns False.
         """
         if isinstance(worker, Worker):
-            self._worker_json.append(worker)
-            self._save_all()
-            return True
+            for i, w in enumerate(self._worker_json):
+                if w.id == worker.id:
+                    self._worker_json[i] = worker
+                    self._save_all()
+                    return True
         return False
-    
     
