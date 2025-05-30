@@ -23,7 +23,7 @@ class PersonRepo:
         """
         JsonStorage.save_all(self.PATH_PERSON_JSON, self._person_json)
 
-    def add_person(self, person : Person):
+    def add_person(self, person : Person) -> bool:
         """
         Adds a Person object to the repository and saves it to the JSON file.
         arguments:
@@ -31,13 +31,13 @@ class PersonRepo:
         returns:
         - True if the person was added successfully, False otherwise.
         """
-        if person:
+        if isinstance(person, Person):
             self._person_json.append(person)
             self._save_all()
             return True
         return False
     
-    def get_by_id(self, id : int):
+    def get_by_id(self, id : int) -> Person | bool:
         """
         Retrieves a Person object by its ID.
         arguments:
@@ -49,12 +49,41 @@ class PersonRepo:
             return next((p for p in self._person_json if p.id == id), None)
         return False
     
-    def person_niss_exist(self, niss : str):
+    def update_person(self, person : Person) -> bool:
         """
-        Checks if a Person with the given national number (NISS) exists in the repository.
+        Updates an existing Person object in the repository and saves the changes to the JSON file.
         arguments:
-        - niss: National number (NISS) to check for existence.
+        - person: Person object to be updated.
         returns:
-        - True if a Person with the given NISS exists, False otherwise.
+        - True if the person was updated successfully, otherwise returns False.
         """
-        return any(person.national_number == niss for person in self._person_json)
+        if isinstance(person, Person):
+            self._person_json[self._person_json.index(person)] = person
+            self._save_all()
+            return True
+        return False
+
+    def delete_person(self, person : Person) -> bool:
+        """
+        Deletes a Person object from the repository and saves the changes to the JSON file.
+        arguments:
+        - person: Person object to be deleted.
+        returns:
+        - True if the person was deleted successfully, False otherwise.
+        """
+        if isinstance(person, Person):
+            self._person_json.remove(person)
+            self._save_all()
+            return True
+        return False
+    
+    def is_unique(self, attribute : str, value : object) -> bool:
+        """
+        Checks if a given attribute of a Person object is unique in the repository.
+        arguments:
+        - attribute: The attribute to check for uniqueness (e.g., 'national_number', 'email').
+        - value: The value to check against the specified attribute.
+        returns:
+        - True if the value is unique, False if it already exists in the repository.
+        """
+        return not any(getattr(person, attribute, None) == value for person in self._person_json)
