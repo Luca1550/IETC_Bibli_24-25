@@ -39,3 +39,15 @@ class WorkerService:
         if worker:
             return worker
         return "Worker not found."
+    
+    def get_worker_authorization(self, id: int) -> bool:
+        """
+        Retrieves the authorization status of a Worker by their ID.
+        arguments:
+        - id: ID of the Worker to check.
+        returns:
+        - True if the Worker has authorization, False otherwise.
+        """
+        return self._worker_repo.get_authorization(id)
+
+

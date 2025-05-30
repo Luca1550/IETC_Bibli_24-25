@@ -47,7 +47,6 @@ class WorkerRepo:
         """
         if id:
             return next((w for w in self._worker_json if w.id == id), None)
-        return False
 
     def is_unique_worker(self, worker: Worker) -> bool:
         """
@@ -59,4 +58,19 @@ class WorkerRepo:
         """
         return worker not in self._worker_json
     
+
+    def get_authorization(self, id: int) -> bool:
+        """
+        Checks if a Worker has authorization based on their ID.
+        arguments:
+        - id: ID of the Worker to check.
+        returns:
+        - True if the Worker has authorization, False otherwise.
+        """
+        worker = self.get_by_id(id)
+        if worker:
+            return worker.authorization
+        return False
+
     
+
