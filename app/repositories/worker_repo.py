@@ -47,24 +47,7 @@ class WorkerRepo:
         """
         if id:
             return next((w for w in self._worker_json if w.id == id), None)
-        return False 
-    
-    def update_worker(self, worker : Worker) -> bool:
-        """
-        Updates an existing Worker object in the repository and saves the changes to the JSON file.
-        arguments:
-        - worker: Worker object to be updated.
-        returns:
-        - True if the worker was updated successfully, otherwise returns False.
-        """
-        if isinstance(worker, Worker):
-            for i, w in enumerate(self._worker_json):
-                if w.id == worker.id:
-                    self._worker_json[i] = worker
-                    self._save_all()
-                    return True
-        return False
-    
+
     def is_unique_worker(self, worker: Worker) -> bool:
         """
         Checks if a Worker object is unique based on its ID.
@@ -75,6 +58,7 @@ class WorkerRepo:
         """
         return worker not in self._worker_json
     
+
     def get_authorization(self, id: int) -> bool:
         """
         Checks if a Worker has authorization based on their ID.
@@ -87,3 +71,6 @@ class WorkerRepo:
         if worker:
             return worker.authorization
         return False
+
+    
+

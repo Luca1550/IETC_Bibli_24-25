@@ -49,3 +49,5 @@ class WorkerService:
         - True if the Worker has authorization, False otherwise.
         """
         return self._worker_repo.get_authorization(id)
+
+
