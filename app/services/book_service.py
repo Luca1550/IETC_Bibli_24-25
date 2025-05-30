@@ -1,9 +1,13 @@
-from repositories import EditorRepo,CollectionRepo,ThemeRepo,AuthorRepo
+from repositories import BookRepo,BookThemeRepo,BookEditorRepo,BookAuthorRepo,CollectionRepo
+from repositories.models import Book,Theme,Author,Editor
 from .models import BookDTO
+import datetime
 
 class BookService:
-    def __init__(self,editor_repo:EditorRepo,collection_repo:CollectionRepo,theme_repo:ThemeRepo,author_repo:AuthorRepo):
-        self.editor_repo = editor_repo
-        self.collection_repo = collection_repo
-        self.theme_repo = theme_repo
-        self.author_repo = author_repo
+    def __init__(self):
+        self._book_repo = BookRepo()
+        self._book_theme_repo = BookThemeRepo()
+        self._book_editor_repo = BookEditorRepo()
+        self._book_author_repo = BookAuthorRepo()
+        self._collection_repo = CollectionRepo()
+    
