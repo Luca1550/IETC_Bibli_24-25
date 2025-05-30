@@ -129,12 +129,12 @@ Commencez par récupérer le code source sur votre machine :
     git clone https://github.com/Luca1550/IETC_Bibli_24-25.git
 
 
-### 2️⃣ **Utilisation d'un environement virtuelle**
+### 2️⃣ **Utilisation d'un environement virtuel**
 Il est recommandé d'utiliser un environnement virtuel pour isoler les dépendances du projet (à la racine du clone): 
 
     py -3 -m venv .venv
 
-### 3️⃣ **Activer l'environement virtuelle**
+### 3️⃣ **Activer l'environement virtuel**
 En fonction de l'OS : 
 #### Windows  :
 
