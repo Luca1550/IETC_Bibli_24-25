@@ -37,4 +37,26 @@ class WorkerRepo:
             return True
         return False
     
+    def get_by_id(self, id : int) -> Worker | bool:
+        """
+        Retrieves a Worker object by its ID.
+        arguments:
+        - id: ID of the Worker to retrieve.
+        returns:
+        - Returns the Worker object if found, otherwise returns False.
+        """
+        if id:
+            return next((w for w in self._worker_json if w.id == id), None)
+        return False
+
+    def is_unique_worker(self, worker: Worker) -> bool:
+        """
+        Checks if a Worker object is unique based on its ID.
+        arguments:
+        - worker: Worker object to check for uniqueness.
+        returns:
+        - True if the worker is unique (not already in the repository), False otherwise.
+        """
+        return worker not in self._worker_json
+    
     
