@@ -23,6 +23,32 @@ class WorkerRepo:
         """
         JsonStorage.save_all(self.PATH_WORKER_JSON, self._worker_json)
 
+    def add_worker(self, worker : Worker) -> bool:
+        """
+        Adds a Worker object to the repository and saves it to the JSON file.
+        arguments:
+        - worker: Worker object to be added.
+        returns:
+        - True if the worker was added successfully, False otherwise.
+        """
+        if isinstance(worker, Worker):
+            self._worker_json.append(worker)
+            self._save_all()
+            return True
+        return False
+    
+    def get_by_id(self, id : int) -> Worker | bool:
+        """
+        Retrieves a Worker object by its ID.
+        arguments:
+        - id: ID of the Worker to retrieve.
+        returns:
+        - Returns the Worker object if found, otherwise returns False.
+        """
+        if id:
+            return next((w for w in self._worker_json if w.id == id), None)
+        return False
+
     def update_worker(self, worker : Worker) -> bool:
         """
         Updates an existing Worker object in the repository and saves the changes to the JSON file.
@@ -39,17 +65,6 @@ class WorkerRepo:
                     return True
         return False
 
-    def get_by_id(self, id : int) -> Worker | bool:
-        """
-        Retrieves a Worker object by its ID.
-        arguments:
-        - id: ID of the Worker to retrieve.
-        returns:
-        - Returns the Worker object if found, otherwise returns False.
-        """
-        if id:
-            return next((w for w in self._worker_json if w.id == id), None)
-        return False 
     
     def delete_worker(self, worker : Worker) -> bool:
         """
@@ -65,3 +80,22 @@ class WorkerRepo:
             return True
         return False
 
+    def get_all_workers(self) -> list[Worker]:
+        """
+        Retrieves all Worker objects from the repository.
+        returns:
+        - A list of all Worker objects.
+        """
+        return self._worker_json
+    
+    def is_unique(self, worker: Worker) -> bool:
+        """
+        Checks if a Worker object is unique based on its ID.
+        arguments:
+        - worker: Worker object to check for uniqueness.
+        returns:
+        - True if the worker is unique, False otherwise.
+        """
+        if isinstance(worker, Worker):
+            return not any(w.id == worker.id for w in self._worker_json)
+        return False
