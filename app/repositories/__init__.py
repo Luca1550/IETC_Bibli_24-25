@@ -5,3 +5,5 @@ from .editor_repo import EditorRepo
 from .book_repo import BookRepo
 from .author_repo import AuthorRepo
 from .book_theme_repo import BookThemeRepo
+from .book_editor_repo import BookEditorRepo
+from .book_author_repo import BookAuthorRepo
