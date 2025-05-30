@@ -44,51 +44,51 @@ Stockage structuré des informations sans nécessité d’un serveur SQL.
 -  → Stockage des données sous format JSON, simulant une base de données.  
 
 ## 📂 Structure du Projet
-- <img witdh=20 height=20 src="Docs/images/folder-app.svg"></img> **app**
-    - <img witdh=20 height=20 src="Docs/images/folder-repository.svg"></img> **Repositories**
-        - <img witdh=20 height=20 src="Docs/images/folder-class.svg"></img> **models**
-            - <img witdh=20 height=20 src="Docs/images/python.svg"></img> **name.py**
-        - <img witdh=20 height=20 src="Docs/images/python.svg"></img> **name_repo.py**
-    - <img witdh=20 height=20 src="Docs/images/folder-svg.svg"></img> **services**
-        - <img witdh=20 height=20 src="Docs/images/folder-class.svg"></img> **models**
-            - <img witdh=20 height=20 src="Docs/images/python.svg"></img> **name_dto.py**
-        - <img witdh=20 height=20 src="Docs/images/python.svg"></img> **name_service.py**
-    - <img witdh=20 height=20 src="Docs/images/folder-tools.svg"></img> **tools**
-        - <img witdh=20 height=20 src="Docs/images/python.svg"></img> **name.py**
-    - <img witdh=20 height=20 src="Docs/images/folder-ui.svg"></img> **ui**
-        - <img witdh=20 height=20 src="Docs/images/folder-components.svg"></img> **components**
-            - <img witdh=20 height=20 src="Docs/images/python.svg"></img> **name.py**
-        - <img witdh=20 height=20 src="Docs/images/folder-views.svg"></img> **pages**
-            - <img witdh=20 height=20 src="Docs/images/python.svg"></img> **name.py**
-    - <img witdh=20 height=20 src="Docs/images/python.svg"></img> **main.py**
-- <img witdh=20 height=20 src="Docs/images/folder-database.svg"></img> **database**
-    - <img witdh=20 height=20 src="Docs/images/json.svg"></img> **name.json**
-- <img witdh=20 height=20 src="Docs/images/python-misc.svg"></img> **requirements.txt**
+- <img witdh=20 height=20 src="Docs/Images/folder-app.svg"></img> **app**
+    - <img witdh=20 height=20 src="Docs/Images/folder-repository.svg"></img> **Repositories**
+        - <img witdh=20 height=20 src="Docs/Images/folder-class.svg"></img> **models**
+            - <img witdh=20 height=20 src="Docs/Images/python.svg"></img> **name.py**
+        - <img witdh=20 height=20 src="Docs/Images/python.svg"></img> **name_repo.py**
+    - <img witdh=20 height=20 src="Docs/Images/folder-svg.svg"></img> **services**
+        - <img witdh=20 height=20 src="Docs/Images/folder-class.svg"></img> **models**
+            - <img witdh=20 height=20 src="Docs/Images/python.svg"></img> **name_dto.py**
+        - <img witdh=20 height=20 src="Docs/Images/python.svg"></img> **name_service.py**
+    - <img witdh=20 height=20 src="Docs/Images/folder-tools.svg"></img> **tools**
+        - <img witdh=20 height=20 src="Docs/Images/python.svg"></img> **name.py**
+    - <img witdh=20 height=20 src="Docs/Images/folder-ui.svg"></img> **ui**
+        - <img witdh=20 height=20 src="Docs/Images/folder-components.svg"></img> **components**
+            - <img witdh=20 height=20 src="Docs/Images/python.svg"></img> **name.py**
+        - <img witdh=20 height=20 src="Docs/Images/folder-views.svg"></img> **pages**
+            - <img witdh=20 height=20 src="Docs/Images/python.svg"></img> **name.py**
+    - <img witdh=20 height=20 src="Docs/Images/python.svg"></img> **main.py**
+- <img witdh=20 height=20 src="Docs/Images/folder-database.svg"></img> **database**
+    - <img witdh=20 height=20 src="Docs/Images/json.svg"></img> **name.json**
+- <img witdh=20 height=20 src="Docs/Images/python-misc.svg"></img> **requirements.txt**
 
 ## 📂 Structure détaillée
-<img witdh=20 height=20 src="Docs/images/folder-app.svg"></img> **app** Cœur du projet : Regroupe tous les modules essentiels qui structurent l’application.
+<img witdh=20 height=20 src="Docs/Images/folder-app.svg"></img> **app** Cœur du projet : Regroupe tous les modules essentiels qui structurent l’application.
 
-<img witdh=20 height=20 src="Docs/images/python.svg"></img> **main.py** : Le point d'entrée principal de notre application.
+<img witdh=20 height=20 src="Docs/Images/python.svg"></img> **main.py** : Le point d'entrée principal de notre application.
 
-<img witdh=20 height=20 src="Docs/images/folder-class.svg"></img> **models** : Contient les définitions des classes et structures de données. Utile pour représenter des entités.
+<img witdh=20 height=20 src="Docs/Images/folder-class.svg"></img> **models** : Contient les définitions des classes et structures de données. Utile pour représenter des entités.
 
-<img witdh=20 height=20 src="Docs/images/folder-svg.svg"></img> **repositories** : Regroupe les accès a la base de données en json.
+<img witdh=20 height=20 src="Docs/Images/folder-svg.svg"></img> **repositories** : Regroupe les accès a la base de données en json.
 
-<img witdh=20 height=20 src="Docs/images/folder-svg.svg"></img> **services** : Regroupe les fonctionnalités ou services métiers (business logic), comme la gestion des Auteurs, des Thèmes, ou toute autre opération métier.
+<img witdh=20 height=20 src="Docs/Images/folder-svg.svg"></img> **services** : Regroupe les fonctionnalités ou services métiers (business logic), comme la gestion des Auteurs, des Thèmes, ou toute autre opération métier.
 
-<img witdh=20 height=20 src="Docs/images/folder-tools.svg"></img> **tools** : Héberge les outils et utilitaires comme le JsonDecoder.
+<img witdh=20 height=20 src="Docs/Images/folder-tools.svg"></img> **tools** : Héberge les outils et utilitaires comme le JsonDecoder.
 
-<img witdh=20 height=20 src="Docs/images/folder-ui.svg"></img> **ui** : Concentre les éléments liés à l'interface utilisateur avec CustomTkinter.
+<img witdh=20 height=20 src="Docs/Images/folder-ui.svg"></img> **ui** : Concentre les éléments liés à l'interface utilisateur avec CustomTkinter.
 
-<img witdh=20 height=20 src="Docs/images/folder-components.svg"></img> **components** : Sous-dossier de ui, il contient les petits éléments réutilisables de l'interface.
+<img witdh=20 height=20 src="Docs/Images/folder-components.svg"></img> **components** : Sous-dossier de ui, il contient les petits éléments réutilisables de l'interface.
 
-<img witdh=20 height=20 src="Docs/images/folder-views.svg"></img> **pages** : Contient les vues complètes, comme les pages de l'application (ex. page d'accueil, page livres).
-
-
-<img witdh=20 height=20 src="Docs/images/folder-database.svg"></img> **data** : Contient les fichiers de données utilisés pour la persistance. Les fichiers JSON présents ici simulent une base de données et servent de stockage structuré pour l'application
+<img witdh=20 height=20 src="Docs/Images/folder-views.svg"></img> **pages** : Contient les vues complètes, comme les pages de l'application (ex. page d'accueil, page livres).
 
 
-<img witdh=20 height=20 src="Docs/images/python-misc.svg"></img> **requirements.txt** : Liste des dépendances (bibliothèques Python) nécessaires pour exécuter le projet.
+<img witdh=20 height=20 src="Docs/Images/folder-database.svg"></img> **data** : Contient les fichiers de données utilisés pour la persistance. Les fichiers JSON présents ici simulent une base de données et servent de stockage structuré pour l'application
+
+
+<img witdh=20 height=20 src="Docs/Images/python-misc.svg"></img> **requirements.txt** : Liste des dépendances (bibliothèques Python) nécessaires pour exécuter le projet.
 
 ## ✏️ Style de notation
 
