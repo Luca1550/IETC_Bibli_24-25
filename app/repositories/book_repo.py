@@ -32,7 +32,7 @@ class BookRepo:
         returns:
         - True if the book was added successfully, False otherwise.
         """
-        if book:
+        if isinstance (book, Book):
             self.book_json.append(book)
             self._save_all()
             return True

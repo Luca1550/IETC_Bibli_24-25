@@ -34,3 +34,5 @@ class BookService:
                     self._book_editor_repo.add_book_editor(isbn,editor.id)
         except ValueError as e:
             return f"Erreur : {e}"
+    
+    def _check_book_value(self,isbn:str,title:str,date:datetime,price:int,)
