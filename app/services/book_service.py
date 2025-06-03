@@ -35,4 +35,10 @@ class BookService:
         except ValueError as e:
             return f"Erreur : {e}"
     
-    
+    def get_all(self):
+        """
+        Returns all books in the repository.
+        returns:
+        - A list of BookDTO objects representing all books stored in the repository.
+        """
+        return self._book_repo.get_all()
