@@ -4,7 +4,12 @@ from .models import BookDTO,AuthorDTO
 import datetime
 
 class BookService:
+    
     def __init__(self):
+        """
+        Initializes the BookService with repositories for books, themes, editors, authors, and collections.
+        This constructor sets up the necessary repositories to manage book-related data, allowing for operations such as adding books and retrieving book details.
+        """
         self._book_repo = BookRepo()
         self._book_theme_repo = BookThemeRepo()
         self._book_editor_repo = BookEditorRepo()
@@ -12,6 +17,19 @@ class BookService:
         self._collection_repo = CollectionRepo()
     
     def add_book(self,isbn:str,title:str,date:datetime,price:float,collection:Collection,authors:list[AuthorDTO],themes:list[Theme],editors:list[Editor]):
+        """
+        Adds a new book to the repository with its associated collection, authors, themes, and editors.
+        :param isbn: ISBN of the book.
+        :param title: Title of the book.
+        :param date: Publication date of the book.
+        :param price: Price of the book.
+        :param collection: Collection to which the book belongs.
+        :param authors: List of AuthorDTO objects representing the authors of the book.
+        :param themes: List of Theme objects representing the themes of the book.
+        :param editors: List of Editor objects representing the editors of the book.
+        :return: None or an error message if the book already exists.
+        This method checks if the ISBN is unique before adding the book to the repository. If the ISBN already exists, it raises a ValueError.
+        """
         try:
             if self._book_repo.is_unique("isbn",isbn):
                 self._book_repo.add_book(Book(
@@ -37,8 +55,33 @@ class BookService:
     
     def get_all(self):
         """
-        Returns all books in the repository.
-        returns:
-        - A list of BookDTO objects representing all books stored in the repository.
+        Returns a list of all books with their associated collections, authors, editors, and themes.
+        :return: List of BookDTO objects containing book details along with associated collections, authors, editors, and themes.
+        
+        This method retrieves all books from the repository, along with their associated collections, authors, editors, and themes.
+        Each book is represented as a BookDTO object, which includes the book's ISBN, title, date, price, and lists of associated authors, editors, themes, and collection.
         """
-        return self._book_repo.get_all()
+        books = self._book_repo.get_all()
+        result : list[BookDTO] = []
+        
+        for book in books:
+            collection = self._collection_repo.get_by_id(book.id_collection)
+            
+            authors = self._book_author_repo.get_author_by_isbn(book.isbn)
+            editors = self._book_editor_repo.get_editors_by_isbn(book.isbn)
+            themes = self._book_theme_repo.get_themes_by_isbn(book.isbn)
+            
+            book_dto = BookDTO(
+                isbn=book.isbn,
+                title=book.title,
+                date=book.date,
+                price=book.price,
+                editors=editors,
+                themes=themes,
+                authors=authors,
+                collection=collection
+            )
+            
+            result.append(book_dto)
+            
+        return result

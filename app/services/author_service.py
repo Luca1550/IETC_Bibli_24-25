@@ -34,7 +34,6 @@ class AuthorService:
         """
         author = self.author_repo.get_by_id(id)
         person = self.person_repo.get_by_id(author.id_person)
-
         return AuthorDTO(id_author=author.id, person=person)
     
     def delete_author(self,id):

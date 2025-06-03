@@ -48,7 +48,6 @@ class BookRepo:
         - True if no book with the specified attribute and value exists, False otherwise.
         """
         return not any (getattr(isbn,attribute,None)== value for isbn in self.book_json)
-    
+
     def get_all(self):
-        
         return self.book_json
