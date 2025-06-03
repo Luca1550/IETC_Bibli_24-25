@@ -30,7 +30,7 @@ class CollectionService :
         """
         collection = self.collection_repo.get_by_name(name)
         if collection:
-            return f"Collection : {collection.name}"
+            return collection
         else : 
             return "Collection not found"
     
@@ -42,7 +42,7 @@ class CollectionService :
         """
         collection = self.collection_repo.get_by_id(id)
         if collection:
-            return f"Collection : {collection.name}"
+            return collection
         else : 
             return "Collection not found"
     

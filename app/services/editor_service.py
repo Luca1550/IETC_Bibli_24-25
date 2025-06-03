@@ -30,18 +30,27 @@ class EditorService :
         """
         editor = self.editor_repo.get_by_name(name)
         if editor:
-            return f"Editor : {editor.name}"
+            return editor
         else : 
             return "Editor not found"
     
     def get_by_id(self,id):
+        """
+        Retrieves a editor by its ID.
+        :param id: The ID of the editor to retrieve.
+        :return: The editor object if found, None otherwise.
+        """
         editor = self.editor_repo.get_by_id(id)
         if editor:
-            return f"Editor : {editor.name}"
+            return editor
         else : 
             return "Editor not found"
     
     def get_all(self):
+        """
+        Retrieves all editors.
+        :return: A list of all editors.
+        """
         return self.editor_repo.get_all()
     
     def update_editor_by_id(self,id:int,name:str):
