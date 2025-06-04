@@ -85,3 +85,12 @@ class BookService:
             result.append(book_dto)
             
         return result
+    
+    def delete_book(self,isbn):
+        try:
+            book = self.get_all()
+            if isinstance(book, Book):
+                return self._book_repo.delete_book(book)
+            raise Exception(book)
+        except Exception as e:
+            return f"🛑 Error [{e}]"

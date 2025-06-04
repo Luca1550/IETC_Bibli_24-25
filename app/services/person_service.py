@@ -41,7 +41,7 @@ class PersonService:
                 if self._person_repo.add_person(new_person):
                     return new_person
         except Exception as e:
-            return f"🛑 Error [{e}]"
+            raise Exception(f"🛑 Error {e}")
         
     def get_by_id(self, id : int) -> Person | str:
         """
@@ -58,7 +58,7 @@ class PersonService:
             else:
                 raise Exception(f"Person with the given ID : {id} was not found.")
         except Exception as e:
-            return f"🛑 Error [{e}]"
+            raise Exception(f"🛑 Error {e}")
         
     def update_person(self, id : int, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str) -> bool | str:
         try:
@@ -78,7 +78,7 @@ class PersonService:
                 if self._person_repo.update_person(person):
                     return True
         except Exception as e:
-            return f"🛑 Error [{e}]"
+            raise Exception(f"🛑 Error {e}")
         
     def delete_person(self, id : int) -> bool | str:
         """
@@ -94,7 +94,7 @@ class PersonService:
                 return self._person_repo.delete_person(person)
             raise Exception(person)
         except Exception as e:
-            return f"🛑 Error [{e}]"
+            raise Exception(f"🛑 Error {e}")
         
     def _check_person_value(self, first_name : str, last_name : str, national_number : str | None, email : str, street : str, cp : str, city : str) -> Exception | bool:
         if national_number is not None:

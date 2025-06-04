@@ -1,6 +1,7 @@
 from repositories import AuthorRepo, PersonRepo
 from .models import AuthorDTO
 from repositories.models import Person, Author
+from .person_service import PersonService
 
 class AuthorService:
     """
@@ -12,19 +13,20 @@ class AuthorService:
         """
         self.author_repo = AuthorRepo()
         self.person_repo = PersonRepo()
+        self.person_service = PersonService()
     
-    def add_author(self,person:Person):
+    def add_author(self, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str) -> Author:
         """
         Adds a new author to the system.
         :param person: Person object containing the details of the author to be added.
+        Using the PersonService to create a new person and then adding the author to the AuthorRepo.
         :return: A message indicating success or failure.
         """
         try:
-            if self.person_repo.add_person(person):
-                self.author_repo.add_author(Author(id=None,id_person=person.id))
-        except:
-            self.person_repo.delete_person(person.id)
-            return f"Error adding author: {person}"
+            person = self.person_service.add_person(first_name=first_name, last_name=last_name, national_number=national_number, email=email, street=street, cp=cp, city=city)
+            self.author_repo.add_author(Author(id=None,id_person=person.id))
+        except Exception as e:
+            return f"Error adding author: {e}"
     
     def get_by_id(self,id:int):
         """

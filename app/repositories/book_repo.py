@@ -50,4 +50,16 @@ class BookRepo:
         return not any (getattr(isbn,attribute,None)== value for isbn in self.book_json)
 
     def get_all(self):
+        """
+        Returns all books in the repository.
+        returns:
+        - A list of Book objects.
+        """
         return self.book_json
+
+    def delete_book(self,book:Book):
+        if isinstance (book, Book):
+            self.book_json.remove(book)
+            self._save_all()
+            return True
+        return False
