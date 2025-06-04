@@ -58,12 +58,26 @@ class BookRepo:
         return self.book_json
     
     def get_by_isbn(self,isbn:str):
+        """
+        Retrieves a book by its ISBN.
+        arguments:
+        - isbn: The ISBN of the book to retrieve.
+        returns:
+        - The Book object with the specified ISBN, or None if not found.
+        """
         for book in self.book_json:
             if book.isbn == isbn:
                 return book
         return None
 
     def delete_book(self,book:Book):
+        """
+        Deletes a book from the repository.
+        arguments:
+        - book: The Book object to be deleted.
+        returns:
+        - True if the book was deleted successfully, False otherwise.
+        """
         if isinstance (book, Book):
             self.book_json.remove(book)
             self._save_all()

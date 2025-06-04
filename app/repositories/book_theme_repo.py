@@ -58,6 +58,10 @@ class BookThemeRepo:
         return lst_theme
     
     def delete_book_theme(self,isbn:str):
+        """
+        Deletes a book-theme relationship by ISBN.
+        :param isbn: ISBN of the book.
+        This method iterates through the list of book-theme relationships and removes the one that matches the given ISBN."""
         for book_theme in self.book_theme_json:
             if book_theme.isbn == isbn:
                 self.book_theme_json.remove(book_theme)

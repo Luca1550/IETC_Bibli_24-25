@@ -98,6 +98,13 @@ class BookService:
             return f"🛑 Error [{e}]"
         
     def delete_book(self,isbn):
+        """
+        Deletes a book by its ISBN along with its associated authors, editors, and themes.
+        :param isbn: ISBN of the book to be deleted.
+        :return: True if the book was deleted successfully, or an error message if an exception occurred.
+        This method retrieves the book by its ISBN, deletes all associated authors, editors, and themes, and then deletes the book itself.
+        If the book is not found, it raises an exception.
+        """
         try:
             book_dto = self.get_by_isbn(isbn)
             book = self._book_repo.get_by_isbn(isbn)

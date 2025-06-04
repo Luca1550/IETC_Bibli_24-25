@@ -58,6 +58,11 @@ class BookEditorRepo:
         return lst_editor
     
     def delete_book_editor(self,isbn:str):
+        """
+        Deletes a book-editor relationship based on the given ISBN.
+        :param isbn: ISBN of the book.
+        This method iterates through the list of book-editor relationships and removes the one that matches the given ISBN.
+        """
         for book_editor in self.book_editor_json:
             if book_editor.isbn == isbn:
                 self.book_editor_json.remove(book_editor)

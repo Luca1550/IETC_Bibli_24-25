@@ -58,6 +58,12 @@ class BookAuthorRepo:
         return lst_author
     
     def delete_book_author(self,isbn:str):
+        """
+        Deletes a book-author relationship by ISBN.
+        :param isbn: ISBN of the book.
+        This method iterates through the list of book-author relationships and removes any that match the given ISBN.
+        It then saves the updated list to the JSON file.
+        """
         for book_author in self.book_author_json:
             if book_author.isbn == isbn:
                 self.book_author_json.remove(book_author)
