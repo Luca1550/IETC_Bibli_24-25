@@ -56,6 +56,12 @@ class BookRepo:
         - A list of Book objects.
         """
         return self.book_json
+    
+    def get_by_isbn(self,isbn:str):
+        for book in self.book_json:
+            if book.isbn == isbn:
+                return book
+        return None
 
     def delete_book(self,book:Book):
         if isinstance (book, Book):

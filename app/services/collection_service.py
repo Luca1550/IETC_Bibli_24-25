@@ -87,3 +87,9 @@ class CollectionService :
             return f"Collection : {name} deleted"
         else:
             return f"Collection : {name} not found"
+        
+    def delete_collection_by_id(self,id):
+        if self.collection_repo.delete_collection(id):
+            return f"Collection : {id} deleted"
+        else:
+            return f"Collection : {id} not found"

@@ -56,3 +56,9 @@ class BookThemeRepo:
             if book_theme.isbn == isbn:
                 lst_theme.append(self._theme_repo.get_by_id(book_theme.id_theme))
         return lst_theme
+    
+    def delete_book_theme(self,isbn:str):
+        for book_theme in self.book_theme_json:
+            if book_theme.isbn == isbn:
+                self.book_theme_json.remove(book_theme)
+        self._save_all()

@@ -86,11 +86,30 @@ class BookService:
             
         return result
     
+    def get_by_isbn(self,isbn):
+        try:
+            books_dto = self.get_all()
+            for book in books_dto : 
+                if book.isbn == isbn:
+                    return book
+            else:
+                raise Exception(f"Book with the given ID : {isbn} was not found.")
+        except Exception as e:
+            return f"🛑 Error [{e}]"
+        
     def delete_book(self,isbn):
         try:
-            book = self.get_all()
-            if isinstance(book, Book):
-                return self._book_repo.delete_book(book)
+            book_dto = self.get_by_isbn(isbn)
+            book = self._book_repo.get_by_isbn(isbn)
+            if isinstance(book_dto, BookDTO):
+                for i in enumerate(book_dto.authors):
+                    self._book_author_repo.delete_book_author(book_dto.isbn)
+                for i in enumerate(book_dto.editors):
+                    self._book_editor_repo.delete_book_editor(book_dto.isbn)
+                for i in enumerate(book_dto.themes):
+                    self._book_theme_repo.delete_book_theme(book_dto.isbn) 
+                self._book_repo.delete_book(book)
+                return True
             raise Exception(book)
         except Exception as e:
             return f"🛑 Error [{e}]"

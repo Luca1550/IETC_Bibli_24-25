@@ -56,3 +56,9 @@ class BookAuthorRepo:
             if book_author.isbn == isbn:
                 lst_author.append(self._author_repo.get_by_id(book_author.id_author))
         return lst_author
+    
+    def delete_book_author(self,isbn:str):
+        for book_author in self.book_author_json:
+            if book_author.isbn == isbn:
+                self.book_author_json.remove(book_author)
+        self._save_all()

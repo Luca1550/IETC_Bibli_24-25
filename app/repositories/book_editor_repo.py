@@ -56,3 +56,9 @@ class BookEditorRepo:
             if book_editor.isbn == isbn:
                 lst_editor.append(self._editor_repo.get_by_id(book_editor.id_editor))
         return lst_editor
+    
+    def delete_book_editor(self,isbn:str):
+        for book_editor in self.book_editor_json:
+            if book_editor.isbn == isbn:
+                self.book_editor_json.remove(book_editor)
+        self._save_all()

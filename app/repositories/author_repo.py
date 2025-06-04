@@ -44,6 +44,7 @@ class AuthorRepo:
             
             WE DICIDED THAT DELETING AN AUTHOR WOULD NOT DELETE THE PERSON.
             PLEASE DON'T COMMENT ON THAT DECISION.
+            WE KNOW THIS IS A LIABILITY.
             THANKS,
             LUCA.
         """
