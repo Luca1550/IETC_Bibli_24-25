@@ -32,15 +32,18 @@ class BookService:
         """
         try:
             if self._book_repo.is_unique("isbn",isbn):
-                self._book_repo.add_book(Book(
-                    isbn=isbn,
-                    title=title,
-                    date=date,
-                    price=price,
-                    id_collection = collection.id
-                ))
+                if self._check_book_value(isbn,title,date,price,authors,themes,editors):
+                    self._book_repo.add_book(Book(
+                        isbn=isbn,
+                        title=title,
+                        date=date,
+                        price=price,
+                        id_collection = collection.id
+                    ))
+                else:
+                    raise Exception("Values are wrong.")
             else:
-                raise ValueError("Cet ISBN existe déjà.")
+                raise Exception("This ISBN already exists.")
             if authors:
                 for author in authors:
                     self._book_author_repo.add_book_author(isbn,author.id_author)
@@ -50,8 +53,8 @@ class BookService:
             if editors:
                 for editor in editors:
                     self._book_editor_repo.add_book_editor(isbn,editor.id)
-        except ValueError as e:
-            return f"Erreur : {e}"
+        except Exception as e:
+            raise Exception(f"🛑 Error {e}")
     
     def get_all(self):
         """
@@ -120,3 +123,20 @@ class BookService:
             raise Exception(book)
         except Exception as e:
             return f"🛑 Error [{e}]"
+        
+    def _check_book_value(self,isbn:str,title:str,date:datetime,price:float,authors:list[AuthorDTO],themes:list[Theme],editors:list[Editor]):
+        if not isbn or len(isbn)!=13 or not isbn.isnumeric():
+            raise Exception("Invalid ISBN. must be exactly 13 characters long.")
+        if not title.strip():
+            raise Exception("Title cannot be empty.")
+        if not isinstance(date, datetime.datetime): #datetime alone doesn't work. It calls the class not the method. need to add .datetime.
+            raise Exception ("Must include a valid date.")
+        if not authors:
+            raise Exception("At least one author is required.")
+        if not editors:
+            raise Exception("At least one editor is required.")
+        if not themes:
+            raise Exception("At least on theme is required.")
+        if not price>0:
+            raise Exception("Books aren't free.")
+        return True
