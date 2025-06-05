@@ -102,29 +102,53 @@ class BookService:
         
     def update_by_parameter(self,isbn:str,title:str,date:datetime,price:float,collection:Collection,authors:list[AuthorDTO],themes:list[Theme],editors:list[Editor]):
         try:
-            book = self._book_repo.get_by_isbn(isbn)
+            book:Book = self._book_repo.get_by_isbn(isbn)
             if not isinstance(book,Book):
                 raise Exception(f"Book with ISBN: {isbn} was not found.")
-            if self._check_book_value(isbn,title,date,price,authors,themes,editors):
-                book.title = title or book.title
-                book.date = date or book.date
-                book.price = price or book.price
-                book.id_colection = collection.id or book.id_collection
+            if self._check_book_value_test(title,date,price,authors,themes,editors):
+                if title is not None:
+                    book.title = title
+                if date is not None:
+                    book.date = date
+                if price is not None:
+                    book.price = price
+                if collection is not None:
+                    book.id_collection = collection.id
                 
                 self._book_repo.update_book(book)
                 
-                self._book_author_repo.delete_book_author(isbn)
-                self._book_editor_repo.delete_book_editor(isbn)
-                self._book_theme_repo.delete_book_theme(isbn)
+                if authors is not None:
+                    self._book_author_repo.delete_book_author(isbn)
+                    for author in authors:
+                        self._book_author_repo.add_book_author(isbn, author.id_author)
                 
-                for author in authors:
-                    self._book_author_repo.add_book_author(isbn, author.id_author)
-                for theme in themes:
-                    self._book_theme_repo.add_book_theme(isbn, theme.id)
-                for editor in editors:
-                    self._book_editor_repo.add_book_editor(isbn, editor.id)
+                if themes is not None:
+                    self._book_theme_repo.delete_book_theme(isbn)
+                    for theme in themes:
+                        self._book_theme_repo.add_book_theme(isbn, theme.id)
+                
+                if editors is not None:
+                    self._book_editor_repo.delete_book_editor(isbn)
+                    for editor in editors:
+                        self._book_editor_repo.add_book_editor(isbn, editor.id)
+                    
         except Exception as e:
             raise Exception(f"🛑 Error {e}")
+        
+    def _check_book_value_test(self, title, date, price, authors, themes, editors):
+        if title is not None and not title.strip():
+            raise Exception("Title cannot be empty.")
+        if date is not None and not isinstance(date, datetime.datetime):
+            raise Exception("Must include a valid date.")
+        if authors is not None and not authors:
+            raise Exception("At least one author is required if modifying authors.")
+        if editors is not None and not editors:
+            raise Exception("At least one editor is required if modifying editors.")
+        if themes is not None and not themes:
+            raise Exception("At least one theme is required if modifying themes.")
+        if price is not None and price <= 0:
+            raise Exception("Books aren't free.")
+        return True
         
     def delete_book(self,isbn):
         """
