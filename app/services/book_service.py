@@ -100,6 +100,32 @@ class BookService:
         except Exception as e:
             return f"🛑 Error [{e}]"
         
+    def update_by_parameter(self,isbn:str,title:str,date:datetime,price:float,collection:Collection,authors:list[AuthorDTO],themes:list[Theme],editors:list[Editor]):
+        try:
+            book = self._book_repo.get_by_isbn(isbn)
+            if not isinstance(book,Book):
+                raise Exception(f"Book with ISBN: {isbn} was not found.")
+            if self._check_book_value(isbn,title,date,price,authors,themes,editors):
+                book.title = title or book.title
+                book.date = date or book.date
+                book.price = price or book.price
+                book.id_colection = collection.id or book.id_collection
+                
+                self._book_repo.update_book(book)
+                
+                self._book_author_repo.delete_book_author(isbn)
+                self._book_editor_repo.delete_book_editor(isbn)
+                self._book_theme_repo.delete_book_theme(isbn)
+                
+                for author in authors:
+                    self._book_author_repo.add_book_author(isbn, author.id_author)
+                for theme in themes:
+                    self._book_theme_repo.add_book_theme(isbn, theme.id)
+                for editor in editors:
+                    self._book_editor_repo.add_book_editor(isbn, editor.id)
+        except Exception as e:
+            raise Exception(f"🛑 Error {e}")
+        
     def delete_book(self,isbn):
         """
         Deletes a book by its ISBN along with its associated authors, editors, and themes.

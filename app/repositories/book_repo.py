@@ -69,8 +69,15 @@ class BookRepo:
             if book.isbn == isbn:
                 return book
         return None
+    
+    def update_book(self,book:Book) -> bool:
+        if isinstance(book, Book):
+            self.book_json[self.book_json.index(book)] = book
+            self._save_all()
+            return True
+        return False
 
-    def delete_book(self,book:Book):
+    def delete_book(self,book:Book) -> bool : 
         """
         Deletes a book from the repository.
         arguments:
