@@ -4,9 +4,6 @@ class Editor(Base):
     """
     Represents a editor with a unique ID and a name.
     inherits from Base to ensure each editor has a unique identifier.
-    Attributes:
-        id (int | None): Unique identifier for the editor.
-        name (str): Name of the editor.
     """
     def __init__(self,id:int | None,name : str):
         """

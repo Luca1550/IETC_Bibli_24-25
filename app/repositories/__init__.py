@@ -3,3 +3,10 @@ from .theme_repo import ThemeRepo
 from .collection_repo import CollectionRepo
 from .editor_repo import EditorRepo
 from .library_repo import LibraryRepo
+from .worker_repo import WorkerRepo
+from .login_repo import LoginRepo
+from .book_repo import BookRepo
+from .author_repo import AuthorRepo
+from .book_theme_repo import BookThemeRepo
+from .book_editor_repo import BookEditorRepo
+from .book_author_repo import BookAuthorRepo

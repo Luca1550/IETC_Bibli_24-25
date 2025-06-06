@@ -43,7 +43,7 @@ class ThemeRepo:
                 return True
         return False
 
-    def get_by_theme (self,name:str):
+    def get_by_name (self,name:str):
         """
         Retrieves a theme by its name from the repository.
         Args:

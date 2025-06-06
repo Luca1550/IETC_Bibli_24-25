@@ -1,6 +1,9 @@
 from repositories.models import Base
 
 class Person(Base):
+    """
+    Represents a person with personal details such as name, contact information, and address.
+    """
     def __init__(self, id : int | None, first_name : str, last_name : str, national_number : str, email : str, street : str, cp : str, city : str):
         """
         Initializes a new Person instance with the provided attributes.

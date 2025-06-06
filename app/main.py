@@ -1,6 +1,8 @@
 import customtkinter as ctk
 from ui.components import MenuNavigation, LoginPage
 from ui.pages.library import LibraryPage
+from ui.pages.book import BookPage
+
 class MainApp(ctk.CTk):
     """
     Main application class that initializes the main window and handles login and page navigation.
@@ -45,6 +47,9 @@ class MainApp(ctk.CTk):
         self.page_container.grid_rowconfigure(0, weight=1)
         self.page_container.grid_columnconfigure(0, weight=1)
 
+        self.page_container.grid_rowconfigure(0, weight=1)
+        self.page_container.grid_columnconfigure(0, weight=1)
+
         self.change_page("Accueil")
 
 
@@ -60,7 +65,7 @@ class MainApp(ctk.CTk):
             return ctk.CTkLabel(self.page_container, text="Bienvenue dans la Bibliothèque")
 
         def page_Livres():
-            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Livres")
+            return BookPage(self.page_container)
 
         def page_Réservation():
             return ctk.CTkLabel(self.page_container, text="Contenu de la Page Réservation")
@@ -87,10 +92,8 @@ class MainApp(ctk.CTk):
             "Employes":page_Employes
         }
 
-        
         self.current_page = page_switch.get(page_name, lambda: ctk.CTkLabel(self.page_container, text="Page inconnue"))()
         self.current_page.grid(row=0, column=0, sticky="nsew")
-
 
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
