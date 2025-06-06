@@ -59,7 +59,6 @@ class MainApp(ctk.CTk):
             return ctk.CTkLabel(self.page_container, text="Bienvenue dans la Bibliothèque")
 
         def page_Livres():
-            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Livres")
             return BookPage(self.page_container)
 
         def page_Réservation():
@@ -90,7 +89,6 @@ class MainApp(ctk.CTk):
         
         self.current_page = page_switch.get(page_name, lambda: ctk.CTkLabel(self.page_container, text="Page inconnue"))()
         self.current_page.pack(expand=True)
- 
 
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
