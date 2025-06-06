@@ -64,5 +64,6 @@ class LibraryPage(ctk.CTkFrame):
         updated_param["id"] =self.paramlib[0]["id"]
         for key, value in self.entries.items():
             updated_param[key] = value.get()
+            print(value.get())
         self.library_service.update_library(**updated_param)
     #def add_buton(self):
