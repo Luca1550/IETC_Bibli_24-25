@@ -42,6 +42,8 @@ class MainApp(ctk.CTk):
 
         self.page_container = ctk.CTkFrame(self)
         self.page_container.grid(row=1, column=0, sticky="nsew", padx=10, pady=10)
+        self.page_container.grid_rowconfigure(0, weight=1)
+        self.page_container.grid_columnconfigure(0, weight=1)
 
         self.change_page("Accueil")
 
@@ -87,8 +89,9 @@ class MainApp(ctk.CTk):
 
         
         self.current_page = page_switch.get(page_name, lambda: ctk.CTkLabel(self.page_container, text="Page inconnue"))()
-        self.current_page.pack(expand=True)
- 
+        self.current_page.grid(row=0, column=0, sticky="nsew")
+
+
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("blue")
