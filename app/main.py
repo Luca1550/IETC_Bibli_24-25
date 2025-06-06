@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from ui.components import MenuNavigation, LoginPage
+from ui.pages.book import BookPage
 
 class MainApp(ctk.CTk):
     """
@@ -59,6 +60,7 @@ class MainApp(ctk.CTk):
 
         def page_Livres():
             return ctk.CTkLabel(self.page_container, text="Contenu de la Page Livres")
+            return BookPage(self.page_container)
 
         def page_Réservation():
             return ctk.CTkLabel(self.page_container, text="Contenu de la Page Réservation")
@@ -89,6 +91,7 @@ class MainApp(ctk.CTk):
         self.current_page = page_switch.get(page_name, lambda: ctk.CTkLabel(self.page_container, text="Page inconnue"))()
         self.current_page.pack(expand=True)
  
+
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("blue")
