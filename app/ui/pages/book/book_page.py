@@ -22,7 +22,7 @@ class BookPage(ctk.CTkFrame):
         #     label = ctk.CTkLabel(self.scroll_frame, text=f"Livre {i+1}")
         #     label.grid(row=i, column=0, padx=10, pady=5)
         all_books = self.book_service.get_all()
-        for i,book in enumerate(all_books):
-            label = ctk.CTkLabel(self.scroll_frame,text=book)
+        for i, book in enumerate(all_books):
+            book_text = f"{book.title} - {book.date} - {book.price} €"
+            label = ctk.CTkLabel(self.scroll_frame, text=book_text)
             label.grid(row=i, column=0, padx=10, pady=5)
-            
