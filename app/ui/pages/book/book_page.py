@@ -11,8 +11,11 @@ class BookPage(ctk.CTkFrame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        self.scroll_frame = ctk.CTkScrollableFrame(self)
-        self.scroll_frame.grid(row=0, column=0, sticky="nsew")
+        self.setup_ui()
+        
+    def setup_ui(self):
+        self.scroll_frame = ctk.CTkScrollableFrame(self,width=200)
+        self.scroll_frame.grid(row=0, column=0, sticky="nsew",pady=5,padx=5)
 
         # Exemple de contenu dans la scrollable
         # for i in range(30):
@@ -22,3 +25,4 @@ class BookPage(ctk.CTkFrame):
         for i,book in enumerate(all_books):
             label = ctk.CTkLabel(self.scroll_frame,text=book)
             label.grid(row=i, column=0, padx=10, pady=5)
+            
