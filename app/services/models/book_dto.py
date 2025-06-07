@@ -1,4 +1,5 @@
-from repositories.models import Editor,Collection,Theme,Author
+from repositories.models import Editor,Collection,Theme
+from services.models import AuthorDTO
 import datetime
 
 class BookDTO:
@@ -8,7 +9,7 @@ class BookDTO:
     """
     def __init__(self,isbn:str,title:str,date:datetime,price:float,
                 editors:list[Editor],collection:Collection,
-                themes:list[Theme],authors:list[Author]):
+                themes:list[Theme],authors:list[AuthorDTO]):
         """
         Initializes a BookDTO instance with the provided parameters.
         :param isbn: ISBN of the book.

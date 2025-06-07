@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import tkinter as tk
 from services import BookService
+from services.models import BookDTO
 from .book_edit_page import BookEditPage
 
 class BookFrame(ctk.CTkFrame):
@@ -8,7 +9,7 @@ class BookFrame(ctk.CTkFrame):
     def __init__(self, parent, book, delete_callback, edit_callback):
         super().__init__(parent)
         
-        self.book = book
+        self.book : BookDTO = book
         self.delete_callback = delete_callback
         self.edit_callback = edit_callback
         
@@ -46,28 +47,29 @@ class BookFrame(ctk.CTkFrame):
         )
         collection_label.pack(anchor="w", pady=2, padx=15)
         
-        # author_names = self.book_service.get_author_names_by_isbn(self.book.isbn)
-        # author_text = ", ".join(author_names) if author_names else "Aucun auteur"
-        # author_label = ctk.CTkLabel(
-        #     self,
-        #     text=f"✍️ Authors: {author_text}"
-        # )
-        # author_label.pack(anchor="w", pady=2, padx=15)
+        # author 
+        author_names = ", ".join(" ".join([author.person.first_name, author.person.last_name]) for author in self.book.authors)
+        author_label = ctk.CTkLabel(
+            self, 
+            text=f"✍️ Author(s): {author_names}"
+        )
+        author_label.pack(anchor="w", pady=2, padx=15)
         
-        # editor
+        # editor 
         editor_names = ", ".join(editor.name for editor in self.book.editors)
         editor_label = ctk.CTkLabel(
             self, 
-            text=f"🏢 editors: {editor_names}"
+            text=f"🏢 Editors: {editor_names}"
         )
         editor_label.pack(anchor="w", pady=2, padx=15)
         
-        # # theme
-        # theme_label = ctk.CTkLabel(
-        #     self, 
-        #     text=f"🏷️ theme: {self.book.theme}"
-        # )
-        # theme_label.pack(anchor="w", pady=2, padx=15)
+        # theme
+        theme_names=", ".join(theme.name for theme in self.book.themes)
+        theme_label = ctk.CTkLabel(
+            self, 
+            text=f"🏷️ theme: {theme_names}"
+        )
+        theme_label.pack(anchor="w", pady=2, padx=15)
         
         # Frame pour les boutons
         button_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -88,7 +90,7 @@ class BookFrame(ctk.CTkFrame):
         if self.edit_callback:
             edit_btn = ctk.CTkButton(
                 button_frame,
-                text="✏️ Modifier",
+                text="✏️ Modify",
                 width=100,
                 command=lambda: self.edit_callback(self.book)
             )
@@ -175,31 +177,6 @@ class BookPage(ctk.CTkFrame):
         )
         add_btn.grid(row=0, column=3, padx=(5, 10), pady=10)
         
-        # # === ZONE D'AJOUT ===
-        # add_frame = ctk.CTkFrame(self)
-        # add_frame.grid(row=1, column=0, sticky="ew", padx=10, pady=5)
-        # add_frame.grid_columnconfigure(0, weight=2)
-        # add_frame.grid_columnconfigure(1, weight=1)
-        # add_frame.grid_columnconfigure(2, weight=1)
-        
-        # # Champs d'ajout
-        # self.title_entry = ctk.CTkEntry(add_frame, placeholder_text="Titre du livre")
-        # self.title_entry.grid(row=0, column=0, sticky="ew", padx=(10, 5), pady=10)
-        
-        # self.date_entry = ctk.CTkEntry(add_frame, placeholder_text="Date (YYYY-MM-DD)")
-        # self.date_entry.grid(row=0, column=1, sticky="ew", padx=5, pady=10)
-        
-        # self.price_entry = ctk.CTkEntry(add_frame, placeholder_text="Price (€)")
-        # self.price_entry.grid(row=0, column=2, sticky="ew", padx=5, pady=10)
-        
-        # # Bouton d'ajout
-        # add_btn = ctk.CTkButton(
-        #     add_frame,
-        #     text="➕ Ajouter",
-        #     command=self.add_book,
-        #     height=35
-        # )
-        # add_btn.grid(row=0, column=3, padx=(5, 10), pady=10)
         
         # === ZONE DE LISTE SCROLLABLE ===
         self.scroll_frame = ctk.CTkScrollableFrame(self, width=600)
