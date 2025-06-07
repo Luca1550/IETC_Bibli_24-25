@@ -38,7 +38,7 @@ class BookService:
                         title=title,
                         date=date,
                         price=price,
-                        id_collection = collection.id
+                        id_collection = collection.id if collection else None
                     ))
                 else:
                     raise Exception("Values are wrong.")
