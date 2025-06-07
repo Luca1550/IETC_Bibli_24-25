@@ -6,7 +6,7 @@ from .book_edit_page import BookEditPage
 
 class BookFrame(ctk.CTkFrame):
     """Frame pour afficher un livre individuel"""
-    def __init__(self, parent, book, delete_callback, edit_callback):
+    def __init__(self, parent, book:BookDTO, delete_callback, edit_callback):
         super().__init__(parent)
         
         self.book : BookDTO = book
@@ -99,7 +99,7 @@ class BookFrame(ctk.CTkFrame):
     def confirm_delete(self):
         """Confirmation avant suppression"""
         confirm_window = ctk.CTkToplevel(self)
-        confirm_window.title("Confirmer la suppression")
+        confirm_window.title("Confirm deletion")
         confirm_window.geometry("300x150")
         confirm_window.resizable(False, False)
         confirm_window.grab_set()  # Modal
