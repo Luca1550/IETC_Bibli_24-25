@@ -80,7 +80,6 @@ class BookEditPage(ctk.CTkToplevel):
         edit_theme_button = ctk.CTkButton(theme_frame, text="✏️", width=30, command=None)
         edit_theme_button.pack(side="right", padx=(5, 0))
         
-        # Ajoute d'autres champs ici si nécessaire (collection, auteurs, etc.)
         
         ctk.CTkButton(self, text="✅ Save", command=self.confirm_action).pack(pady=10)
         ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
