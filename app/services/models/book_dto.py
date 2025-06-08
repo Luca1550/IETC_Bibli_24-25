@@ -30,3 +30,18 @@ class BookDTO:
         self.collection = collection
         self.themes = themes
         self.authors = authors
+
+    def __eq__(self, other):
+        """
+        Compares two BookDTO objects for equality based on their ID.
+        arguments:
+            other (BookDTO): The other BookDTO object to compare with.
+        """
+        if isinstance(other, BookDTO):
+            return self.isbn == other.isbn
+
+    def __hash__(self):
+        """
+        Returns a hash value for the BookDTO object based on its ID.
+        """
+        return hash(self.isbn)
