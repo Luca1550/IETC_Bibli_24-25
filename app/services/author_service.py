@@ -38,6 +38,18 @@ class AuthorService:
         person = self.person_repo.get_by_id(author.id_person)
         return AuthorDTO(id_author=author.id, person=person)
     
+    def get_all(self):
+        authors=self.author_repo.get_all()
+        authors_dto = []
+        for author in authors:
+            authors_dto.append(
+                AuthorDTO(
+                    id_author=author.id,
+                    person=self.person_repo.get_by_id(author.id_person)
+                )
+            )
+        return authors_dto
+    
     def delete_author(self,id):
         """
         Deletes an author with the given name.
