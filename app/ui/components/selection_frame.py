@@ -25,7 +25,7 @@ class SelectionFrame(ctk.CTkToplevel, Generic[T]):
         self.focus_set()
         self.grab_set()
         self.lift()
-        self.title("")
+        self.title(" ")
         self.protocol("WM_DELETE_WINDOW", self.destroy)
 
         self.font=("default", 20)
