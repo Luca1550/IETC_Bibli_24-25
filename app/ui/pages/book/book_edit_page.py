@@ -46,7 +46,7 @@ class BookEditPage(ctk.CTkToplevel):
         self.collection_entry = ctk.CTkEntry(collection_frame, placeholder_text="Collection")
         self.collection_entry.pack(side="left", fill="x", expand=True)
         self.collection_entry.insert(0, str(self.book.collection.name))
-        edit_collection_button = ctk.CTkButton(collection_frame, text="✏️", width=30, command=self.update_book)
+        edit_collection_button = ctk.CTkButton(collection_frame, text="✏️", width=30, command=None)
         edit_collection_button.pack(side="right", padx=(5, 0))
         
         label_collection_entry = ctk.CTkLabel(self, text="Author", anchor="w")
@@ -57,7 +57,7 @@ class BookEditPage(ctk.CTkToplevel):
         self.author_entry.pack(side="left", fill="x", expand=True)
         author_names = ", ".join(" ".join([author.person.first_name, author.person.last_name]) for author in self.book.authors)
         self.author_entry.insert(0, str(author_names))
-        edit_author_button = ctk.CTkButton(author_frame, text="✏️", width=30, command=self.update_book)
+        edit_author_button = ctk.CTkButton(author_frame, text="✏️", width=30, command=None)
         edit_author_button.pack(side="right", padx=(5, 0))
         
         label_colleditor_entry = ctk.CTkLabel(self, text="Editor", anchor="w")
@@ -67,7 +67,7 @@ class BookEditPage(ctk.CTkToplevel):
         self.editor_entry = ctk.CTkEntry(editor_frame, placeholder_text="Editor")
         self.editor_entry.pack(side="left", fill="x", expand=True)
         self.editor_entry.insert(0, str(self.book.price))
-        edit_editor_button = ctk.CTkButton(editor_frame, text="✏️", width=30, command=self.update_book)
+        edit_editor_button = ctk.CTkButton(editor_frame, text="✏️", width=30, command=None)
         edit_editor_button.pack(side="right", padx=(5, 0))
         
         label_colltheme_entry = ctk.CTkLabel(self, text="Theme", anchor="w")
@@ -77,7 +77,7 @@ class BookEditPage(ctk.CTkToplevel):
         self.theme_entry = ctk.CTkEntry(theme_frame, placeholder_text="Theme")
         self.theme_entry.pack(side="left", fill="x", expand=True)
         self.theme_entry.insert(0, str(self.book.price))
-        edit_theme_button = ctk.CTkButton(theme_frame, text="✏️", width=30, command=self.update_book)
+        edit_theme_button = ctk.CTkButton(theme_frame, text="✏️", width=30, command=None)
         edit_theme_button.pack(side="right", padx=(5, 0))
         
         # Ajoute d'autres champs ici si nécessaire (collection, auteurs, etc.)
