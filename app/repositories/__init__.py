@@ -3,7 +3,6 @@ from .theme_repo import ThemeRepo
 from .collection_repo import CollectionRepo
 from .editor_repo import EditorRepo
 from .worker_repo import WorkerRepo
-from .login_repo import LoginRepo
 from .book_repo import BookRepo
 from .author_repo import AuthorRepo
 from .book_theme_repo import BookThemeRepo

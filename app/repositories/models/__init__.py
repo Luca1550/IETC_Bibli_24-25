@@ -4,8 +4,7 @@ from .theme import Theme
 from .collection import Collection
 from .editor import Editor
 from .author import Author
-from .worker import Worker
-from .login import Login  
+from .worker import Worker 
 from .book import Book
 from .book_theme import BookTheme
 from .book_editor import BookEditor
