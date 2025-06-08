@@ -108,31 +108,31 @@ class BookEditPage(ctk.CTkToplevel):
         except Exception as e :
                 PopUpMessage.pop_up(self,e)
         
-    # def update_book(self):
-    #     try:
-    #         title = self.title_entry.get().strip()
-    #         date_str = self.date_entry.get().strip()
-    #         price = float(self.price_entry.get().strip())
+    def update_book(self):
+        try:
+            title = self.title_entry.get().strip()
+            date_str = self.date_entry.get().strip()
+            price = float(self.price_entry.get().strip())
 
-    #         from datetime import datetime
-    #         date = datetime.strptime(date_str, "%Y-%m-%d")
+            from datetime import datetime
+            date = datetime.strptime(date_str, "%Y-%m-%d")
             
-    #         # Tu peux remplacer ici les valeurs None par les vraies (auteurs, collection...)
-    #         updated = self.book_service.update_by_parameter(
-    #             isbn=self.book.isbn,
-    #             title=title,
-    #             date=date,
-    #             price=price,
-    #             collection=None,
-    #             authors=[],
-    #             themes=[],
-    #             editors=[]
-    #         )
+            # Tu peux remplacer ici les valeurs None par les vraies (auteurs, collection...)
+            updated = self.book_service.update_by_parameter(
+                isbn=self.book.isbn,
+                title=title,
+                date=date,
+                price=price,
+                collection=None,
+                authors=[],
+                themes=[],
+                editors=[]
+            )
 
-    #         PopUpMessage.pop_up(self, "✅ Book updated successfully")
-    #         if self.on_success:
-    #             self.on_success()  # callback pour rafraîchir la liste
-    #         self.destroy()
+            PopUpMessage.pop_up(self, "✅ Book updated successfully")
+            if self.on_success:
+                self.on_success()  # callback pour rafraîchir la liste
+            self.destroy()
 
-    #     except Exception as e:
-    #         PopUpMessage.pop_up(self, f"❌ Error: {str(e)}")
+        except Exception as e:
+            PopUpMessage.pop_up(self, f"❌ Error: {str(e)}")
