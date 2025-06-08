@@ -60,8 +60,8 @@ class BookEditPage(ctk.CTkToplevel):
         edit_author_button = ctk.CTkButton(author_frame, text="✏️", width=30, command=None)
         edit_author_button.pack(side="right", padx=(5, 0))
         
-        label_colleditor_entry = ctk.CTkLabel(self, text="Editor", anchor="w")
-        label_colleditor_entry.pack(fill="x", padx=20)
+        label_editor_entry = ctk.CTkLabel(self, text="Editor", anchor="w")
+        label_editor_entry.pack(fill="x", padx=20)
         editor_frame = ctk.CTkFrame(self, fg_color="transparent")
         editor_frame.pack(fill="x", padx=20)
         self.editor_entry = ctk.CTkEntry(editor_frame, placeholder_text="Editor")
@@ -70,8 +70,8 @@ class BookEditPage(ctk.CTkToplevel):
         edit_editor_button = ctk.CTkButton(editor_frame, text="✏️", width=30, command=None)
         edit_editor_button.pack(side="right", padx=(5, 0))
         
-        label_colltheme_entry = ctk.CTkLabel(self, text="Theme", anchor="w")
-        label_colltheme_entry.pack(fill="x", padx=20)
+        label_theme_entry = ctk.CTkLabel(self, text="Theme", anchor="w")
+        label_theme_entry.pack(fill="x", padx=20)
         theme_frame = ctk.CTkFrame(self, fg_color="transparent")
         theme_frame.pack(fill="x", padx=20)
         self.theme_entry = ctk.CTkEntry(theme_frame, placeholder_text="Theme")
