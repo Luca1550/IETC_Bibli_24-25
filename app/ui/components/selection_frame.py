@@ -44,6 +44,14 @@ class SelectionFrame(ctk.CTkToplevel, Generic[T]):
         self.all_items_widgets : dict[str, ctk.CTkFrame] = {}  
         self.selected_items_widgets : dict[str, ctk.CTkFrame] = {}  
 
+        self.selected_items_parent_frame = ctk.CTkFrame(self, height=150, border_color="#1f6aa5", border_width=3)
+        self.selected_items_parent_frame.pack(fill="both", padx="15", expand=True, pady="5")
+        self.selected_items_parent_frame.pack_propagate(False)
+        self.selected_items_parent_label = ctk.CTkLabel(self.selected_items_parent_frame, text=f"Selected items")
+        self.selected_items_parent_label.pack(fill="x", padx="15", pady="5")
+        self.selected_items_frame = ctk.CTkScrollableFrame(self.selected_items_parent_frame)
+        self.selected_items_frame.pack(fill="both", padx="15", pady="10", expand=True)
+
         self.all_items_parent_frame = ctk.CTkFrame(self, border_color="#1f6aa5", border_width=3)
         self.all_items_parent_frame.pack(fill="both", pady="5", padx="15", expand=True)
         self.divider = ctk.CTkFrame(self.all_items_parent_frame, height=2, fg_color="transparent")
@@ -53,14 +61,6 @@ class SelectionFrame(ctk.CTkToplevel, Generic[T]):
         self.search_entry.bind("<KeyRelease>", lambda event: self.after(30, self._filter_all_items))
         self.all_items_frame = ctk.CTkScrollableFrame(self.all_items_parent_frame)
         self.all_items_frame.pack(fill="both", padx="15", pady="10", expand=True)
-
-        self.selected_items_parent_frame = ctk.CTkFrame(self, height=150, border_color="#1f6aa5", border_width=3)
-        self.selected_items_parent_frame.pack(fill="both", padx="15", expand=True, pady="5")
-        self.selected_items_parent_frame.pack_propagate(False)
-        self.selected_items_parent_label = ctk.CTkLabel(self.selected_items_parent_frame, text=f"Selected items")
-        self.selected_items_parent_label.pack(fill="x", padx="15", pady="5")
-        self.selected_items_frame = ctk.CTkScrollableFrame(self.selected_items_parent_frame)
-        self.selected_items_frame.pack(fill="both", padx="15", pady="10", expand=True)
 
         self.confirm_button = ctk.CTkButton(self, text="Confirm", command=self._close)
         self.confirm_button.pack(fill="x", padx="15", pady="5")
@@ -91,7 +91,7 @@ class SelectionFrame(ctk.CTkToplevel, Generic[T]):
                 label = ctk.CTkLabel(row_frame, text=self.display_model(item))
                 label.pack(side="left", padx=10)
 
-                add_button = ctk.CTkButton(row_frame, text="Add", width=30, command=lambda i=item: self._add_selection(i))
+                add_button = ctk.CTkButton(row_frame, text="➕", width=30, command=lambda i=item: self._add_selection(i))
                 add_button.pack(side="right", padx="2")
 
                 self.selected_items_widgets[item] = row_frame 
@@ -138,7 +138,7 @@ class SelectionFrame(ctk.CTkToplevel, Generic[T]):
                 label = ctk.CTkLabel(row_frame, text=self.display_model(item))
                 label.pack(side="left", padx=10)
 
-                delete_button = ctk.CTkButton(row_frame, text="Delete", width=30, fg_color="red", command=lambda i=item: self._delete_selection(i))
+                delete_button = ctk.CTkButton(row_frame, text="➖", width=30, fg_color="red", command=lambda i=item: self._delete_selection(i))
                 delete_button.pack(side="right", padx="2")
 
                 self.all_items_widgets[item] = row_frame  
