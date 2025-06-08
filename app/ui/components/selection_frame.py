@@ -1,13 +1,13 @@
 import customtkinter as ctk
 from typing import TypeVar, Generic
 
-T = TypeVar("T")
 
-class SelectionFrame(ctk.CTkToplevel, Generic[T]):
+class SelectionFrame(ctk.CTkToplevel):
     """
     A custom selection frame that allows users to select items from a list.
     It displays all items and allows users to add or remove selected items.
     It also provides a search functionality to filter items based on specified attributes.
+    
     arguments:
     - parent: The parent widget for this frame.
     - title: The title of the selection frame.
@@ -17,8 +17,11 @@ class SelectionFrame(ctk.CTkToplevel, Generic[T]):
     - attributes_to_search: A list of attributes to search for filtering items.
     - entry_to_update: An optional entry widget to update with selected items.
     - attributes_to_entry: An optional list of attributes to display in the entry widget.
+
+    **Important Warning:**
+    This component needs to use __eq__ and __hash__ methods to work properly with personalized objects.
     """
-    def __init__(self, parent, title, all_items : list[T] , selected_items : list[T],  display_model_method, attributes_to_search, entry_to_update=None, attributes_to_entry = None, **kwargs):
+    def __init__(self, parent, title, all_items : list , selected_items : list,  display_model_method, attributes_to_search, entry_to_update=None, attributes_to_entry = None, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.geometry("400x535")
@@ -35,9 +38,9 @@ class SelectionFrame(ctk.CTkToplevel, Generic[T]):
         label_title = ctk.CTkLabel(self, text=f"{title}", height=50, font=self.font)
         label_title.pack(fill="x", padx="15" )  
 
-        self.all_items : list[T] = all_items
-        self.old_selected_items : list[T] = selected_items
-        self.selected_items : list[T] = list(selected_items) 
+        self.all_items : list = all_items
+        self.externe_selected_items : list = selected_items
+        self.selected_items : list = list(selected_items) 
         self.display_model = display_model_method
         self.attributes_to_search = attributes_to_search
 
@@ -75,10 +78,11 @@ class SelectionFrame(ctk.CTkToplevel, Generic[T]):
         search_value = self.search_entry.get().lower()
 
         new_research_values = [
-            option for option in self.all_items 
-            if option not in self.selected_items and 
-            any(search_value in str(getattr(option, attr, "")).lower() for attr in self.attributes_to_search)
-        ] if search_value else [option for option in self.all_items if option not in self.selected_items]
+            item for item in self.all_items
+                if item not in self.selected_items and (
+                not search_value or any(search_value in str(search_func(item)).lower() for search_func in self.attributes_to_search)
+                )
+        ]
 
         for item in new_research_values:
             if item in self.selected_items_widgets:
@@ -150,11 +154,11 @@ class SelectionFrame(ctk.CTkToplevel, Generic[T]):
     def _close(self): 
         """
         Closes the selection frame.
-        If the selected items have changed, it updates the old_selected_items list and the entry_to_update.
+        If the selected items have changed, it updates the externe_selected_items list and the entry_to_update.
         """
-        if self.old_selected_items != self.selected_items:
-            self.old_selected_items[:] = self.selected_items
+        if self.externe_selected_items != self.selected_items:
+            self.externe_selected_items[:] = self.selected_items
         if self.entry_to_update:
             self.entry_to_update.delete(0, "end")
-            self.entry_to_update.insert(0, str(", ".join(" ".join(str(getattr(item, attr)) for attr in (self.attributes_to_search if self.attributes_to_entry is None else self.attributes_to_entry)) for item in self.selected_items)))
+            self.entry_to_update.insert(0, str(", ".join(self.display_model(item) if self.attributes_to_entry is None else self.attributes_to_entry(item) for item in self.selected_items)))
         self.destroy()

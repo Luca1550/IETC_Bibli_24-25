@@ -15,3 +15,18 @@ class Collection(Base):
         """
         super().__init__(id)
         self.name = name
+
+    def __eq__(self, other):
+        """
+        Compares two Collection objects for equality based on their ID.
+        arguments:
+            other (Collection): The other Collection object to compare with.
+        """
+        if isinstance(other, Collection):
+            return self.id == other.id
+
+    def __hash__(self):
+        """
+        Returns a hash value for the Collection object based on its ID.
+        """
+        return hash(self.id)
