@@ -9,3 +9,4 @@ from .login_repo import LoginRepo
 from .book_theme_repo import BookThemeRepo
 from .book_editor_repo import BookEditorRepo
 from .book_author_repo import BookAuthorRepo
+from .exemplar_repo import ExemplarRepo 
