@@ -47,3 +47,12 @@ class ExemplarService:
             raise Exception(f"Invalid status")
         if not location:
             raise Exception(f"Location cannot be empty.")
+    
+    def get_by_id(self, id:int):
+        """
+        Retrieves an exemplar by its ID.
+        """
+        exemplar = self._exemplar_repo.get_by_id(id)
+        if isinstance(exemplar, Exemplar):
+            return exemplar
+        raise Exception("Not found")
