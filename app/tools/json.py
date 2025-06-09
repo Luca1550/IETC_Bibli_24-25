@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+from enum import Enum
 
 import repositories.models 
 
@@ -21,6 +22,8 @@ class Encoder(json.JSONEncoder):
         """
         if isinstance(obj, datetime):
             return obj.isoformat()
+        elif isinstance(obj, Enum):
+            return {"__enum__": obj.__class__.__name__, "value": obj.value}  
         elif hasattr(obj, '__dict__'):
             data = {
                 key: value for key, value in obj.__dict__.items() 
@@ -50,6 +53,10 @@ class Decoder:
         Returns:
             object: The corresponding object based on the '__type__' key.
         """
+        if '__enum__' in dct:
+            enum_class = globals().get(dct['__enum__']) 
+            if enum_class and issubclass(enum_class, Enum):
+                return enum_class(dct['value'])
         if '__type__' in dct:
             type_name = dct.pop('__type__')
             model = Decoder._models_dict.get(type_name)
