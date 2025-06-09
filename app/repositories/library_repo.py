@@ -16,7 +16,7 @@ class LibraryRepo:
         Loads existing libraries from the JSON file into the library_json attribute.
         """
         self.library_json : list[Library] = JsonStorage.load_all(self.PATH_LIBRARY_JSON)
-        
+
     def _save_all(self):
         """
         Saves all libraries to the JSON file.
@@ -45,31 +45,18 @@ class LibraryRepo:
             return True
         return False
     
-    def update_library(self, id:int,name:str,fine_per_day:float,subscribe_amout:float,limit_borrow:int,borrow_price_with_sub:float,borrow_price_without_sub:float,borrow_delay:int,url_logo:str): 
+    def update_library(self,library: Library):  
         """
         Updates an existing library in the repository.
         Args:
-            id (int): The ID of the library to update.
-            name (str): The new name of the library.
-            fine_per_day (float): The new fine per day for overdue items.
-            subscribe_amout (float): The new subscription amount for the library.
-            limit_borrow (int): The new maximum number of items that can be borrowed at once.
-            borrow_price_with_sub (float): The new borrowing price for subscribers.
-            borrow_price_without_sub (float): The new borrowing price for non-subscribers.
-            borrow_delay (int): The new allowed borrowing delay in days.
-            url_logo (str): The new URL to the library's logo image.
-
+            library (Library): The Library object containing the updated values.
+        Returns:
+            bool: True if the library was updated successfully, False otherwise.
         """
-        for library in self.library_json:
-            if library.id == id:
-                library.name = name
-                library.fine_per_day = fine_per_day
-                library.subscribe_amout = subscribe_amout
-                library.limit_borrow = limit_borrow
-                library.borrow_price_with_sub = borrow_price_with_sub
-                library.borrow_price_without_sub = borrow_price_without_sub
-                library.borrow_delay = borrow_delay
-                library.url_logo = url_logo
-                self._save_all()  
-                return True
+        for i, lib in enumerate(self.library_json):
+            if isinstance(lib, dict):
+                    if lib.get('id') == library.id:
+                        self.library_json[i] = library.__dict__  
+                        self._save_all()
+                        return True
         return False

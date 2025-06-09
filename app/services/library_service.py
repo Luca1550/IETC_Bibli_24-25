@@ -45,7 +45,7 @@ class LibraryService:
                 raise Exception("Invalid subscription amount: it must be a non-negative numeric value.")
             if not limit_borrow >= 0 or not isinstance(limit_borrow, (int)):
                 raise Exception("Invalid limit borrow: it must be a non-negative numeric value.")
-            if not borrow_price_with_sub >= 0 or not borrow_price_with_sub(fine_per_day, (int, float)):
+            if not borrow_price_with_sub >= 0 or not isinstance(borrow_price_with_sub, (int, float)):
                 raise Exception("Invalid borrow price with subscription: it must be a non-negative numeric value.")
             if not borrow_price_without_sub >= 0 or not isinstance(borrow_price_without_sub, (int, float)):
                 raise Exception("Invalid borrow price without subscription: it must be a non-negative numeric value.")
@@ -91,6 +91,7 @@ class LibraryService:
         Returns:
             bool: True if the library was updated successfully, False otherwise.
         """
+        print("Updating with:", id, name, fine_per_day, subscribe_amout, limit_borrow, borrow_price_with_sub, borrow_price_without_sub, borrow_delay, url_logo)
         try:
             if not fine_per_day >= 0 or  not isinstance(fine_per_day, (int, float)):
                 raise Exception("Invalid fine per day: it must be a non-negative numeric value.")
@@ -98,7 +99,7 @@ class LibraryService:
                 raise Exception("Invalid subscription amount: it must be a non-negative numeric value.")
             if not limit_borrow >= 0 or not isinstance(limit_borrow, (int)):
                 raise Exception("Invalid limit borrow: it must be a non-negative numeric value.")
-            if not borrow_price_with_sub >= 0 or not borrow_price_with_sub(fine_per_day, (int, float)):
+            if not borrow_price_with_sub >= 0 or not isinstance(borrow_price_with_sub, (int, float)):
                 raise Exception("Invalid borrow price with subscription: it must be a non-negative numeric value.")
             if not borrow_price_without_sub >= 0 or not isinstance(borrow_price_without_sub, (int, float)):
                 raise Exception("Invalid borrow price without subscription: it must be a non-negative numeric value.")
@@ -109,11 +110,15 @@ class LibraryService:
             if not isinstance(url_logo, str) or not url_pattern.match(url_logo):
                 raise ValueError("Invalid URL for logo: it must be a valid URL.")
             
-            resultata = self._library_repo.update_library(id, name, fine_per_day, subscribe_amout, limit_borrow, borrow_price_with_sub, borrow_price_without_sub, borrow_delay, url_logo)
-            if resultata:
-                return resultata
+            updated_library = Library(id=id,name=name,fine_per_day=fine_per_day,subscribe_amout=subscribe_amout,limit_borrow=limit_borrow,borrow_price_with_sub=borrow_price_with_sub,borrow_price_without_sub=borrow_price_without_sub,borrow_delay=borrow_delay,url_logo=url_logo)
+            
+
+            result = self._library_repo.update_library(updated_library)
+            if result:
+                return True
             else:
-                raise Exception("Failed to update library to repository")
+                raise Exception("Failed to update library in repository")
                 
         except Exception as e:
             return f"🛑 Error [{e}]"
+        
