@@ -2,6 +2,7 @@ from .person_repo import PersonRepo
 from .theme_repo import ThemeRepo
 from .collection_repo import CollectionRepo
 from .editor_repo import EditorRepo
+from .library_repo import LibraryRepo
 from .worker_repo import WorkerRepo
 from .book_repo import BookRepo
 from .author_repo import AuthorRepo
@@ -10,3 +11,4 @@ from .member_repo import MemberRepo
 from .book_theme_repo import BookThemeRepo
 from .book_editor_repo import BookEditorRepo
 from .book_author_repo import BookAuthorRepo
+from .exemplar_repo import ExemplarRepo 

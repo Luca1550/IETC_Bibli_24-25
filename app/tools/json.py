@@ -1,8 +1,11 @@
 import json
 import os
 from datetime import datetime
+from enum import Enum
+import enums
 
 import repositories.models 
+
 
 
 class Encoder(json.JSONEncoder):
@@ -21,6 +24,11 @@ class Encoder(json.JSONEncoder):
         """
         if isinstance(obj, datetime):
             return obj.isoformat()
+        elif isinstance(obj, Enum):  
+            return {
+                "__enum__": obj.__class__.__name__,  
+                "value": obj.value 
+            }
         elif hasattr(obj, '__dict__'):
             data = {
                 key: value for key, value in obj.__dict__.items() 
@@ -40,6 +48,12 @@ class Decoder:
     if hasattr(obj, '__dict__') and isinstance(obj, type)
     }
 
+    _enums_dict = {
+        name: obj
+    for name, obj in enums.__dict__.items()
+    if hasattr(obj, '__dict__') and isinstance(obj, type)
+    }
+
     @staticmethod
     def decoder_hook(dct):
         """
@@ -50,6 +64,11 @@ class Decoder:
         Returns:
             object: The corresponding object based on the '__type__' key.
         """
+        if '__enum__' in dct:
+                    type_name = dct.pop('__enum__')
+                    model = Decoder._enums_dict.get(type_name)
+                    if model is not None:
+                        return model(**dct)
         if '__type__' in dct:
             type_name = dct.pop('__type__')
             model = Decoder._models_dict.get(type_name)
