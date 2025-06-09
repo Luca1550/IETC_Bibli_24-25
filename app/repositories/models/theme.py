@@ -15,3 +15,18 @@ class Theme(Base):
         """
         super().__init__(id)
         self.name = name
+
+    def __eq__(self, other):
+        """
+        Compares two Theme objects for equality based on their ID.
+        arguments:
+            other (Theme): The other Theme object to compare with.
+        """
+        if isinstance(other, Theme):
+            return self.id == other.id
+
+    def __hash__(self):
+        """
+        Returns a hash value for the Theme object based on its ID.
+        """
+        return hash(self.id)

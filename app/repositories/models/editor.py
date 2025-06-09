@@ -15,3 +15,18 @@ class Editor(Base):
         """
         super().__init__(id)
         self.name = name
+
+    def __eq__(self, other):
+        """
+        Compares two Editor objects for equality based on their ID.
+        arguments:
+            other (Editor): The other Editor object to compare with.
+        """
+        if isinstance(other, Editor):
+            return self.id == other.id
+
+    def __hash__(self):
+        """
+        Returns a hash value for the Editor object based on its ID.
+        """
+        return hash(self.id)
