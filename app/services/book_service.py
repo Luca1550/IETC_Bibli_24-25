@@ -107,8 +107,9 @@ class BookService:
         
     def update_by_parameter(self,isbn:str,title:str,date:datetime,price:float,collection:Collection,authors:list[AuthorDTO],themes:list[Theme],editors:list[Editor]):
         try:
-            book:BookDTO = self.get_by_isbn(isbn)
-            if not isinstance(book,BookDTO):
+            book:Book = self._book_repo.get_by_isbn(isbn)
+            book_dto: BookDTO = self.get_by_isbn(isbn)
+            if not isinstance(book,Book):
                 raise Exception(f"Book with ISBN: {isbn} was not found.")
             if self._check_book_value(isbn=isbn,title=title,date=date,price=price,authors=authors,themes=themes,editors=editors):
                 if title is not None:
@@ -117,26 +118,28 @@ class BookService:
                     book.date = date
                 if price is not None:
                     book.price = price
-                if collection is not None:
+                if collection is None:
+                    book.id_collection = -1
+                else:
                     book.id_collection = collection.id
                 
                 
                 self._book_repo.update_book(book)
                 
                 if authors is not None:
-                    for i in enumerate(book.authors):
+                    for i in enumerate(book_dto.authors):
                         self._book_author_repo.delete_book_author(isbn)
                     for author in authors:
                         self._book_author_repo.add_book_author(isbn, author.id_author)
                 
                 if themes is not None:
-                    for i in enumerate(book.themes):
+                    for i in enumerate(book_dto.themes):
                         self._book_theme_repo.delete_book_theme(isbn)
                     for theme in themes:
                         self._book_theme_repo.add_book_theme(isbn, theme.id)
                 
                 if editors is not None:
-                    for i in enumerate(book.editors):
+                    for i in enumerate(book_dto.editors):
                         self._book_editor_repo.delete_book_editor(isbn)
                     for editor in editors:
                         self._book_editor_repo.add_book_editor(isbn, editor.id)

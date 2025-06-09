@@ -49,11 +49,12 @@ class BookEditPage(ctk.CTkToplevel):
         collection_frame.pack(fill="x", padx=20)
         self.collection_entry = ctk.CTkEntry(collection_frame, placeholder_text="Collection")
         self.collection_entry.pack(side="left", fill="x", expand=True)
-        self.collection_entry.insert(0, str(self.book.collection.name))
+        self.collection_entry.insert(0, str(self.book.collection.name if self.book.collection else "No collection"))
+        self.selected_collection = [self.book.collection] if self.book.collection else []
         edit_collection_button = ctk.CTkButton(collection_frame, text="✏️", width=30, command=lambda:self.open_selection_frame(
             title="Collection update",
             all_items=self.collection_service.get_all(),
-            selected_items=[self.book.collection],
+            selected_items=self.selected_collection,
             display_model_method=lambda collection: f"{collection.name}",
             attributes_to_search=[lambda collection: collection.name],
             entry_to_update=self.collection_entry
@@ -122,8 +123,6 @@ class BookEditPage(ctk.CTkToplevel):
         ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
         
     def open_selection_frame(self,title,all_items,selected_items,display_model_method,attributes_to_search,entry_to_update,attributes_to_entry=None):
-        print(all_items)
-        print(selected_items)
         selection_frame = SelectionFrame(
             self,
             title,
@@ -142,20 +141,23 @@ class BookEditPage(ctk.CTkToplevel):
         If the book is added successfully, the page is closed.
         If there is an error, a pop-up message is displayed with the error details.
         """
-        try: 
-            # if len(self.book.collection)>1:
-            #     raise Exception ("A book can only have one collection.")
+        try:
+            if not self.selected_collection:
+                if len(self.selected_collection)>1:
+                    raise Exception ("A book can only have one collection.")
             self.book_service.update_by_parameter(
                 isbn=self.isbn_entry.get(),
                 title=self.title_entry.get(),
                 date=self.date_entry.get(),
                 price=self.price_entry.get(),
-                collection=self.book.collection,
+                collection=self.selected_collection[0] if self.selected_collection else None,
                 authors=self.book.authors,
                 themes=self.book.themes,
                 editors=self.book.editors
             )
             
+            if self.on_success:
+                self.on_success()
             PopUpMessage.pop_up(self,f"Book updated ✅")
             self.destroy()
         except Exception as e :
