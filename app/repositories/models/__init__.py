@@ -12,3 +12,5 @@ from .book_theme import BookTheme
 from .book_editor import BookEditor
 from .book_author import BookAuthor
 from .exemplar import Exemplar
+from .reservation import Reservation
+
