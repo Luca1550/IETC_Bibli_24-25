@@ -194,6 +194,7 @@ class BookPage(ctk.CTkFrame):
         try:
             self.books = self.book_service.get_all()
             self.filtered_books = self.books.copy()
+            print(self.books[0].__dict__,"dans le load_books")
             self.display_books()
             self.update_info()
         except Exception as e:
@@ -226,8 +227,10 @@ class BookPage(ctk.CTkFrame):
             book_frame.pack(fill="x", padx=10, pady=5)
     
     def edit_book(self,book):
-        BookEditPage(book=book, on_success=self.refresh)
-    
+        edit_page = BookEditPage(book=book,book_service=self.book_service,on_success=self.refresh)
+        self.wait_window(edit_page)
+        self.refresh()
+        
     def add_book(self):
         """Ajoute un nouveau livre"""
         title = self.title_entry.get().strip()

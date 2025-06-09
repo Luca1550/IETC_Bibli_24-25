@@ -4,11 +4,11 @@ from services.models import BookDTO
 from ui.components import PopUpMessage,SelectionFrame
 
 class BookEditPage(ctk.CTkToplevel):
-    def __init__(self, book:BookDTO, on_success=None):
+    def __init__(self, book:BookDTO, book_service: BookService ,on_success=None):
         super().__init__()
         self.book : BookDTO = book
         self.on_success = on_success  # callback pour rafraîchir BookPage
-        self.book_service = BookService()
+        self.book_service = book_service
         self.editor_service=EditorService()
         self.author_service=AuthorService()
         self.theme_service=ThemeService()
@@ -145,6 +145,7 @@ class BookEditPage(ctk.CTkToplevel):
             if not self.selected_collection:
                 if len(self.selected_collection)>1:
                     raise Exception ("A book can only have one collection.")
+            print("ou pas")
             self.book_service.update_by_parameter(
                 isbn=self.isbn_entry.get(),
                 title=self.title_entry.get(),
@@ -156,8 +157,9 @@ class BookEditPage(ctk.CTkToplevel):
                 editors=self.book.editors
             )
             
-            if self.on_success:
-                self.on_success()
+            print("MAJ effectuée")
+            # if self.on_success:
+            #     self.on_success()
             PopUpMessage.pop_up(self,f"Book updated ✅")
             self.destroy()
         except Exception as e :
