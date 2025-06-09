@@ -1,4 +1,5 @@
-from repositories.models import Editor,Collection,Theme,Author
+from repositories.models import Editor,Collection,Theme
+from services.models import AuthorDTO
 import datetime
 
 class BookDTO:
@@ -8,7 +9,7 @@ class BookDTO:
     """
     def __init__(self,isbn:str,title:str,date:datetime,price:float,
                 editors:list[Editor],collection:Collection,
-                themes:list[Theme],authors:list[Author]):
+                themes:list[Theme],authors:list[AuthorDTO]):
         """
         Initializes a BookDTO instance with the provided parameters.
         :param isbn: ISBN of the book.
@@ -29,3 +30,18 @@ class BookDTO:
         self.collection = collection
         self.themes = themes
         self.authors = authors
+
+    def __eq__(self, other):
+        """
+        Compares two BookDTO objects for equality based on their ID.
+        arguments:
+            other (BookDTO): The other BookDTO object to compare with.
+        """
+        if isinstance(other, BookDTO):
+            return self.isbn == other.isbn
+
+    def __hash__(self):
+        """
+        Returns a hash value for the BookDTO object based on its ID.
+        """
+        return hash(self.isbn)

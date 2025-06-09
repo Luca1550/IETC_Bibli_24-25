@@ -1,6 +1,7 @@
 from repositories import BookRepo,BookThemeRepo,BookEditorRepo,BookAuthorRepo,CollectionRepo
 from repositories.models import Book,Theme,Author,Editor,Collection
 from .models import BookDTO,AuthorDTO
+from services import AuthorService
 import datetime
 
 class BookService:
@@ -15,6 +16,7 @@ class BookService:
         self._book_editor_repo = BookEditorRepo()
         self._book_author_repo = BookAuthorRepo()
         self._collection_repo = CollectionRepo()
+        self._author_service = AuthorService()
     
     def add_book(self,isbn:str,title:str,date:datetime,price:float,collection:Collection,authors:list[AuthorDTO],themes:list[Theme],editors:list[Editor]):
         """
@@ -38,7 +40,7 @@ class BookService:
                         title=title,
                         date=date,
                         price=price,
-                        id_collection = collection.id
+                        id_collection = collection.id if collection is not None else 0
                     ))
                 else:
                     raise Exception("Values are wrong.")
@@ -71,6 +73,9 @@ class BookService:
             collection = self._collection_repo.get_by_id(book.id_collection)
             
             authors = self._book_author_repo.get_author_by_isbn(book.isbn)
+            author_dto:list[AuthorDTO] = []
+            for author in authors:
+                author_dto.append(self._author_service.get_by_id(author.id))
             editors = self._book_editor_repo.get_editors_by_isbn(book.isbn)
             themes = self._book_theme_repo.get_themes_by_isbn(book.isbn)
             
@@ -81,7 +86,7 @@ class BookService:
                 price=book.price,
                 editors=editors,
                 themes=themes,
-                authors=authors,
+                authors=author_dto,
                 collection=collection
             )
             
@@ -105,7 +110,7 @@ class BookService:
             book:Book = self._book_repo.get_by_isbn(isbn)
             if not isinstance(book,Book):
                 raise Exception(f"Book with ISBN: {isbn} was not found.")
-            if self._check_book_value_test(title,date,price,authors,themes,editors):
+            if self._check_book_value(isbn=isbn,title=title,date=date,price=price,authors=authors,themes=themes,editors=editors):
                 if title is not None:
                     book.title = title
                 if date is not None:
@@ -114,6 +119,8 @@ class BookService:
                     book.price = price
                 if collection is not None:
                     book.id_collection = collection.id
+                
+                old_editor = self._book_editor_repo.get_editors_by_isbn(isbn)
                 
                 self._book_repo.update_book(book)
                 
@@ -128,27 +135,13 @@ class BookService:
                         self._book_theme_repo.add_book_theme(isbn, theme.id)
                 
                 if editors is not None:
-                    self._book_editor_repo.delete_book_editor(isbn)
+                    for i in old_editor:
+                        self._book_editor_repo.delete_book_editor(isbn)
                     for editor in editors:
                         self._book_editor_repo.add_book_editor(isbn, editor.id)
                     
         except Exception as e:
             raise Exception(f"🛑 Error {e}")
-        
-    def _check_book_value_test(self, title, date, price, authors, themes, editors):
-        if title is not None and not title.strip():
-            raise Exception("Title cannot be empty.")
-        if date is not None and not isinstance(date, datetime.datetime):
-            raise Exception("Must include a valid date.")
-        if authors is not None and not authors:
-            raise Exception("At least one author is required if modifying authors.")
-        if editors is not None and not editors:
-            raise Exception("At least one editor is required if modifying editors.")
-        if themes is not None and not themes:
-            raise Exception("At least one theme is required if modifying themes.")
-        if price is not None and price <= 0:
-            raise Exception("Books aren't free.")
-        return True
         
     def delete_book(self,isbn):
         """
@@ -179,7 +172,7 @@ class BookService:
             raise Exception("Invalid ISBN. must be exactly 13 characters long.")
         if not title.strip():
             raise Exception("Title cannot be empty.")
-        if not isinstance(date, datetime.datetime): #datetime alone doesn't work. It calls the class not the method. need to add .datetime.
+        if not date:
             raise Exception ("Must include a valid date.")
         if not authors:
             raise Exception("At least one author is required.")
@@ -187,6 +180,6 @@ class BookService:
             raise Exception("At least one editor is required.")
         if not themes:
             raise Exception("At least on theme is required.")
-        if not price>0:
+        if not price>0.00:
             raise Exception("Books aren't free.")
         return True

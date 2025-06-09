@@ -5,9 +5,10 @@ from .collection import Collection
 from .editor import Editor
 from .library import Library
 from .author import Author
-from .worker import Worker
-from .login import Login  
+from .worker import Worker 
+from .login import Login
 from .book import Book
 from .book_theme import BookTheme
 from .book_editor import BookEditor
 from .book_author import BookAuthor
+from .exemplar import Exemplar
