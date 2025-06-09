@@ -53,9 +53,9 @@ class BookEditPage(ctk.CTkToplevel):
         edit_collection_button = ctk.CTkButton(collection_frame, text="✏️", width=30, command=lambda:self.open_selection_frame(
             title="Collection update",
             all_items=self.collection_service.get_all(),
-            selected_items=self.book.collection,
+            selected_items=[self.book.collection],
             display_model_method=lambda collection: f"{collection.name}",
-            attributes_to_search=["name"],
+            attributes_to_search=[lambda collection: collection.name],
             entry_to_update=self.collection_entry
         ))
         edit_collection_button.pack(side="right", padx=(5, 0))
@@ -72,8 +72,11 @@ class BookEditPage(ctk.CTkToplevel):
             title="Author update",
             all_items=self.author_service.get_all(),
             selected_items=self.book.authors,
-            display_model_method=lambda author: f"{author.person.first_name},{author.person.last_name}",
-            attributes_to_search=["person"],
+            display_model_method=lambda author: f"{author.person.first_name} {author.person.last_name}",
+            attributes_to_search=[
+                lambda author: author.person.first_name,
+                lambda author: author.person.last_name
+                ],
             entry_to_update=self.author_entry
         ))
         edit_author_button.pack(side="right", padx=(5, 0))
@@ -91,7 +94,7 @@ class BookEditPage(ctk.CTkToplevel):
             all_items=self.editor_service.get_all(),
             selected_items=self.book.editors,
             display_model_method=lambda editor: f"{editor.name}",
-            attributes_to_search=["name"],
+            attributes_to_search=[lambda editor: {editor.name}],
             entry_to_update=self.editor_entry
         ))
         edit_editor_button.pack(side="right", padx=(5, 0))
@@ -109,7 +112,7 @@ class BookEditPage(ctk.CTkToplevel):
             all_items=self.theme_service.get_all(),
             selected_items=self.book.themes,
             display_model_method=lambda theme: f"{theme.name}",
-            attributes_to_search=["name"],
+            attributes_to_search=[lambda theme: theme.name],
             entry_to_update=self.theme_entry
         ))
         edit_theme_button.pack(side="right", padx=(5, 0))
@@ -140,6 +143,8 @@ class BookEditPage(ctk.CTkToplevel):
         If there is an error, a pop-up message is displayed with the error details.
         """
         try: 
+            # if len(self.book.collection)>1:
+            #     raise Exception ("A book can only have one collection.")
             self.book_service.update_by_parameter(
                 isbn=self.isbn_entry.get(),
                 title=self.title_entry.get(),
@@ -154,33 +159,6 @@ class BookEditPage(ctk.CTkToplevel):
             PopUpMessage.pop_up(self,f"Book updated ✅")
             self.destroy()
         except Exception as e :
-                PopUpMessage.pop_up(self,e)
+                PopUpMessage.pop_up(self,str(e).lower())
         
-    def update_book(self):
-        try:
-            title = self.title_entry.get().strip()
-            date_str = self.date_entry.get().strip()
-            price = float(self.price_entry.get().strip())
-
-            from datetime import datetime
-            date = datetime.strptime(date_str, "%Y-%m-%d")
-            
-            # Tu peux remplacer ici les valeurs None par les vraies (auteurs, collection...)
-            updated = self.book_service.update_by_parameter(
-                isbn=self.book.isbn,
-                title=title,
-                date=date,
-                price=price,
-                collection=None,
-                authors=[],
-                themes=[],
-                editors=[]
-            )
-
-            PopUpMessage.pop_up(self, "✅ Book updated successfully")
-            if self.on_success:
-                self.on_success()  # callback pour rafraîchir la liste
-            self.destroy()
-
-        except Exception as e:
-            PopUpMessage.pop_up(self, f"❌ Error: {str(e)}")
+    
