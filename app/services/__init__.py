@@ -1,4 +1,6 @@
 from .person_service import	PersonService
+from .worker_service import	WorkerService
+from .login_service import	LoginService
 from .theme_service import ThemeService
 from .collection_service import CollectionService
 from .author_service import AuthorService
