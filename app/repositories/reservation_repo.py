@@ -28,7 +28,10 @@ class ReservationRepo():
         return False
 
     def delete_reservation(self, reservation : Reservation):
-        pass
-
+        if isinstance(reservation, Reservation):
+            self.reservation_json.remove(reservation)
+            self._save_all()
+            return True
+        return False
     def _save_all(self):
         JsonStorage.save_all(self.PATH_RESERVATION_JSON, self.reservation_json)  
