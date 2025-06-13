@@ -43,3 +43,17 @@ class ExemplarRepo():
         if id:
             return next((e for e in self._exemplar_json if e.id == id), None)
         return False
+    
+    def delete_exemplar(self, exemplar : Exemplar) -> bool:
+        """
+        Deletes an Exemplar object from the repository and saves the changes to the JSON file.
+        arguments:
+        - exemplar: Exemplar object to be deleted.
+        returns:
+        - True if the exemplar was deleted successfully, False otherwise.
+        """
+        if isinstance(exemplar, Exemplar):
+            self._exemplar_json.remove(exemplar)
+            self._save_all()
+            return True
+        return False

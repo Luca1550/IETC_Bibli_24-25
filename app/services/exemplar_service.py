@@ -29,7 +29,7 @@ class ExemplarService:
                 location=location
             ))
         except Exception as e:
-            raise Exception(f"error : {e}")
+            raise Exception(f"🛑 error {e}")
         
     def check_exemplar_value(self, isbn : str, status : int, location : str):
         """
@@ -52,7 +52,27 @@ class ExemplarService:
         """
         Retrieves an exemplar by its ID.
         """
-        exemplar = self._exemplar_repo.get_by_id(id)
-        if isinstance(exemplar, Exemplar):
-            return exemplar
-        raise Exception("Not found")
+        try:
+            exemplar = self._exemplar_repo.get_by_id(id)
+            if isinstance(exemplar, Exemplar):
+                return exemplar
+            raise Exception(f"Exemplar with the given ID : {id} was not found.")
+        except Exception as e:
+            raise Exception(f"🛑 error {e}")
+    
+    def delete_exemplar(self, id : int):
+        """
+        Deletes a person by their ID.
+        arguments:
+        - id: ID of the person to delete.
+        returns:
+        - True if the person was deleted successfully, False otherwise.
+        """
+        try:
+            exemplar = self.get_by_id(id)
+            if isinstance(exemplar, Exemplar):
+                if self._exemplar_repo.delete_exemplar(exemplar):
+                    return True
+                raise Exception("Failed to delete exemplar")
+        except Exception as e:
+            raise Exception(f"🛑 error {e}")
