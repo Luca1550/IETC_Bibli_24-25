@@ -57,3 +57,17 @@ class ExemplarRepo():
             self._save_all()
             return True
         return False
+    
+    def update_status(self, examplar : Exemplar) -> bool:
+        """
+        Updates an existing Exemplar object in the repository and saves the changes to the JSON file.
+        arguments:
+        - examplar: Exemplar object to be updated.
+        returns:
+        - True if the examplar was updated successfully, otherwise returns False.
+        """
+        if isinstance(examplar, Exemplar):
+            self._exemplar_json[self._exemplar_json.index(examplar)] = examplar
+            self._save_all()
+            return True
+        return False

@@ -78,3 +78,22 @@ class ExemplarService:
                 raise Exception("Failed to delete exemplar")
         except Exception as e:
             raise Exception(f"🛑 error {e}")
+        
+    def update_status(self, id : int, status : Status):
+        """
+        Updates the status of an exemplar by its ID.
+        arguments:
+        - id: ID of the exemplar to update.
+        - status: New status of the exemplar (as an integer) [AVAILABLE = 1, BORROWED = 2, RESERVED = 3].
+        returns:
+        - True if the status was updated successfully, Raise Exception otherwise.
+        """
+        try:
+            exemplar = self.get_by_id(id)
+            if isinstance(exemplar, Exemplar):
+                exemplar.status = status
+                if self._exemplar_repo.update_status(exemplar):
+                    return True
+                raise Exception("Failed to update exemplar status")
+        except Exception as e:
+            raise Exception(f"🛑 error {e}")
