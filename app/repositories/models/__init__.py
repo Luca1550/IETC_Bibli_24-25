@@ -7,6 +7,7 @@ from .library import Library
 from .author import Author
 from .worker import Worker 
 from .login import Login
+from .member import Member
 from .book import Book
 from .book_theme import BookTheme
 from .book_editor import BookEditor

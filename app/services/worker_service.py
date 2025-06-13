@@ -1,8 +1,9 @@
 import re
-from repositories.models import Worker
-from repositories.models import Person
-from repositories import WorkerRepo
-from repositories import PersonRepo
+from services.models import WorkerDTO
+from repositories.models import Worker,Person
+from repositories import WorkerRepo, PersonRepo
+from services import PersonService
+
 
 class WorkerService:
     """
@@ -13,8 +14,10 @@ class WorkerService:
         Initializes the WorkerService instance with a WorkerRepo instance.
         """
         self._worker_repo: WorkerRepo = WorkerRepo()
+        self._person_repo: PersonRepo = PersonRepo()
+        self.person_service = PersonService()
 
-    def add_worker(self, person:Person) -> Worker | str:
+    def add_worker(self, person: Person) -> WorkerDTO | str:
         """
         Adds a new worker to the repository.
         arguments:
@@ -26,16 +29,14 @@ class WorkerService:
             if isinstance(person, Person):
                 new_worker = Worker(
                     id=None,
-                    first_name=person.first_name,
-                    last_name=person.last_name,
-                    national_number=person.national_number,
-                    email=person.email,
-                    street=person.street,
-                    cp=person.cp,
-                    city=person.city
+                    id_person=person.id
                 )
                 if self._worker_repo.add_worker(new_worker):
-                    return new_worker
+                    person = self._person_repo.get_by_id(person.id)
+                    return WorkerDTO(
+                        id_worker=new_worker.id,
+                        person=person
+                    )
             else:
                 raise TypeError("Provided person is not a valid Person object.")
         except Exception as e:
@@ -60,7 +61,7 @@ class WorkerService:
             print(f"🛑 Error [{e}]")
             return False
 
-    def update_worker(self, worker: Worker) -> bool:
+    def update_worker(self, id : int, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str) -> bool | str:
         """
         Updates an existing worker in the repository.
         arguments:
@@ -68,24 +69,63 @@ class WorkerService:
         returns:
         - True if the worker was updated successfully, otherwise returns False.
         """
-        if isinstance(worker, Worker):
-            return self._worker_repo.update_worker(worker)
-        return False
     
-    def get_by_id(self, id: int) -> Worker | str:
+        if self.person_service.update_person(
+            id,
+            first_name,
+            last_name,
+            national_number,
+            email,
+            street,
+            cp,
+            city
+        ): 
+            return True
+        raise Exception("Worker not found or update failed.")
+    
+    def get_worker_by_id(self, id: int) -> WorkerDTO | str:
         """
         Retrieves a worker by their ID.
         arguments:
         - id: ID of the worker to retrieve.
         returns:
-        - Returns the Worker object if found, otherwise returns an error message.
+        - Returns a WorkerDTO object if found, otherwise raises an exception.
         """
         try:
             worker = self._worker_repo.get_by_id(id)
             if worker:
-                return worker
+                person = self._person_repo.get_by_id(worker.id_person)
+                if person:
+                    return WorkerDTO(
+                        id_worker=worker.id,
+                        person=person
+                    )
+                else:
+                    raise Exception(f"Person associated with worker ID {id} not found.")
             else:
                 raise Exception(f"Worker with the given ID : {id} was not found.")
         except Exception as e:
-            return f"🛑 Error [{e}]"
+            print(f"🛑 Error [{e}]")
+            raise Exception(f"🛑 Error [{e}]")
+        
+    def get_all_workers(self) -> list[WorkerDTO]:
+        """
+        Retrieves all workers from the repository.
+        returns:
+        - Returns a list of WorkerDTO objects representing all workers.
+        """
+        try:
+            workers = self._worker_repo.get_all_workers()
+            worker_dtos = []
+            for worker in workers:
+                person = self._person_repo.get_by_id(worker.id_person)
+                if person:
+                    worker_dtos.append(WorkerDTO(
+                        id_worker=worker.id,
+                        person=person
+                    ))
+            return worker_dtos
+        except Exception as e:
+            print(f"🛑 Error [{e}]")
+            raise Exception(f"🛑 Error [{e}]")
 

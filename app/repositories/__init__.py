@@ -7,6 +7,7 @@ from .worker_repo import WorkerRepo
 from .book_repo import BookRepo
 from .author_repo import AuthorRepo
 from .login_repo import LoginRepo
+from .member_repo import MemberRepo
 from .book_theme_repo import BookThemeRepo
 from .book_editor_repo import BookEditorRepo
 from .book_author_repo import BookAuthorRepo
