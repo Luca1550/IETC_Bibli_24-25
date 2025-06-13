@@ -70,6 +70,8 @@ class ExemplarService:
         """
         try:
             exemplar = self.get_by_id(id)
+            if exemplar.status != 1:
+                raise Exception("Exemplar must be available to be deleted.")
             if isinstance(exemplar, Exemplar):
                 if self._exemplar_repo.delete_exemplar(exemplar):
                     return True
