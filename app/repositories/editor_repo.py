@@ -27,6 +27,7 @@ class EditorRepo:
         """
         self.editor_json.append(Editor(id = None,name = name))
         JsonStorage.save_all(self.PATH_EDITOR_JSON,self.editor_json)
+        return True
     
     def get_by_name(self,name:str):
         """
@@ -94,17 +95,27 @@ class EditorRepo:
                 return True
         return False
     
-    def delete_editor(self,name:str):
+    def delete_editor(self, editor : Editor):
         """
-        Deletes a editor by its name from the repository.
-        Args:
-            name (str): The name of the editor to be deleted.
-        Returns:
-            bool: True if the editor was found and deleted, False otherwise.
+        Deletes a editor from the repository.
+        arguments:
+        - editor: The editor object to be deleted.
+        returns:
+        - True if the deletion was successful, False otherwise.
         """
-        for editor in self.editor_json:
-            if editor.name == name:
-                self.editor_json.remove(editor)
-                JsonStorage.save_all(self.PATH_EDITOR_JSON, self.editor_json)
-                return True
+        if isinstance(editor, Editor):
+            self.editor_json.remove(editor)
+            JsonStorage.save_all(self.PATH_EDITOR_JSON, self.editor_json)
+            return True
         return False
+    
+    def is_unique(self, attribute : str, value : object) -> bool:
+        """
+        Checks if a given attribute of an object is unique in the repository.
+        arguments:
+        - attribute: The attribute to check for uniqueness.
+        - value: The value to check against the specified attribute.
+        returns:
+        - True if the value is unique, False if it already exists in the repository.
+        """
+        return not any(getattr(editor, attribute, None) == value for editor in self.editor_json)
