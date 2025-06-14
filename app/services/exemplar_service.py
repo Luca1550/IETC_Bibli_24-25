@@ -97,3 +97,11 @@ class ExemplarService:
                 raise Exception("Failed to update exemplar status")
         except Exception as e:
             raise Exception(f"🛑 error {e}")
+        
+    def get_status(self, id : int):
+        try:
+            exemplar = self.get_by_id(id)
+            if isinstance(exemplar, Exemplar):
+                return exemplar.status
+        except Exception as e:
+            raise Exception(f"🛑 error {e}")
