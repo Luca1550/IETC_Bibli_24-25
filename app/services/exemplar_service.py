@@ -105,3 +105,29 @@ class ExemplarService:
                 return exemplar.status
         except Exception as e:
             raise Exception(f"🛑 error {e}")
+        
+    def get_disponibility(self, isbn : str):
+        """
+        Checks if there are any available exemplars for a given book ISBN.
+        arguments:
+        - isbn: ISBN of the book.
+        returns:
+        - True if there are available exemplars, False otherwise.
+        """
+        try:
+            return self._exemplar_repo.get_disponibility(isbn)
+        except Exception as e:
+            raise Exception(f"🛑 error {e}")
+    
+    def get_all_by_isbn(self, isbn : str):
+        """
+        Retrieves all available exemplars for a given book ISBN.
+        arguments:
+        - isbn: ISBN of the book.
+        returns:
+        - List of available exemplars.
+        """
+        try:
+            return self._exemplar_repo.get_all(isbn)
+        except Exception as e:
+            raise Exception(f"🛑 error {e}")
