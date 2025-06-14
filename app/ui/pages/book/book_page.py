@@ -1,8 +1,9 @@
 import customtkinter as ctk
-import tkinter as tk
-from services import BookService
+from services import BookService,ThemeService
 from services.models import BookDTO
 from .book_edit_page import BookEditPage
+from .book_add_page import BookAddPage
+from .book_config_page import BookConfigPage
 
 class BookFrame(ctk.CTkFrame):
     """Frame pour afficher un livre individuel"""
@@ -12,6 +13,7 @@ class BookFrame(ctk.CTkFrame):
         self.book : BookDTO = book
         self.delete_callback = delete_callback
         self.edit_callback = edit_callback
+        
         
         self.configure(corner_radius=10, border_width=1)
         self.setup_book_display()
@@ -110,7 +112,7 @@ class BookFrame(ctk.CTkFrame):
         # Message
         message = ctk.CTkLabel(
             confirm_window,
-            text=f"Êtes-vous sûr de vouloir supprimer\n'{self.book.title}' ?",
+            text=f"Are you sure you want to delete \n'{self.book.title}' ?",
             wraplength=250
         )
         message.pack(pady=20)
@@ -121,7 +123,7 @@ class BookFrame(ctk.CTkFrame):
         
         yes_btn = ctk.CTkButton(
             button_frame,
-            text="Oui",
+            text="Yes",
             fg_color="red",
             hover_color="#cc0000",
             command=lambda: [
@@ -133,7 +135,7 @@ class BookFrame(ctk.CTkFrame):
         
         no_btn = ctk.CTkButton(
             button_frame,
-            text="Non",
+            text="No",
             command=confirm_window.destroy
         )
         no_btn.pack(side="right", padx=10)
@@ -142,10 +144,10 @@ class BookPage(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         
+        self.theme_service = ThemeService()
         self.book_service = BookService()
         self.books = []
-        self.filtered_books = []
-        
+        self.filtered_books = []        
         self.setup_ui()
         self.load_books()
         
@@ -175,7 +177,18 @@ class BookPage(ctk.CTkFrame):
             command=self.add_book,
             height=35
         )
-        add_btn.grid(row=0, column=3, padx=(5, 10), pady=10)
+        add_btn.grid(row=0, column=2, padx=(5, 10), pady=10)
+        
+        conf_btn = ctk.CTkButton(
+            search_frame,
+            text="✏️ CONFIG",
+            command=self.conf_book,
+            fg_color="#dd5019",
+            hover_color="#cf714c",
+            text_color="white",
+            height=35
+        )
+        conf_btn.grid(row=0, column=1, padx=(5, 10), pady=10)
         
         
         # === ZONE DE LISTE SCROLLABLE ===
@@ -208,7 +221,7 @@ class BookPage(ctk.CTkFrame):
         if not self.filtered_books:
             no_books_label = ctk.CTkLabel(
                 self.scroll_frame,
-                text="📚 Aucun livre trouvé",
+                text="📚 No book found",
                 font=ctk.CTkFont(size=16),
                 text_color="gray"
             )
@@ -221,55 +234,29 @@ class BookPage(ctk.CTkFrame):
                 self.scroll_frame,
                 book,
                 delete_callback=self.delete_book,
-                edit_callback=self.edit_book  # Vous pouvez ajouter une fonction d'édition
+                edit_callback=self.edit_book 
             )
             book_frame.pack(fill="x", padx=10, pady=5)
     
     def edit_book(self,book):
-        BookEditPage(book=book, on_success=self.refresh)
-    
+        edit_page = BookEditPage(book=book,book_service=self.book_service,on_success=self.refresh)
+        self.wait_window(edit_page)
+        self.refresh()
+        
     def add_book(self):
-        """Ajoute un nouveau livre"""
-        title = self.title_entry.get().strip()
-        date = self.date_entry.get().strip()
-        price_str = self.price_entry.get().strip()
-        
-        # Validation
-        if not title:
-            self.show_error("Le titre est obligatoire")
-            return
-        
-        if not date:
-            self.show_error("La date est obligatoire")
-            return
-        
-        try:
-            price = float(price_str) if price_str else 0.0
-        except ValueError:
-            self.show_error("Le prix doit être un nombre valide")
-            return
-        
-        try:
-            # Créer un objet livre (ajustez selon votre modèle)
-            # Supposons que BookService.create() accepte ces paramètres
-            new_book = self.book_service.create(title=title, date=date, price=price)
-            
-            # Vider les champs
-            self.title_entry.delete(0, 'end')
-            self.date_entry.delete(0, 'end')
-            self.price_entry.delete(0, 'end')
-            
-            # Recharger la liste
-            self.load_books()
-            self.show_success("Book successfully added !")
-            
-        except Exception as e:
-            self.show_error(f"Error : {str(e)}")
+        add_page = BookAddPage(book_service=self.book_service, on_success=self.refresh)
+        self.wait_window(add_page)
+        self.refresh()
+    
+    def conf_book(self):
+        add_page = BookConfigPage(theme_service=self.theme_service)
+        self.wait_window(add_page)
+        self.refresh()
     
     def delete_book(self, book):
         """Supprime un livre"""
         try:
-            self.book_service.delete(book.id)  # Ajustez selon votre modèle
+            self.book_service.delete_book(book.isbn)  # Ajustez selon votre modèle
             self.load_books()
             self.show_success("Book successfully deleted !")
         except Exception as e:
@@ -306,7 +293,7 @@ class BookPage(ctk.CTkFrame):
         """Affiche un message d'erreur"""
         self.info_label.configure(text=f"❌ {message}", text_color="red")
         # Revenir à l'état normal après 3 secondes
-        #self.after(3000, lambda: self.update_info())
+        # self.after(3000, lambda: self.update_info())
     
     def show_success(self, message):
         """Affiche un message de succès"""
@@ -317,4 +304,4 @@ class BookPage(ctk.CTkFrame):
     def refresh(self):
         """Méthode publique pour rafraîchir la page"""
         self.load_books()
-
+        

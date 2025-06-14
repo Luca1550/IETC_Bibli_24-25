@@ -34,6 +34,9 @@ class AuthorRepo:
                 return author
         return None
     
+    def get_all(self):
+        return self.author_json
+    
     def delete_author(self,id:str):
         """
         Deletes a author by its name from the repository.

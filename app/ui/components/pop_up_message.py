@@ -20,7 +20,7 @@ class PopUpMessage(customtkinter.CTkToplevel):
         self.focus_set() 
         self.attributes("-topmost", True) 
 
-        if "error" in message.lower():
+        if "error" in message:
             self.label = customtkinter.CTkLabel(self, text=message, fg_color="red", text_color="white", corner_radius=10)
         else:
             self.label = customtkinter.CTkLabel(self, text=message, fg_color="#1f6aa5", text_color="white", corner_radius=10)
