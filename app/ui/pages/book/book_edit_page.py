@@ -2,6 +2,7 @@ import customtkinter as ctk
 from services import BookService,AuthorService,CollectionService,EditorService,ThemeService
 from services.models import BookDTO
 from ui.components import PopUpMessage,SelectionFrame
+from .book_config_page import AddThemePage,AddCollectionPage,AddEditorPage,AddAuthorPage
 
 class BookEditPage(ctk.CTkToplevel):
     def __init__(self, book:BookDTO, book_service: BookService ,on_success=None):
@@ -60,6 +61,8 @@ class BookEditPage(ctk.CTkToplevel):
             entry_to_update=self.collection_entry
         ))
         edit_collection_button.pack(side="right", padx=(5, 0))
+        self.collection_entry.configure(state="disabled")
+        ctk.CTkButton(collection_frame,text="➕",width=30,command=self.open_add_collection_page).pack(side="right", padx=(5, 0))
         
         label_author_entry = ctk.CTkLabel(self, text="Author", anchor="w")
         label_author_entry.pack(fill="x", padx=20)
@@ -81,6 +84,8 @@ class BookEditPage(ctk.CTkToplevel):
             entry_to_update=self.author_entry
         ))
         edit_author_button.pack(side="right", padx=(5, 0))
+        self.author_entry.configure(state="disabled")
+        ctk.CTkButton(author_frame,text="➕",width=30,command=self.open_add_author_page).pack(side="right", padx=(5, 0))
         
         label_editor_entry = ctk.CTkLabel(self, text="Editor", anchor="w")
         label_editor_entry.pack(fill="x", padx=20)
@@ -99,6 +104,8 @@ class BookEditPage(ctk.CTkToplevel):
             entry_to_update=self.editor_entry
         ))
         edit_editor_button.pack(side="right", padx=(5, 0))
+        self.editor_entry.configure(state="disabled")
+        ctk.CTkButton(editor_frame,text="➕",width=30,command=self.open_add_editor_page).pack(side="right", padx=(5, 0))
         
         label_theme_entry = ctk.CTkLabel(self, text="Theme", anchor="w")
         label_theme_entry.pack(fill="x", padx=20)
@@ -117,6 +124,8 @@ class BookEditPage(ctk.CTkToplevel):
             entry_to_update=self.theme_entry
         ))
         edit_theme_button.pack(side="right", padx=(5, 0))
+        self.theme_entry.configure(state="disabled")
+        ctk.CTkButton(theme_frame,text="➕",width=30,command=self.open_add_theme_page).pack(side="right", padx=(5, 0))
         
         
         ctk.CTkButton(self, text="✅ Save", command=self.confirm_action).pack(pady=10)
@@ -134,6 +143,22 @@ class BookEditPage(ctk.CTkToplevel):
             attributes_to_entry
         )
         self.wait_window(selection_frame)
+        
+    def open_add_theme_page(self):
+        add_theme_page = AddThemePage(self.theme_service)
+        self.wait_window(add_theme_page)
+    
+    def open_add_editor_page(self):
+        add_editor_page = AddEditorPage(self.editor_service)
+        self.wait_window(add_editor_page)
+    
+    def open_add_collection_page(self):
+        add_collection_page = AddCollectionPage(self.collection_service)
+        self.wait_window(add_collection_page)
+    
+    def open_add_author_page(self):
+        add_author_page = AddAuthorPage(self.author_service)
+        self.wait_window(add_author_page)
 
     def confirm_action(self):
         """
@@ -145,7 +170,6 @@ class BookEditPage(ctk.CTkToplevel):
             if not self.selected_collection:
                 if len(self.selected_collection)>1:
                     raise Exception ("A book can only have one collection.")
-            print("ou pas")
             self.book_service.update_by_parameter(
                 isbn=self.isbn_entry.get(),
                 title=self.title_entry.get(),
@@ -157,7 +181,6 @@ class BookEditPage(ctk.CTkToplevel):
                 editors=self.book.editors
             )
             
-            print("MAJ effectuée")
             # if self.on_success:
             #     self.on_success()
             PopUpMessage.pop_up(self,f"Book updated ✅")
