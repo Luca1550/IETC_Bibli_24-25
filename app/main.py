@@ -2,6 +2,7 @@ import customtkinter as ctk
 from ui.components import MenuNavigation, LoginPage
 from ui.pages.library import LibraryPage
 from ui.pages.book import BookPage
+from ui.pages.worker import WorkerPage
 
 class MainApp(ctk.CTk):
     """
@@ -80,7 +81,7 @@ class MainApp(ctk.CTk):
             return LibraryPage(self.page_container)
 
         def page_Employes():
-            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Employes")
+            return WorkerPage(self.page_container)
 
         page_switch = {
             "Accueil": page_Accueil,
