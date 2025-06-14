@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from services import BookService,ThemeService
+from services import BookService,ThemeService,EditorService,CollectionService,AuthorService
 from services.models import BookDTO
 from .book_edit_page import BookEditPage
 from .book_add_page import BookAddPage
@@ -166,6 +166,9 @@ class BookPage(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         
+        self.editor_service = EditorService()
+        self.author_service= AuthorService()
+        self.collection_service = CollectionService()
         self.theme_service = ThemeService()
         self.book_service = BookService()
         self.books = []
@@ -287,7 +290,7 @@ class BookPage(ctk.CTkFrame):
         """
         open a page to configure books
         """
-        add_page = BookConfigPage(theme_service=self.theme_service)
+        add_page = BookConfigPage(theme_service=self.theme_service, editor_service=self.editor_service, collection_service=self.collection_service, author_service=self.author_service)
         self.wait_window(add_page)
         self.refresh()
     
