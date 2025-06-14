@@ -27,6 +27,7 @@ class CollectionRepo:
         """
         self.collection_json.append(Collection(id = None,name = name))
         JsonStorage.save_all(self.PATH_COLLECTION_JSON,self.collection_json)
+        return True
     
     def get_by_name(self,name:str):
         """
@@ -108,3 +109,14 @@ class CollectionRepo:
                 JsonStorage.save_all(self.PATH_COLLECTION_JSON, self.collection_json)
                 return True
         return False
+    
+    def is_unique(self, attribute : str, value : object) -> bool:
+        """
+        Checks if a given attribute of an object is unique in the repository.
+        arguments:
+        - attribute: The attribute to check for uniqueness.
+        - value: The value to check against the specified attribute.
+        returns:
+        - True if the value is unique, False if it already exists in the repository.
+        """
+        return not any(getattr(collection, attribute, None) == value for collection in self.collection_json)
