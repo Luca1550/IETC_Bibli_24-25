@@ -3,7 +3,9 @@ from services import AuthorService,ThemeService,EditorService,CollectionService
 from ui.components import PopUpMessage
 
 class BookConfigPage(ctk.CTkToplevel):
+    """Page for managing book configurations such as authors, themes, editors, and collections."""
     def __init__(self, theme_service : ThemeService):
+        """Initialize the book configuration page."""
         super().__init__()
         self.theme_service = theme_service
         
@@ -17,14 +19,17 @@ class BookConfigPage(ctk.CTkToplevel):
         ctk.CTkButton(self,width=100,text="🗑️ Delete Themes", command=self.open_delete_theme_page)
     
     def open_delete_theme_page(self):
+        """Open the page to delete themes."""
         delete_theme_page = DeleteThemePage(self.theme_service)
         self.wait_window(delete_theme_page)
     
     def open_add_theme_page(self):
+        """Open the page to add a new theme."""
         add_theme_page = AddThemePage(self.theme_service)
         self.wait_window(add_theme_page)
 
 class AddThemePage(ctk.CTkToplevel):
+    """Page for adding a new theme."""
     def __init__(self, theme_service : ThemeService):
         super().__init__()
         self.theme_service = theme_service
@@ -39,6 +44,7 @@ class AddThemePage(ctk.CTkToplevel):
         ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
         
     def confirm_action(self):
+        """Confirm the action of adding a new theme."""
         try:
             self.theme_service.add_theme(
                 name=self.name_entry.get(),

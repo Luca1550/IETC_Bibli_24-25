@@ -6,8 +6,20 @@ from .book_add_page import BookAddPage
 from .book_config_page import BookConfigPage
 
 class BookFrame(ctk.CTkFrame):
-    """Frame pour afficher un livre individuel"""
+    """
+        This class represents a frame that displays book details.
+        It includes the book's title, publication date, price, collection,
+        authors, editors, and themes. It also provides buttons to delete or edit the book.
+    """
     def __init__(self, parent, book:BookDTO, delete_callback, edit_callback):
+        """
+            Initializes the BookFrame with the book details and callbacks for delete and edit actions.
+            
+            :param parent: The parent widget for this frame.
+            :param book: An instance of BookDTO containing book details.
+            :param delete_callback: A function to call when the delete button is pressed.
+            :param edit_callback: A function to call when the edit button is pressed.
+        """
         super().__init__(parent)
         
         self.book : BookDTO = book
@@ -19,7 +31,10 @@ class BookFrame(ctk.CTkFrame):
         self.setup_book_display()
     
     def setup_book_display(self):
-        # Titre du livre
+        """
+            Configure the display of book details in the frame.
+        """
+        # Book title
         title_label = ctk.CTkLabel(
             self, 
             text=f"📖 {self.book.title}", 
@@ -27,21 +42,21 @@ class BookFrame(ctk.CTkFrame):
         )
         title_label.pack(anchor="w", pady=(10, 2), padx=15)
         
-        # Date de publication
+        # Date
         date_label = ctk.CTkLabel(
             self, 
             text=f"📅 Date: {self.book.date}"
         )
         date_label.pack(anchor="w", pady=2, padx=15)
         
-        # Prix
+        # Price
         price_label = ctk.CTkLabel(
             self, 
             text=f"💰 Price: {self.book.price} €"
         )
         price_label.pack(anchor="w", pady=2, padx=15)
         
-        # collection
+        # Collection
         collection_name = self.book.collection.name if self.book.collection else "No collection"
         collection_label = ctk.CTkLabel(
             self, 
@@ -49,7 +64,7 @@ class BookFrame(ctk.CTkFrame):
         )
         collection_label.pack(anchor="w", pady=2, padx=15)
         
-        # author 
+        # Author 
         author_names = ", ".join(" ".join([author.person.first_name, author.person.last_name]) for author in self.book.authors)
         author_label = ctk.CTkLabel(
             self, 
@@ -57,7 +72,7 @@ class BookFrame(ctk.CTkFrame):
         )
         author_label.pack(anchor="w", pady=2, padx=15)
         
-        # editor 
+        # Editor 
         editor_names = ", ".join(editor.name for editor in self.book.editors)
         editor_label = ctk.CTkLabel(
             self, 
@@ -65,7 +80,7 @@ class BookFrame(ctk.CTkFrame):
         )
         editor_label.pack(anchor="w", pady=2, padx=15)
         
-        # theme
+        # Theme
         theme_names=", ".join(theme.name for theme in self.book.themes)
         theme_label = ctk.CTkLabel(
             self, 
@@ -73,14 +88,14 @@ class BookFrame(ctk.CTkFrame):
         )
         theme_label.pack(anchor="w", pady=2, padx=15)
         
-        # Frame pour les boutons
+        # Button frame
         button_frame = ctk.CTkFrame(self, fg_color="transparent")
         button_frame.pack(fill="x", pady=10, padx=15)
         
-        # Bouton supprimer
+        # Delete button
         delete_btn = ctk.CTkButton(
             button_frame,
-            text="🗑️ Supprimer",
+            text="🗑️ Delete",
             fg_color="red",
             hover_color="#cc0000",
             width=100,
@@ -88,7 +103,7 @@ class BookFrame(ctk.CTkFrame):
         )
         delete_btn.pack(side="right", padx=(5, 0))
         
-        # Bouton modifier
+        # delete button
         if self.edit_callback:
             edit_btn = ctk.CTkButton(
                 button_frame,
@@ -99,14 +114,16 @@ class BookFrame(ctk.CTkFrame):
             edit_btn.pack(side="right", padx=(0, 5))
     
     def confirm_delete(self):
-        """Confirmation avant suppression"""
+        """
+            Open a confirmation window for book deletion.
+        """
         confirm_window = ctk.CTkToplevel(self)
         confirm_window.title("Confirm deletion")
         confirm_window.geometry("300x150")
         confirm_window.resizable(False, False)
         confirm_window.grab_set()  # Modal
         
-        # Centrer la fenêtre
+        # Window centering
         confirm_window.transient(self.winfo_toplevel())
         
         # Message
@@ -117,7 +134,7 @@ class BookFrame(ctk.CTkFrame):
         )
         message.pack(pady=20)
         
-        # Boutons
+        # Buttons
         button_frame = ctk.CTkFrame(confirm_window, fg_color="transparent")
         button_frame.pack(pady=10)
         
@@ -141,6 +158,11 @@ class BookFrame(ctk.CTkFrame):
         no_btn.pack(side="right", padx=10)
 
 class BookPage(ctk.CTkFrame):
+    """
+        This class represents the main page for managing books.
+        It includes functionalities to add, edit, delete, and search for books.
+        It also displays a list of books in a scrollable frame.
+    """
     def __init__(self, parent):
         super().__init__(parent)
         
@@ -152,20 +174,23 @@ class BookPage(ctk.CTkFrame):
         self.load_books()
         
     def setup_ui(self):
-        # Configuration de la grille principale
-        self.grid_rowconfigure(2, weight=1)  # La zone de liste s'étend
+        """
+            Configure the user interface for the book management page.
+            It sets up the search bar, scrollable book list, and information display.
+        """
+        
+        self.grid_rowconfigure(2, weight=1) 
         self.grid_columnconfigure(0, weight=1)
         
-        # === ZONE DE RECHERCHE ===
+        # === Search zone ===
         search_frame = ctk.CTkFrame(self)
         search_frame.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 5))
         search_frame.grid_columnconfigure(0, weight=1)
         search_frame.grid_columnconfigure(1, weight=0) 
         
-        # Champ de recherche
         self.search_entry = ctk.CTkEntry(
             search_frame,
-            placeholder_text="🔍 Rechercher par titre...",
+            placeholder_text="🔍 Search by title...",
             height=35
         )
         self.search_entry.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
@@ -191,11 +216,11 @@ class BookPage(ctk.CTkFrame):
         conf_btn.grid(row=0, column=1, padx=(5, 10), pady=10)
         
         
-        # === ZONE DE LISTE SCROLLABLE ===
+        # === Scrollable frame ===
         self.scroll_frame = ctk.CTkScrollableFrame(self, width=600)
         self.scroll_frame.grid(row=2, column=0, sticky="nsew", padx=10, pady=(5, 10))
         
-        # === ZONE D'INFORMATIONS ===
+        # === Info ===
         info_frame = ctk.CTkFrame(self)
         info_frame.grid(row=3, column=0, sticky="ew", padx=10, pady=(0, 10))
         
@@ -203,18 +228,22 @@ class BookPage(ctk.CTkFrame):
         self.info_label.pack(pady=5)
     
     def load_books(self):
-        """Charge tous les livres"""
+        """
+            loads all books from the book service and displays them.
+        """
         try:
             self.books = self.book_service.get_all()
             self.filtered_books = self.books.copy()
             self.display_books()
             self.update_info()
         except Exception as e:
-            self.show_error(f"Erreur lors du chargement : {str(e)}")
+            self.show_error(f"Error while loading : {str(e)}")
     
     def display_books(self):
-        """Affiche les livres dans la zone scrollable"""
-        # Nettoyer les widgets existants
+        """
+            displays the list of books in the scrollable frame.
+        """
+        # cleaning existing widgets in the scrollable frame
         for widget in self.scroll_frame.winfo_children():
             widget.destroy()
         
@@ -228,7 +257,7 @@ class BookPage(ctk.CTkFrame):
             no_books_label.pack(pady=50)
             return
         
-        # Afficher chaque livre
+        # displaying each book in a BookFrame
         for book in self.filtered_books:
             book_frame = BookFrame(
                 self.scroll_frame,
@@ -239,31 +268,44 @@ class BookPage(ctk.CTkFrame):
             book_frame.pack(fill="x", padx=10, pady=5)
     
     def edit_book(self,book):
+        """
+        open a page to edit a book
+        """
         edit_page = BookEditPage(book=book,book_service=self.book_service,on_success=self.refresh)
         self.wait_window(edit_page)
         self.refresh()
         
     def add_book(self):
+        """
+        open a page to add a book
+        """
         add_page = BookAddPage(book_service=self.book_service, on_success=self.refresh)
         self.wait_window(add_page)
         self.refresh()
     
     def conf_book(self):
+        """
+        open a page to configure books
+        """
         add_page = BookConfigPage(theme_service=self.theme_service)
         self.wait_window(add_page)
         self.refresh()
     
     def delete_book(self, book):
-        """Supprime un livre"""
+        """
+        Deletes a book and refreshes the book list.`
+        """
         try:
-            self.book_service.delete_book(book.isbn)  # Ajustez selon votre modèle
+            self.book_service.delete_book(book.isbn)
             self.load_books()
             self.show_success("Book successfully deleted !")
         except Exception as e:
             self.show_error(f"Error : {str(e)}")
     
     def on_search(self, event=None):
-        """Filtre les livres selon la recherche"""
+        """
+            Handles the search functionality by filtering books based on the search query.
+        """
         query = self.search_entry.get().lower().strip()
         
         if not query:
@@ -278,7 +320,9 @@ class BookPage(ctk.CTkFrame):
         self.update_info()
     
     def update_info(self):
-        """Met à jour les informations affichées"""
+        """
+            Updates the information label with the count of total and displayed books.
+        """
         total = len(self.books)
         displayed = len(self.filtered_books)
         
@@ -290,18 +334,24 @@ class BookPage(ctk.CTkFrame):
         self.info_label.configure(text=info_text)
     
     def show_error(self, message):
-        """Affiche un message d'erreur"""
+        """
+            shows an error message in the info label.
+            waits for 3 seconds before clearing the message.
+        """
         self.info_label.configure(text=f"❌ {message}", text_color="red")
-        # Revenir à l'état normal après 3 secondes
-        # self.after(3000, lambda: self.update_info())
+        self.after(3000, lambda: self.update_info())
     
     def show_success(self, message):
-        """Affiche un message de succès"""
+        """
+            shows a success message in the info label.
+            waits for 3 seconds before reverting to the normal state.
+        """
         self.info_label.configure(text=f"✅ {message}", text_color="green")
-        # Revenir à l'état normal après 3 secondes
         self.after(3000, lambda: self.update_info())
     
     def refresh(self):
-        """Méthode publique pour rafraîchir la page"""
+        """
+            Refreshes the book list by reloading the books from the service.
+        """
         self.load_books()
         

@@ -5,10 +5,23 @@ from ui.components import PopUpMessage,SelectionFrame
 from .book_config_page import AddThemePage,AddCollectionPage,AddEditorPage,AddAuthorPage
 
 class BookEditPage(ctk.CTkToplevel):
+    """Page to edit a book's details."""
     def __init__(self, book:BookDTO, book_service: BookService ,on_success=None):
-        super().__init__()
+        """
+        Initializes the BookEditPage.
+        :param book: The book to edit.
+        all info are separated by categories:
+        - ISBN
+        - Title
+        - Date
+        - Price
+        - Collection
+        - Author
+        - Editor
+        - Theme
+        """
         self.book : BookDTO = book
-        self.on_success = on_success  # callback pour rafraîchir BookPage
+        self.on_success = on_success
         self.book_service = book_service
         self.editor_service=EditorService()
         self.author_service=AuthorService()
@@ -132,6 +145,9 @@ class BookEditPage(ctk.CTkToplevel):
         ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
         
     def open_selection_frame(self,title,all_items,selected_items,display_model_method,attributes_to_search,entry_to_update,attributes_to_entry=None):
+        """
+            opens a selection frame to choose items from a list.
+        """
         selection_frame = SelectionFrame(
             self,
             title,
@@ -145,18 +161,22 @@ class BookEditPage(ctk.CTkToplevel):
         self.wait_window(selection_frame)
         
     def open_add_theme_page(self):
+        """Opens the AddThemePage to add a new theme."""
         add_theme_page = AddThemePage(self.theme_service)
         self.wait_window(add_theme_page)
     
     def open_add_editor_page(self):
+        """Opens the AddEditorPage to add a new editor."""
         add_editor_page = AddEditorPage(self.editor_service)
         self.wait_window(add_editor_page)
     
     def open_add_collection_page(self):
+        """Opens the AddCollectionPage to add a new collection."""
         add_collection_page = AddCollectionPage(self.collection_service)
         self.wait_window(add_collection_page)
     
     def open_add_author_page(self):
+        """Opens the AddAuthorPage to add a new author."""
         add_author_page = AddAuthorPage(self.author_service)
         self.wait_window(add_author_page)
 

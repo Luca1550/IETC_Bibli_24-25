@@ -4,7 +4,17 @@ from ui.components import PopUpMessage, SelectionFrame
 from .book_config_page import AddThemePage,AddCollectionPage,AddEditorPage,AddAuthorPage
 
 class BookAddPage(ctk.CTkToplevel):
+    """
+        page for adding a new book to the library.
+        It allows the user to input book details such as ISBN, title, date, price,
+        and select associated authors, editors, themes, and collections.
+        It also provides options to add new authors, editors, themes, and collections.
+    """
     def __init__(self, book_service: BookService, on_success=None):
+        """
+        Initialize the book add page.
+        attributes are seprarated by a blank line for better readability.
+        """
         super().__init__()
         self.book_service = book_service
         self.author_service = AuthorService()
@@ -108,6 +118,7 @@ class BookAddPage(ctk.CTkToplevel):
         ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
 
     def open_selection_frame(self, title, all_items, selected_items, display_model_method, attributes_to_search, entry_to_update):
+        """Open a selection frame for choosing items from a list."""
         selection_frame = SelectionFrame(
             self,
             title,
@@ -120,22 +131,27 @@ class BookAddPage(ctk.CTkToplevel):
         self.wait_window(selection_frame)
         
     def open_add_theme_page(self):
+        """Open the page to add a new theme."""
         add_theme_page = AddThemePage(self.theme_service)
         self.wait_window(add_theme_page)
     
     def open_add_editor_page(self):
+        """Open the page to add a new editor."""
         add_editor_page = AddEditorPage(self.editor_service)
         self.wait_window(add_editor_page)
     
     def open_add_collection_page(self):
+        """Open the page to add a new collection."""
         add_collection_page = AddCollectionPage(self.collection_service)
         self.wait_window(add_collection_page)
     
     def open_add_author_page(self):
+        """Open the page to add a new author."""
         add_author_page = AddAuthorPage(self.author_service)
         self.wait_window(add_author_page)
 
     def confirm_action(self):
+        """Confirm the action of adding a book with the provided details."""
         try:
             if len(self.selected_collection) > 1:
                 raise Exception("A book can only have one collection.")
