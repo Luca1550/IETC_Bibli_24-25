@@ -64,7 +64,7 @@ class LibraryPage(ctk.CTkFrame):
         if self.paramlib:
 
             lib_params=self.paramlib[0]
-            print("ouii",lib_params.__dict__)
+            
             self.entries={}
             for i,(key, value) in enumerate(lib_params.__dict__.items(),start=1):
                 if key != "id":
@@ -100,7 +100,7 @@ class LibraryPage(ctk.CTkFrame):
                 updated_param[key] = val
         
         self.library_service.update_library(**updated_param)
-        print("update: ",updated_param)
+        
     def add_form(self):
         
                 

@@ -5,15 +5,21 @@ from tools import JsonStorage
 
 class ReservationMemberRepo:
     PATH_RESERVATION_MEMBER_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "reservation_member.json"
+    
     def __init__(self):
         self._reservation_member_json : list[ReservationMember] = JsonStorage.load_all(self.PATH_RESERVATION_MEMBER_JSON)
+        if self._reservation_member_json is None:
+            self._reservation_member_json = []
         self.member_repo : MemberRepo = MemberRepo()
     def _save_all(self):
         JsonStorage.save_all(self.PATH_RESERVATION_MEMBER_JSON, self._reservation_member_json)
     
     def add_reservation_member(self,id_member:int,id_reservation:int):
-        self._reservation_member_json.append(ReservationMember(id_member=id_member, id_reservation=id_reservation))
+        new_member = ReservationMember(id_reservation=id_reservation, id_member=id_member)
+        self._reservation_member_json.append(new_member)
         self._save_all()
+        return new_member
+    
     def update_reservation_member(self,id_member:int,id_reservation:int):
         for exist_res in self._reservation_member_json:
             if exist_res.id == id_reservation:
@@ -24,12 +30,18 @@ class ReservationMemberRepo:
         Listmemb : list[Member] = []
         for truc in self._reservation_member_json:
             if truc.id_reservation == id_reservation:
-                Listmemb.append(self.member_repo.get_member_by_id(truc.id_member))
+                member = self.member_repo.get_member_by_id(truc.id_member)
+                if member:
+                    Listmemb.append(member)
         return Listmemb
-
+    def get_reservation_member_byId(self, id_reservation: int):
+        for reservation_member in self._reservation_member_json:
+            if reservation_member.id_reservation == id_reservation:
+                return self.member_repo.get_member_by_id(reservation_member.id_member)
+        return None
     def delete_reservation_member(self,id_member:int,id_reservation:int):
         for things in self._reservation_member_json:
-            if things.id_reservation == id_reservation:
+            if things.id_reservation == id_reservation and things.id_member == id_member:
                 self._reservation_member_json.remove(things)
                 self._save_all()
             return True

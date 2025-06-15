@@ -116,7 +116,7 @@ class LibraryService:
                 raise ValueError("Invalid URL for logo: it must be a valid URL.")
             
             updated_library = Library(id=id,name=name,fine_per_day=fine_per_day,subscribe_amout=subscribe_amout,limit_borrow=limit_borrow,borrow_price_with_sub=borrow_price_with_sub,borrow_price_without_sub=borrow_price_without_sub,borrow_delay=borrow_delay,url_logo=url_logo,limit_reservation=limit_reservation)
-            print(updated_library)
+            
 
             result = self._library_repo.update_library(updated_library)
             if result:

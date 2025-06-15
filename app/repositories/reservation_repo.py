@@ -7,6 +7,9 @@ class ReservationRepo():
 
     def __init__(self):
         self.reservation_json : list[Reservation] = JsonStorage.load_all(self.PATH_RESERVATION_JSON)
+        if self.reservation_json is None:
+            self.reservation_json = []
+
     def add_reservation(self, reservation : Reservation):
         if reservation:
             self.reservation_json.append(reservation)
@@ -33,5 +36,6 @@ class ReservationRepo():
             self._save_all()
             return True
         return False
+        
     def _save_all(self):
         JsonStorage.save_all(self.PATH_RESERVATION_JSON, self.reservation_json)  
