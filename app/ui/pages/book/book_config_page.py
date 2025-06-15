@@ -7,6 +7,13 @@ class BookConfigPage(ctk.CTkToplevel):
     def __init__(self, theme_service : ThemeService, editor_service : EditorService, collection_service : CollectionService, author_service : AuthorService):
         """Initialize the book configuration page."""
         super().__init__()
+
+        self.focus_set()
+        self.grab_set()
+        self.lift()
+        self.title("Configurations")
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
+
         self.theme_service = theme_service
         self.editor_service = editor_service
         self.collection_service = collection_service
@@ -38,7 +45,7 @@ class BookConfigPage(ctk.CTkToplevel):
     
     def open_delete_theme_page(self):
         """Open the page to delete themes."""
-        delete_theme_page = DeleteThemePage(self.theme_service)
+        delete_theme_page = DeleteThemePage()
         self.wait_window(delete_theme_page)
     
     
@@ -49,7 +56,7 @@ class BookConfigPage(ctk.CTkToplevel):
     
     def open_delete_editor_page(self):
         """Open the page to delete editors."""
-        delete_editor_page = DeleteEditorPage(self.editor_service)
+        delete_editor_page = DeleteEditorPage()
         self.wait_window(delete_editor_page)
     
     
@@ -60,7 +67,7 @@ class BookConfigPage(ctk.CTkToplevel):
     
     def open_delete_collection_page(self):
         """Open the page to delete collections."""
-        delete_collection_page = DeleteCollectionPage(self.collection_service)
+        delete_collection_page = DeleteCollectionPage()
         self.wait_window(delete_collection_page)
     
     
@@ -71,16 +78,21 @@ class BookConfigPage(ctk.CTkToplevel):
     
     def open_delete_author_page(self):
         """Open the page to delete authors."""
-        delete_author_page = DeleteAuthorPage(self.author_service)
+        delete_author_page = DeleteAuthorPage()
         self.wait_window(delete_author_page)
 
 class AddThemePage(ctk.CTkToplevel):
     """Page for adding a new theme."""
     def __init__(self, theme_service : ThemeService):
         super().__init__()
+        self.focus_set()
+        self.grab_set()
+        self.lift()
+        self.geometry("400x145")
+        self.title("Add Theme")
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
+
         self.theme_service = theme_service
-        
-        self.title = "Add Theme"
         
         ctk.CTkLabel(self, text="Name", anchor="w").pack(fill="x", padx=20)
         self.name_entry = ctk.CTkEntry(self)
@@ -103,10 +115,15 @@ class AddThemePage(ctk.CTkToplevel):
             PopUpMessage.pop_up(self, str(e).lower())
 
 class DeleteThemePage(ctk.CTkToplevel):
-    def __init__(self, theme_service: ThemeService):
+    def __init__(self):
         super().__init__()
-        self.theme_service = theme_service
+        self.theme_service = ThemeService()
         self.themes = []
+
+        self.focus_set()
+        self.grab_set()
+        self.lift()
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
 
         self.title("Delete Themes")
         self.geometry("500x600")
@@ -172,7 +189,7 @@ class DeleteThemePage(ctk.CTkToplevel):
             fg_color="red",
             hover_color="#cc0000",
             command=lambda: [
-                self.theme_service.delete_theme(name=theme.name),
+                self.delete_theme(theme),
                 confirm_window.destroy()
             ]
         ).pack(side="left", padx=10)
@@ -185,7 +202,7 @@ class DeleteThemePage(ctk.CTkToplevel):
 
     def delete_theme(self, theme):
         try:
-            self.theme_service.delete_theme(theme.id)
+            self.theme_service.delete_theme(theme.name)
             PopUpMessage.pop_up(self, f"✅ Theme deleted")
             self.load_themes()
         except Exception as e:
@@ -195,10 +212,16 @@ class DeleteThemePage(ctk.CTkToplevel):
 class AddEditorPage(ctk.CTkToplevel):
     def __init__(self, editor_service : EditorService):
         super().__init__()
+
+        self.focus_set()
+        self.grab_set()
+        self.lift()
+        self.geometry("400x145")
+        self.title("Add Editor")
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
+
         self.editor_service = editor_service
-        
-        self.title = "Add Editor"
-        
+
         ctk.CTkLabel(self, text="Name", anchor="w").pack(fill="x", padx=20)
         self.name_entry = ctk.CTkEntry(self)
         self.name_entry.pack(fill="x", padx=20)
@@ -219,9 +242,14 @@ class AddEditorPage(ctk.CTkToplevel):
             PopUpMessage.pop_up(self, str(e).lower())
 
 class DeleteEditorPage(ctk.CTkToplevel):
-    def __init__(self, editor_service: EditorService):
+    def __init__(self):
         super().__init__()
-        self.editor_service = editor_service
+
+        self.focus_set()
+        self.grab_set()
+        self.lift()
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
+        self.editor_service = EditorService()
         self.editors = []
 
         self.title("Delete Editors")
@@ -288,7 +316,7 @@ class DeleteEditorPage(ctk.CTkToplevel):
             fg_color="red",
             hover_color="#cc0000",
             command=lambda: [
-                self.editor_service.delete_editor(name=editor.name),
+                self.delete_editor(editor),
                 confirm_window.destroy()
             ]
         ).pack(side="left", padx=10)
@@ -311,9 +339,13 @@ class DeleteEditorPage(ctk.CTkToplevel):
 class AddCollectionPage(ctk.CTkToplevel):
     def __init__(self, collection_service : CollectionService):
         super().__init__()
+        self.focus_set()
+        self.grab_set()
+        self.lift()
+        self.geometry("400x145")
+        self.title("Add Collection")
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
         self.collection_service = collection_service
-        
-        self.title = "Add Collection"
         
         ctk.CTkLabel(self, text="Name", anchor="w").pack(fill="x", padx=20)
         self.name_entry = ctk.CTkEntry(self)
@@ -335,9 +367,13 @@ class AddCollectionPage(ctk.CTkToplevel):
             PopUpMessage.pop_up(self, str(e).lower())
 
 class DeleteCollectionPage(ctk.CTkToplevel):
-    def __init__(self, collection_service: CollectionService):
+    def __init__(self):
         super().__init__()
-        self.collection_service = collection_service
+        self.focus_set()
+        self.grab_set()
+        self.lift()
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
+        self.collection_service = CollectionService()
         self.collections = []
 
         self.title("Delete Collections")
@@ -404,7 +440,7 @@ class DeleteCollectionPage(ctk.CTkToplevel):
             fg_color="red",
             hover_color="#cc0000",
             command=lambda: [
-                self.collection_service.delete_collection(name=collection.name),
+                self.delete_collection(collection),
                 confirm_window.destroy()
             ]
         ).pack(side="left", padx=10)
@@ -417,7 +453,7 @@ class DeleteCollectionPage(ctk.CTkToplevel):
 
     def delete_collection(self, collection):
         try:
-            self.collection_service.delete_collection(collection.id)
+            self.collection_service.delete_collection_by_id(collection.id)
             PopUpMessage.pop_up(self, f"✅ Collection deleted")
             self.load_collections()
         except Exception as e:
@@ -427,9 +463,14 @@ class DeleteCollectionPage(ctk.CTkToplevel):
 class AddAuthorPage(ctk.CTkToplevel):
     def __init__(self, author_service : AuthorService):
         super().__init__()
+        self.focus_set()
+        self.grab_set()
+        self.lift()
+        self.geometry("400x480")
+        self.title("Add Author")
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
+
         self.author_service = author_service
-        
-        self.title = "Add Author"
         
         ctk.CTkLabel(self, text="first name", anchor="w").pack(fill="x", padx=20)
         self.first_name_entry = ctk.CTkEntry(self)
@@ -481,9 +522,13 @@ class AddAuthorPage(ctk.CTkToplevel):
             PopUpMessage.pop_up(self, str(e).lower())
 
 class DeleteAuthorPage(ctk.CTkToplevel):
-    def __init__(self, author_service: AuthorService):
+    def __init__(self):
         super().__init__()
-        self.author_service = author_service
+        self.focus_set()
+        self.grab_set()
+        self.lift()
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
+        self.author_service = AuthorService()
         self.authors = []
 
         self.title("Delete authors")
@@ -551,7 +596,7 @@ class DeleteAuthorPage(ctk.CTkToplevel):
             fg_color="red",
             hover_color="#cc0000",
             command=lambda: [
-                self.author_service.delete_author(id=author.id_author),
+                self.delete_author(author),
                 confirm_window.destroy()
             ]
         ).pack(side="left", padx=10)
@@ -564,7 +609,7 @@ class DeleteAuthorPage(ctk.CTkToplevel):
 
     def delete_author(self, author):
         try:
-            self.author_service.delete_author(author.id)
+            self.author_service.delete_author(author.id_author)
             PopUpMessage.pop_up(self, f"✅ Author deleted")
             self.load_authors()
         except Exception as e:
