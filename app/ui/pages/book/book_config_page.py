@@ -336,6 +336,7 @@ class DeleteEditorPage(ctk.CTkToplevel):
             PopUpMessage.pop_up(self, f"Error : {str(e)}")
 
 
+
 class AddCollectionPage(ctk.CTkToplevel):
     def __init__(self, collection_service : CollectionService):
         super().__init__()

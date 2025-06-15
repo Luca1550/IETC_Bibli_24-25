@@ -5,8 +5,9 @@ from .theme_service import ThemeService
 from .collection_service import CollectionService
 from .library_service import LibraryService
 from .author_service import AuthorService
+from .exemplar_service import ExemplarService
 from .book_service import BookService
 from .editor_service import EditorService
 from .member_service import MemberService
-from .exemplar_service import ExemplarService
+
 

@@ -1,6 +1,8 @@
 import customtkinter as ctk
-from services import BookService,ThemeService,EditorService,CollectionService,AuthorService
+from services import BookService,ThemeService,EditorService,CollectionService,AuthorService, ExemplarService
 from services.models import BookDTO
+from tools import Color
+from ui.components import PopUpMessage
 from .book_edit_page import BookEditPage
 from .book_add_page import BookAddPage
 from .book_config_page import BookConfigPage
@@ -11,7 +13,7 @@ class BookFrame(ctk.CTkFrame):
         It includes the book's title, publication date, price, collection,
         authors, editors, and themes. It also provides buttons to delete or edit the book.
     """
-    def __init__(self, parent, book:BookDTO, delete_callback, edit_callback):
+    def __init__(self, parent, book:BookDTO, delete_callback, edit_callback, exemplar_service : ExemplarService):
         """
             Initializes the BookFrame with the book details and callbacks for delete and edit actions.
             
@@ -21,11 +23,31 @@ class BookFrame(ctk.CTkFrame):
             :param edit_callback: A function to call when the edit button is pressed.
         """
         super().__init__(parent)
-        
         self.book : BookDTO = book
         self.delete_callback = delete_callback
         self.edit_callback = edit_callback
-        
+        self.exemplar_service = exemplar_service
+
+        self.configure(
+            border_width=0,  
+        )
+        self.pack_propagate(False)
+
+        self.tag_font = ctk.CTkFont(size=13, weight="bold")
+        self.title_font = ctk.CTkFont(size=14, weight="bold")
+
+        border_frame = ctk.CTkFrame(self, fg_color="transparent", corner_radius=15, border_width=5, border_color=Color.primary_color())
+        border_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        self.top_frame = ctk.CTkFrame(border_frame, corner_radius=5, fg_color=Color.primary_color(), border_color=Color.primary_color())
+        self.top_frame.pack(side="top", fill="x")
+
+        self.left_frame = ctk.CTkFrame(border_frame)
+        self.left_frame.pack(side="left", fill="x", expand=True, padx=10, pady=10)
+
+        self.right_frame = ctk.CTkFrame(border_frame)
+        self.right_frame.pack(side="right", fill="both", padx=10, pady=10)
+
         
         self.configure(corner_radius=10, border_width=1)
         self.setup_book_display()
@@ -34,84 +56,167 @@ class BookFrame(ctk.CTkFrame):
         """
             Configure the display of book details in the frame.
         """
-        # Book title
-        title_label = ctk.CTkLabel(
-            self, 
-            text=f"📖 {self.book.title}", 
-            font=ctk.CTkFont(size=16, weight="bold")
-        )
-        title_label.pack(anchor="w", pady=(10, 2), padx=15)
-        
-        # Date
-        date_label = ctk.CTkLabel(
-            self, 
-            text=f"📅 Date: {self.book.date}"
-        )
-        date_label.pack(anchor="w", pady=2, padx=15)
-        
-        # Price
-        price_label = ctk.CTkLabel(
-            self, 
-            text=f"💰 Price: {self.book.price} €"
-        )
-        price_label.pack(anchor="w", pady=2, padx=15)
-        
-        # Collection
-        collection_name = self.book.collection.name if self.book.collection else "No collection"
-        collection_label = ctk.CTkLabel(
-            self, 
-            text=f"📦 Collection: {collection_name}"
-        )
-        collection_label.pack(anchor="w", pady=2, padx=15)
-        
-        # Author 
-        author_names = ", ".join(" ".join([author.person.first_name, author.person.last_name]) for author in self.book.authors)
-        author_label = ctk.CTkLabel(
-            self, 
-            text=f"✍️ Author(s): {author_names}"
-        )
-        author_label.pack(anchor="w", pady=2, padx=15)
-        
-        # Editor 
-        editor_names = ", ".join(editor.name for editor in self.book.editors)
-        editor_label = ctk.CTkLabel(
-            self, 
-            text=f"🏢 Editor(s): {editor_names}"
-        )
-        editor_label.pack(anchor="w", pady=2, padx=15)
-        
-        # Theme
-        theme_names=", ".join(theme.name for theme in self.book.themes)
-        theme_label = ctk.CTkLabel(
-            self, 
-            text=f"🏷️ theme(s): {theme_names}"
-        )
-        theme_label.pack(anchor="w", pady=2, padx=15)
-        
+
         # Button frame
-        button_frame = ctk.CTkFrame(self, fg_color="transparent")
-        button_frame.pack(fill="x", pady=10, padx=15)
+        button_frame = ctk.CTkFrame(self.top_frame, fg_color="transparent")
+        button_frame.pack(side="right", pady=5, padx=5)
         
-        # Delete button
-        delete_btn = ctk.CTkButton(
-            button_frame,
-            text="🗑️ Delete",
-            fg_color="red",
-            hover_color="#cc0000",
-            width=100,
-            command=self.confirm_delete
-        )
-        delete_btn.pack(side="right", padx=(5, 0))
-        
-        # delete button
+        # Modify button
         if self.edit_callback:
             edit_btn = ctk.CTkButton(
                 button_frame,
                 text="✏️ Modify",
                 width=100,
-                command=lambda: self.edit_callback(self.book)
+                command=lambda: self.edit_callback(self.book),
+                fg_color="transparent",
+                hover_color=(Color.hover_color(Color.secondary_color(), 30)),
+                border_width=2,
+                text_color="white",
             )
-            edit_btn.pack(side="right", padx=(0, 5))
+            edit_btn.pack(side="right", padx=(5, 0))
+
+        # Delete button
+        delete_btn = ctk.CTkButton(
+            button_frame,
+            text="🗑️ Delete",
+            fg_color="transparent",
+            hover_color=(Color.hover_color(Color.error_color(), 30)),
+            border_width=2,
+            width=100,
+            command=self.confirm_delete
+        )
+        delete_btn.pack(side="right", padx=(0, 5))
+        
+
+        # Book title
+        title_label = ctk.CTkLabel(
+            self.top_frame, 
+            text=f"{self.book.title}", 
+            font= ctk.CTkFont(size=16, weight="bold"),
+            corner_radius=10,
+            height=35
+        )
+        title_label.pack(side="left", anchor="w", padx=5,
+            pady=5)
+        
+        # Date
+        date_label = ctk.CTkLabel(
+            self.top_frame, 
+            text=f"Publication Date: {self.book.date}",
+            corner_radius=25,
+            height=25,
+            fg_color=Color.background_color(),
+            font = self.tag_font
+        )
+        date_label.pack(side="right", anchor="w", padx=5)
+        
+        # Collection
+        collection_name = self.book.collection.name if self.book.collection else "No collection"
+        collection_label = ctk.CTkLabel(
+            self.top_frame, 
+            text=f"Collection: {collection_name}",
+            corner_radius=25,
+            height=25,
+            fg_color=Color.background_color(),
+            font = self.tag_font
+        )
+        collection_label.pack(side="right", anchor="w", padx=5)
+
+        # Price
+        price_label = ctk.CTkLabel(
+            self.top_frame, 
+            text=f"Price: {self.book.price} €",
+            corner_radius=25,
+            height=25,
+            fg_color=Color.background_color(),
+            font = self.tag_font
+        )
+        price_label.pack(side="right", anchor="w", padx=5)
+        
+        # Author 
+        author_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
+        author_frame.pack(fill="x", padx=5)
+        author_title_label = ctk.CTkLabel(author_frame, text=f"Author(s)", font=self.title_font)
+        author_title_label.pack(side="left", anchor="w", pady=2, padx=(5,5))
+        separator = ctk.CTkFrame(self.left_frame, height=2, fg_color="gray")
+        separator.pack(fill="x", padx=10, pady=5)
+        for author in self.book.authors:
+            author_label = ctk.CTkLabel(
+                author_frame, 
+                text=f"{author.person.first_name} {author.person.last_name}",
+                corner_radius=25,
+                height=25,
+                fg_color=Color.primary_color(),
+                font = self.tag_font
+            )
+            author_label.pack(side="left", anchor="w", pady=2, padx=5)
+        # Editor 
+        editor_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
+        editor_frame.pack(fill="x", padx=5)
+        editor_title_label = ctk.CTkLabel(editor_frame, text=f"Editor(s)", font=self.title_font)
+        editor_title_label.pack(side="left", anchor="w", pady=2, padx=(5,0))
+        separator = ctk.CTkFrame(self.left_frame, height=2, fg_color="gray")
+        separator.pack(fill="x", padx=10, pady=5)
+        for editor in self.book.editors:
+            editor_label = ctk.CTkLabel(
+                editor_frame, 
+                text=f"{editor.name}",
+                corner_radius=25,
+                height=25,
+                fg_color=Color.primary_color(),
+                font = self.tag_font
+            )
+            editor_label.pack(side="left", anchor="w",  pady=2, padx=5)
+        
+        # Theme
+        theme_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
+        theme_frame.pack(fill="x", padx=5)
+        theme_title_label = ctk.CTkLabel(theme_frame, text=f"Theme(s)", font=self.title_font)
+        theme_title_label.pack(side="left", anchor="w", pady=2, padx=(5,0))
+        for theme in self.book.themes:
+            theme_label = ctk.CTkLabel(
+                theme_frame, 
+                text=f"{theme.name}",
+                corner_radius=25,
+                height=25,
+                fg_color=Color.primary_color(),
+                font = self.tag_font
+            )
+            theme_label.pack(side="left", anchor="w",  pady=2, padx=5)
+        
+        # Exemplar
+        exemplars_frame = ctk.CTkScrollableFrame(self.right_frame, fg_color=None, scrollbar_button_color=Color.primary_color(), width=350)
+        exemplars_frame.pack(fill="both", expand=True, padx=15)
+
+        exemplars = self.exemplar_service.get_all_by_isbn(self.book.isbn)
+        if exemplars:
+            for exemplar in exemplars:
+                exemplar_frame = ctk.CTkFrame(
+                    exemplars_frame,
+                    corner_radius=25,
+                    height=25,
+                    fg_color=Color.primary_color()
+                    )
+                exemplar_frame.pack(expand=True, fill="x", pady=5, padx=10)
+                exemplar_label = ctk.CTkLabel(
+                    exemplar_frame, 
+                    text=f"Réf : {exemplar.id} | Localisation : {exemplar.location} | {exemplar.status.name.lower()}",
+                    font = self.tag_font
+                )
+                exemplar_label.pack(side="left", pady=5, padx=15)
+                status = ctk.CTkLabel(
+                    exemplar_frame, 
+                    text=f"",
+                    font = self.tag_font,
+                    fg_color=Color.status_color(int(exemplar.status.value)),
+                    height=25,
+                    width=25,
+                    corner_radius=25
+                )
+                status.pack(side="right", pady=5, padx=5)
+        else:
+            exemplar_title_label = ctk.CTkLabel(exemplars_frame, text="No exemplar", font=self.title_font)
+            exemplar_title_label.pack(anchor="w", pady=2, padx=5)
     
     def confirm_delete(self):
         """
@@ -157,6 +262,7 @@ class BookFrame(ctk.CTkFrame):
         )
         no_btn.pack(side="right", padx=10)
 
+
 class BookPage(ctk.CTkFrame):
     """
         This class represents the main page for managing books.
@@ -171,6 +277,7 @@ class BookPage(ctk.CTkFrame):
         self.collection_service = CollectionService()
         self.theme_service = ThemeService()
         self.book_service = BookService()
+        self.exemplar_service = ExemplarService()
         self.books = []
         self.filtered_books = []        
         self.setup_ui()
@@ -203,6 +310,7 @@ class BookPage(ctk.CTkFrame):
             search_frame,
             text="➕ ADD",
             command=self.add_book,
+            fg_color=Color.primary_color(),
             height=35
         )
         add_btn.grid(row=0, column=2, padx=(5, 10), pady=10)
@@ -220,7 +328,7 @@ class BookPage(ctk.CTkFrame):
         
         
         # === Scrollable frame ===
-        self.scroll_frame = ctk.CTkScrollableFrame(self, width=600)
+        self.scroll_frame = ctk.CTkScrollableFrame(self, width=600, scrollbar_button_color=Color.primary_color())
         self.scroll_frame.grid(row=2, column=0, sticky="nsew", padx=10, pady=(5, 10))
         
         # === Info ===
@@ -235,6 +343,7 @@ class BookPage(ctk.CTkFrame):
             loads all books from the book service and displays them.
         """
         try:
+            self.book_service = BookService()
             self.books = self.book_service.get_all()
             self.filtered_books = self.books.copy()
             self.display_books()
@@ -255,7 +364,7 @@ class BookPage(ctk.CTkFrame):
                 self.scroll_frame,
                 text="📚 No book found",
                 font=ctk.CTkFont(size=16),
-                text_color="gray"
+                text_color="gray",
             )
             no_books_label.pack(pady=50)
             return
@@ -266,9 +375,10 @@ class BookPage(ctk.CTkFrame):
                 self.scroll_frame,
                 book,
                 delete_callback=self.delete_book,
-                edit_callback=self.edit_book 
+                edit_callback=self.edit_book,
+                exemplar_service=self.exemplar_service
             )
-            book_frame.pack(fill="x", padx=10, pady=5)
+            book_frame.pack(fill="x", padx=(0,10), pady=5)
     
     def edit_book(self,book):
         """
@@ -282,7 +392,7 @@ class BookPage(ctk.CTkFrame):
         """
         open a page to add a book
         """
-        add_page = BookAddPage(book_service=self.book_service, author_service=self.author_service,on_success=self.refresh)
+        add_page = BookAddPage(book_service=self.book_service, author_service=self.author_service, exemplar_service=self.exemplar_service, on_success=self.refresh)
         self.wait_window(add_page)
         self.refresh()
     
@@ -303,7 +413,7 @@ class BookPage(ctk.CTkFrame):
             self.load_books()
             self.show_success("Book successfully deleted !")
         except Exception as e:
-            self.show_error(f"Error : {str(e)}")
+            PopUpMessage(self, f"{e}")
     
     def on_search(self, event=None):
         """

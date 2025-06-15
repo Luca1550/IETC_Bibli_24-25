@@ -1,6 +1,4 @@
 import customtkinter as ctk
-from typing import TypeVar, Generic
-
 
 class SelectionFrame(ctk.CTkToplevel):
     """
