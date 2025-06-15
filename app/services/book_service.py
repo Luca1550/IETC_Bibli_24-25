@@ -1,7 +1,7 @@
 from repositories import BookRepo,BookThemeRepo,BookEditorRepo,BookAuthorRepo,CollectionRepo
 from repositories.models import Book,Theme,Author,Editor,Collection
 from .models import BookDTO,AuthorDTO
-from services import AuthorService
+from services import AuthorService, ExemplarService
 import datetime
 
 class BookService:
@@ -17,6 +17,7 @@ class BookService:
         self._book_author_repo = BookAuthorRepo()
         self._collection_repo = CollectionRepo()
         self._author_service = AuthorService()
+        self._exemplar_service = ExemplarService()      
     
     def add_book(self,isbn:str,title:str,date:datetime,price:float,collection:Collection,authors:list[AuthorDTO],themes:list[Theme],editors:list[Editor]):
         """
@@ -55,6 +56,8 @@ class BookService:
             if editors:
                 for editor in editors:
                     self._book_editor_repo.add_book_editor(isbn,editor.id)
+            
+            return self.get_by_isbn(isbn)
         except Exception as e:
             raise Exception(f"🛑 Error {e}")
     
@@ -157,6 +160,12 @@ class BookService:
         """
         try:
             book_dto = self.get_by_isbn(isbn)
+            if not self._exemplar_service.check_all_status_by_isbn(book_dto.isbn):
+                raise Exception("You cannot delete this book as all exemplars must be available before the deletion")
+            book_exemplars = self._exemplar_service.get_all_by_isbn(book_dto.isbn)
+            if book_exemplars:
+                for exemplar in book_exemplars:
+                    self._exemplar_service.delete_exemplar(exemplar.id)
             book = self._book_repo.get_by_isbn(isbn)
             if isinstance(book_dto, BookDTO):
                 for i in enumerate(book_dto.authors):
@@ -169,7 +178,8 @@ class BookService:
                 return True
             raise Exception(book)
         except Exception as e:
-            return f"🛑 Error [{e}]"
+            print(e)
+            raise Exception(f"🛑 Error [{e}]")
         
     def _check_book_value(self,isbn:str,title:str,date:datetime,price:float,authors:list[AuthorDTO],themes:list[Theme],editors:list[Editor]):
         if not isbn or len(isbn)!=13 or not isbn.isnumeric():

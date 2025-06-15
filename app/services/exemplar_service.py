@@ -70,7 +70,7 @@ class ExemplarService:
         """
         try:
             exemplar = self.get_by_id(id)
-            if exemplar.status != 1:
+            if exemplar.status.value != 1:
                 raise Exception("Exemplar must be available to be deleted.")
             if isinstance(exemplar, Exemplar):
                 if self._exemplar_repo.delete_exemplar(exemplar):
@@ -131,3 +131,12 @@ class ExemplarService:
             return self._exemplar_repo.get_all(isbn)
         except Exception as e:
             raise Exception(f"🛑 error {e}")
+        
+    def check_all_status_by_isbn(self, isbn : str):
+        exemplars = self.get_all_by_isbn(isbn)
+        if not exemplars:
+            return True
+        for exemplar in exemplars:
+            if exemplar.status.value != 1:
+                return False
+        return True

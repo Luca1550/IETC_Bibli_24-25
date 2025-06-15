@@ -1,6 +1,8 @@
 import customtkinter as ctk
-from services import BookService, AuthorService, CollectionService, EditorService, ThemeService
+from services import BookService, AuthorService, CollectionService, EditorService, ThemeService, ExemplarService
 from ui.components import PopUpMessage, SelectionFrame
+from ui.pages import AddExemplarPage
+from tools import Color
 from .book_config_page import AddThemePage,AddCollectionPage,AddEditorPage,AddAuthorPage
 
 class BookAddPage(ctk.CTkToplevel):
@@ -10,7 +12,7 @@ class BookAddPage(ctk.CTkToplevel):
         and select associated authors, editors, themes, and collections.
         It also provides options to add new authors, editors, themes, and collections.
     """
-    def __init__(self, book_service: BookService, on_success=None):
+    def __init__(self, book_service: BookService, exemplar_service : ExemplarService,on_success=None):
         """
         Initialize the book add page.
         attributes are seprarated by a blank line for better readability.
@@ -21,6 +23,7 @@ class BookAddPage(ctk.CTkToplevel):
         self.collection_service = CollectionService()
         self.editor_service = EditorService()
         self.theme_service = ThemeService()
+        self.exemplar_service = exemplar_service
         self.on_success = on_success
 
         self.title(" ")
@@ -117,6 +120,8 @@ class BookAddPage(ctk.CTkToplevel):
         ctk.CTkButton(self, text="✅ Add Book", command=self.confirm_action).pack(pady=10)
         ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
 
+
+
     def open_selection_frame(self, title, all_items, selected_items, display_model_method, attributes_to_search, entry_to_update):
         """Open a selection frame for choosing items from a list."""
         selection_frame = SelectionFrame(
@@ -150,13 +155,51 @@ class BookAddPage(ctk.CTkToplevel):
         add_author_page = AddAuthorPage(self.author_service)
         self.wait_window(add_author_page)
 
+    def open_add_exemplar_page(self, book):
+        """Open the page to add a new exemplar."""
+        add_exemplar_page = AddExemplarPage(book, self.exemplar_service)
+        self.wait_window(add_exemplar_page)
+        self.destroy()
+        
+
+    def pop_up_add_exemplar(self, book):
+        confirm_window = ctk.CTkToplevel(self)
+        confirm_window.title("Choice Box")
+        confirm_window.geometry("300x150")
+        confirm_window.grab_set()
+
+        ctk.CTkLabel(
+            confirm_window,
+            text=f"Would you like to add an exemplar?",
+            wraplength=250
+        ).pack(pady=20)
+
+        btn_frame = ctk.CTkFrame(confirm_window, fg_color="transparent")
+        btn_frame.pack(pady=10)
+
+        ctk.CTkButton(
+            btn_frame,
+            text="Yes",
+            command=lambda :   self.open_add_exemplar_page(book)
+        ).pack(side="left", padx=10)
+
+        ctk.CTkButton(
+            btn_frame,
+            text="No",
+            command=lambda: [
+                confirm_window.destroy(),
+            ]
+        ).pack(side="right", padx=10)
+        
+
+
     def confirm_action(self):
         """Confirm the action of adding a book with the provided details."""
         try:
             if len(self.selected_collection) > 1:
                 raise Exception("A book can only have one collection.")
 
-            self.book_service.add_book(
+            book = self.book_service.add_book(
                 isbn=self.isbn_entry.get(),
                 title=self.title_entry.get(),
                 date=self.date_entry.get(),
@@ -168,9 +211,7 @@ class BookAddPage(ctk.CTkToplevel):
             )
 
             PopUpMessage.pop_up(self, "Book added ✅")
-            if self.on_success:
-                self.on_success()
-            self.destroy()
+            self.pop_up_add_exemplar(book)
 
         except Exception as e:
             PopUpMessage.pop_up(self, str(e).lower())

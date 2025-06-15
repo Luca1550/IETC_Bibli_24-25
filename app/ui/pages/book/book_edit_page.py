@@ -1,7 +1,9 @@
 import customtkinter as ctk
-from services import BookService,AuthorService,CollectionService,EditorService,ThemeService
+from tools import Color
+from services import BookService,AuthorService,CollectionService,EditorService,ThemeService,ExemplarService
 from services.models import BookDTO
-from ui.components import PopUpMessage,SelectionFrame
+from ui.components import PopUpMessage,SelectionFrame,DeleteFrame
+from ui.pages import AddExemplarPage
 from .book_config_page import AddThemePage,AddCollectionPage,AddEditorPage,AddAuthorPage
 
 class BookEditPage(ctk.CTkToplevel):
@@ -21,6 +23,12 @@ class BookEditPage(ctk.CTkToplevel):
         - Theme
         """
         super().__init__()
+        self.title(" ")
+        self.geometry("500x700")
+        self.grab_set()
+        self.focus_set()
+        self.lift
+
         self.book : BookDTO = book
         self.on_success = on_success
         self.book_service = book_service
@@ -28,8 +36,10 @@ class BookEditPage(ctk.CTkToplevel):
         self.author_service=AuthorService()
         self.theme_service=ThemeService()
         self.collection_service=CollectionService()
-        self.title(" ")
-        self.geometry("500x600")
+        self.exemplar_service=ExemplarService()
+
+        self.tag_font = ctk.CTkFont(size=13, weight="bold")
+        self.title_font = ctk.CTkFont(size=14, weight="bold")
         
         ctk.CTkLabel(self, text="✏️ Edit Book", font=("Roboto", 18)).pack(pady=10)
         
@@ -140,11 +150,58 @@ class BookEditPage(ctk.CTkToplevel):
         edit_theme_button.pack(side="right", padx=(5, 0))
         self.theme_entry.configure(state="disabled")
         ctk.CTkButton(theme_frame,text="➕",width=30,command=self.open_add_theme_page).pack(side="right", padx=(5, 0))
-        
+
+        #Exemplar
+        label_exemplar_entry = ctk.CTkLabel(self, text="Exemplar(s)", anchor="w")
+        label_exemplar_entry.pack(fill="x", padx=20)
+        exemplars_frame = ctk.CTkFrame(self, fg_color="transparent")
+        exemplars_frame.pack(fill="x", padx=20)
+        exemplars = self.exemplar_service.get_all_by_isbn(self.book.isbn)
+        if exemplars:
+            exemplar_frame = ctk.CTkFrame(
+                    exemplars_frame,
+                    )
+            exemplar_frame.pack(side="left", expand=True, fill="x")
+            exemplar_label = ctk.CTkLabel(
+                exemplar_frame, 
+                text=f"{len(exemplars)} exemplar(s)",
+                font = self.tag_font
+            )
+            exemplar_label.pack(side="left", pady=5, padx=15)
+        else:
+            exemplar_title_label = ctk.CTkLabel(exemplars_frame, text="No exemplar", font=self.title_font)
+            exemplar_title_label.pack(side="left", anchor="w", pady=2, padx=5)
+
+        edit_exemplar_button = ctk.CTkButton(exemplars_frame, text="✏️", width=30, command=lambda:self.open_delete_frame(
+            title="examplar update",
+            items=self.exemplar_service.get_all_by_isbn(book.isbn),
+            display_model_method=lambda exemplar: f"{exemplar.id} | {exemplar.location} | {exemplar.status}",
+            delete_method=lambda exemplar: self.exemplar_service.delete_exemplar(exemplar),
+            item_to_delete=lambda exemplar: exemplar.id,
+            entry_to_update=exemplar_label if exemplar_label else None,
+            display_entry_to_update=lambda exemplar: f"{len(exemplar)} exemplar(s)"
+        ))
+        edit_exemplar_button.pack(side="right", padx=(5, 0))
+        ctk.CTkButton(exemplars_frame,text="➕",width=30,command=lambda : self.open_add_exemplar_page(exemplar_label)).pack(side="right", padx=(5, 0))
+
         
         ctk.CTkButton(self, text="✅ Save", command=self.confirm_action).pack(pady=10)
         ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
-        
+
+    def open_delete_frame(self,title,items,display_model_method,delete_method,item_to_delete,entry_to_update,display_entry_to_update):
+        delete_frame = DeleteFrame(
+            self,
+            title,
+            items,
+            display_model_method,
+            delete_method,
+            item_to_delete,
+            entry_to_update,
+            display_entry_to_update
+        )
+        self.wait_window(delete_frame)
+
+
     def open_selection_frame(self,title,all_items,selected_items,display_model_method,attributes_to_search,entry_to_update,attributes_to_entry=None):
         """
             opens a selection frame to choose items from a list.
@@ -166,6 +223,12 @@ class BookEditPage(ctk.CTkToplevel):
         add_theme_page = AddThemePage(self.theme_service)
         self.wait_window(add_theme_page)
     
+    def open_add_exemplar_page(self, exemplar_label):
+        """Opens the AddExemplarPage to add a new editor."""
+        add_exemplar_page = AddExemplarPage(self.book, self.exemplar_service)
+        self.wait_window(add_exemplar_page)
+        exemplar_label.configure(text=f"{len(self.exemplar_service.get_all_by_isbn(self.book.isbn))} exemplar(s)")
+
     def open_add_editor_page(self):
         """Opens the AddEditorPage to add a new editor."""
         add_editor_page = AddEditorPage(self.editor_service)
@@ -208,5 +271,3 @@ class BookEditPage(ctk.CTkToplevel):
             self.destroy()
         except Exception as e :
                 PopUpMessage.pop_up(self,str(e).lower())
-        
-    
