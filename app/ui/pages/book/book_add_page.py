@@ -10,14 +10,14 @@ class BookAddPage(ctk.CTkToplevel):
         and select associated authors, editors, themes, and collections.
         It also provides options to add new authors, editors, themes, and collections.
     """
-    def __init__(self, book_service: BookService, on_success=None):
+    def __init__(self, book_service: BookService, author_service : AuthorService,on_success=None):
         """
         Initialize the book add page.
         attributes are seprarated by a blank line for better readability.
         """
         super().__init__()
         self.book_service = book_service
-        self.author_service = AuthorService()
+        self.author_service = author_service
         self.collection_service = CollectionService()
         self.editor_service = EditorService()
         self.theme_service = ThemeService()

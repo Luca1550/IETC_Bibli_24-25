@@ -282,7 +282,7 @@ class BookPage(ctk.CTkFrame):
         """
         open a page to add a book
         """
-        add_page = BookAddPage(book_service=self.book_service, on_success=self.refresh)
+        add_page = BookAddPage(book_service=self.book_service, author_service=self.author_service,on_success=self.refresh)
         self.wait_window(add_page)
         self.refresh()
     
