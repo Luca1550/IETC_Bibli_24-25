@@ -42,6 +42,7 @@ class AuthorService:
     def get_all(self):
         authors=self.author_repo.get_all()
         authors_dto = []
+        self.person_repo = PersonRepo()
         for author in authors:
             authors_dto.append(
                 AuthorDTO(
