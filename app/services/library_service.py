@@ -23,7 +23,7 @@ class LibraryService:
         """
         return self._library_repo.get_library_parameters()
     
-    def add_library(self,name: str, fine_per_day: float, subscribe_amout: float, limit_borrow: int, borrow_price_with_sub: float, borrow_price_without_sub: float, borrow_delay: int, url_logo: str, id: int | None = None) -> Library:
+    def add_library(self,name: str, fine_per_day: float, subscribe_amout: float, limit_borrow: int, borrow_price_with_sub: float, borrow_price_without_sub: float, borrow_delay: int, url_logo: str,limit_reservation: int, id: int | None = None) -> Library:
         """
         Adds a new library to the repository.
         Args:
@@ -51,6 +51,8 @@ class LibraryService:
                 raise Exception("Invalid borrow price without subscription: it must be a non-negative numeric value.")
             if not borrow_delay >= 0 or not isinstance(borrow_delay, (int)):
                 raise Exception("Invalid borrow delay: it must be a non-negative numeric value.")
+            if not limit_reservation >= 0 or not isinstance(limit_reservation, (int)):
+                raise Exception("Invalid limitreservation: it must be a non-negative numeric value.")
             
             url_pattern = re.compile(r'^https?://[\w\-\.]+\.\w{2,}(?:/[\w\-/\.\?\=\&]*)?$')
             if not isinstance(url_logo, str) or not url_pattern.match(url_logo):
@@ -65,7 +67,8 @@ class LibraryService:
                 borrow_price_with_sub=borrow_price_with_sub,
                 borrow_price_without_sub=borrow_price_without_sub,
                 borrow_delay=borrow_delay,
-                url_logo=url_logo
+                url_logo=url_logo,
+                limit_reservation=limit_reservation
             )
             result = self._library_repo.add_library(new_library)
             if result:
@@ -75,7 +78,7 @@ class LibraryService:
         except Exception as e:
             return f"🛑 Error [{e}]"
     
-    def update_library(self, id: int, name: str, fine_per_day: float, subscribe_amout: float, limit_borrow: int, borrow_price_with_sub: float, borrow_price_without_sub: float, borrow_delay: int, url_logo: str) -> bool:
+    def update_library(self, id: int, name: str, fine_per_day: float, subscribe_amout: float, limit_borrow: int, borrow_price_with_sub: float, borrow_price_without_sub: float, borrow_delay: int, url_logo: str, limit_reservation: int) -> bool:
         """
         Updates an existing library in the repository.
         Args:
@@ -91,7 +94,7 @@ class LibraryService:
         Returns:
             bool: True if the library was updated successfully, False otherwise.
         """
-        print("Updating with:", id, name, fine_per_day, subscribe_amout, limit_borrow, borrow_price_with_sub, borrow_price_without_sub, borrow_delay, url_logo)
+        
         try:
             if not fine_per_day >= 0 or  not isinstance(fine_per_day, (int, float)):
                 raise Exception("Invalid fine per day: it must be a non-negative numeric value.")
@@ -105,13 +108,15 @@ class LibraryService:
                 raise Exception("Invalid borrow price without subscription: it must be a non-negative numeric value.")
             if not borrow_delay >= 0 or not isinstance(borrow_delay, (int)):
                 raise Exception("Invalid borrow delay: it must be a non-negative numeric value.")
+            if not limit_reservation >= 0 or not isinstance(limit_reservation, (int)):
+                raise Exception("Invalid limit reservation: it must be a non-negative numeric value.")
             
             url_pattern = re.compile(r'^https?://[\w\-\.]+\.\w{2,}(?:/[\w\-/\.\?\=\&]*)?$')
             if not isinstance(url_logo, str) or not url_pattern.match(url_logo):
                 raise ValueError("Invalid URL for logo: it must be a valid URL.")
             
-            updated_library = Library(id=id,name=name,fine_per_day=fine_per_day,subscribe_amout=subscribe_amout,limit_borrow=limit_borrow,borrow_price_with_sub=borrow_price_with_sub,borrow_price_without_sub=borrow_price_without_sub,borrow_delay=borrow_delay,url_logo=url_logo)
-            
+            updated_library = Library(id=id,name=name,fine_per_day=fine_per_day,subscribe_amout=subscribe_amout,limit_borrow=limit_borrow,borrow_price_with_sub=borrow_price_with_sub,borrow_price_without_sub=borrow_price_without_sub,borrow_delay=borrow_delay,url_logo=url_logo,limit_reservation=limit_reservation)
+            print(updated_library)
 
             result = self._library_repo.update_library(updated_library)
             if result:

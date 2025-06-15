@@ -88,19 +88,19 @@ class LibraryPage(ctk.CTkFrame):
         
         """
         updated_param={}
-        updated_param["id"] =self.paramlib[0]["id"]
+        updated_param["id"] =self.paramlib[0].id
         
         for key, value in self.entries.items():
             val = value.get()
             if key in ["fine_per_day", "subscribe_amout", "borrow_price_with_sub", "borrow_price_without_sub"]:
                 updated_param[key] = float(val)
-            elif key in ["limit_borrow", "borrow_delay"]:
+            elif key in ["limit_borrow", "borrow_delay","limit_reservation"]:
                 updated_param[key] = int(val)
             else:
                 updated_param[key] = val
         
         self.library_service.update_library(**updated_param)
-        
+        print("update: ",updated_param)
     def add_form(self):
         
                 
@@ -139,8 +139,13 @@ class LibraryPage(ctk.CTkFrame):
         self.labelUrl.grid(row=8, column=0, sticky="w", padx=1, pady=1)
         self.urlentry = ctk.CTkEntry(self.main_panel)
         self.urlentry.grid(row=8, column=1, sticky="ew", pady=1)
+        self.labelLR= ctk.CTkLabel(self.main_panel,text='Limit reservation')
+        self.labelLR.grid(row=9, column=0, sticky="w", padx=1, pady=1)
+        self.LRentry = ctk.CTkEntry(self.main_panel)
+        self.LRentry.grid(row=9, column=1, sticky="ew", pady=1)
+
         self.add_button = ctk.CTkButton(self.main_panel, text="Add",command=self.add_library)
-        self.add_button.grid(row=9, column=0, columnspan=2, pady=10)
+        self.add_button.grid(row=10, column=0, columnspan=2, pady=10)
 
     def add_library(self):
         """
@@ -164,7 +169,8 @@ class LibraryPage(ctk.CTkFrame):
             borrow_without_sub = float(self.BPWTSentry.get())
             borrow_delay = int(self.BDentry.get())
             url_logo = self.urlentry.get()
-            newlib=self.library_service.add_library(name,fine_per_day,subscribe_amount,limit_borrow,borrow_with_sub,borrow_without_sub,borrow_delay,url_logo)
+            limit_reservation = int(self.LRentry.get())
+            newlib=self.library_service.add_library(name,fine_per_day,subscribe_amount,limit_borrow,borrow_with_sub,borrow_without_sub,borrow_delay,url_logo,limit_reservation)
             if isinstance(newlib, str):
                 PopUpMessage.pop_up(self, newlib)
             else:
