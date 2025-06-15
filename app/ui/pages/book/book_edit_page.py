@@ -20,6 +20,7 @@ class BookEditPage(ctk.CTkToplevel):
         - Editor
         - Theme
         """
+        super().__init__()
         self.book : BookDTO = book
         self.on_success = on_success
         self.book_service = book_service

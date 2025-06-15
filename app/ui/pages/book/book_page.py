@@ -76,7 +76,7 @@ class BookFrame(ctk.CTkFrame):
         editor_names = ", ".join(editor.name for editor in self.book.editors)
         editor_label = ctk.CTkLabel(
             self, 
-            text=f"🏢 Editors: {editor_names}"
+            text=f"🏢 Editor(s): {editor_names}"
         )
         editor_label.pack(anchor="w", pady=2, padx=15)
         
@@ -84,7 +84,7 @@ class BookFrame(ctk.CTkFrame):
         theme_names=", ".join(theme.name for theme in self.book.themes)
         theme_label = ctk.CTkLabel(
             self, 
-            text=f"🏷️ theme: {theme_names}"
+            text=f"🏷️ theme(s): {theme_names}"
         )
         theme_label.pack(anchor="w", pady=2, padx=15)
         
@@ -342,7 +342,7 @@ class BookPage(ctk.CTkFrame):
             waits for 3 seconds before clearing the message.
         """
         self.info_label.configure(text=f"❌ {message}", text_color="red")
-        self.after(3000, lambda: self.update_info())
+        # self.after(3000, lambda: self.update_info())
     
     def show_success(self, message):
         """

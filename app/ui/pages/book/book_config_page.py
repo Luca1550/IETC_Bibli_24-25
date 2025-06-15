@@ -87,7 +87,7 @@ class AddThemePage(ctk.CTkToplevel):
         self.name_entry.pack(fill="x", padx=20)
         
         ctk.CTkButton(self, text="✅ Add Theme", command=self.confirm_action).pack(pady=10)
-        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
+        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(pady=(0,10))
         
     def confirm_action(self):
         """Confirm the action of adding a new theme."""
@@ -204,7 +204,7 @@ class AddEditorPage(ctk.CTkToplevel):
         self.name_entry.pack(fill="x", padx=20)
         
         ctk.CTkButton(self, text="✅ Add Editor", command=self.confirm_action).pack(pady=10)
-        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
+        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(pady=(0,10))
         
     def confirm_action(self):
         try:
@@ -320,7 +320,7 @@ class AddCollectionPage(ctk.CTkToplevel):
         self.name_entry.pack(fill="x", padx=20)
         
         ctk.CTkButton(self, text="✅ Add Collection", command=self.confirm_action).pack(pady=10)
-        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
+        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(pady=(0,10))
         
     def confirm_action(self):
         try:
@@ -460,7 +460,7 @@ class AddAuthorPage(ctk.CTkToplevel):
         self.city_entry.pack(fill="x", padx=20)
         
         ctk.CTkButton(self, text="✅ Add Author", command=self.confirm_action).pack(pady=10)
-        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
+        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(pady=(0,10))
         
     def confirm_action(self):
         try:
