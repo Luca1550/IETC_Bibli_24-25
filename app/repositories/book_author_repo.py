@@ -68,3 +68,14 @@ class BookAuthorRepo:
             if book_author.isbn == isbn:
                 self.book_author_json.remove(book_author)
         self._save_all()
+
+    def exist(self, attribute : str, value : object) -> bool:
+        """
+        Checks if a given attribute of an object is unique in the repository.
+        arguments:
+        - attribute: The attribute to check for uniqueness.
+        - value: The value to check against the specified attribute.
+        returns:
+        - True if the value is unique, False if it already exists in the repository.
+        """
+        return any(getattr(author, attribute, None) == value for author in self.book_author_json)

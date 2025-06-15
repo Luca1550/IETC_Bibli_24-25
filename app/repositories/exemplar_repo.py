@@ -1,5 +1,6 @@
 from .models import Exemplar
 from tools import JsonStorage
+from enums import Status
 import pathlib
 
 class ExemplarRepo():
@@ -44,6 +45,23 @@ class ExemplarRepo():
             return next((e for e in self._exemplar_json if e.id == id), None)
         return False
     
+    def get_all(self, isbn : str) -> list[Exemplar]:
+        """
+        Retrieves all Exemplar objects from the repository.
+        returns:
+        - Returns a list of all Exemplar objects.
+        """
+        exemplars = []
+        for exemplar in self._exemplar_json:
+            if exemplar.isbn == isbn:
+                exemplars.append(exemplar)
+        return exemplars
+
+    def get_disponibility(self, isbn : str) -> Exemplar | bool:
+        if isbn:
+            return next((e for e in self._exemplar_json if e.isbn == isbn and e.status == Status(1)), None)
+        return False
+    
     def delete_exemplar(self, exemplar : Exemplar) -> bool:
         """
         Deletes an Exemplar object from the repository and saves the changes to the JSON file.
@@ -71,3 +89,4 @@ class ExemplarRepo():
             self._save_all()
             return True
         return False
+    

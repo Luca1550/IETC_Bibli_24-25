@@ -1,4 +1,4 @@
-from repositories import AuthorRepo, PersonRepo
+from repositories import AuthorRepo, PersonRepo, BookAuthorRepo
 from .models import AuthorDTO
 from repositories.models import Person, Author
 from .person_service import PersonService
@@ -14,6 +14,7 @@ class AuthorService:
         self.author_repo = AuthorRepo()
         self.person_repo = PersonRepo()
         self.person_service = PersonService()
+        self.book_author_repo = BookAuthorRepo()
     
     def add_author(self, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str) -> Author:
         """
@@ -26,7 +27,7 @@ class AuthorService:
             person = self.person_service.add_person(first_name=first_name, last_name=last_name, national_number=national_number, email=email, street=street, cp=cp, city=city)
             self.author_repo.add_author(Author(id=None,id_person=person.id))
         except Exception as e:
-            return f"Error adding author: {e}"
+            raise Exception(f"🛑 error adding author: {e}")
     
     def get_by_id(self,id:int):
         """
@@ -50,13 +51,22 @@ class AuthorService:
             )
         return authors_dto
     
-    def delete_author(self,id):
+    def delete_author(self,id : int):
         """
-        Deletes an author with the given name.
-        :param name: The name of the author to delete.
-        :return: A message indicating the result of the deletion.
+        Deletes an author by their ID.
+
+        Arguments:
+        - id: The unique identifier of the author.
+
+        Returns:
+        - True if the deletion was successful.
+        - Raises an exception if the author is referenced elsewhere or not found.
         """
-        if self.author_repo.delete_author(id):
-            return f"Author ID: {id} deleted"
-        else:
-            return f"Author ID: {id} not found"
+        try:    
+            if self.book_author_repo.exist("id_author", id):
+                raise Exception("Cannot delete, already used womewhere else.")
+            if self.author_repo.delete_author(id):
+                return True
+            raise Exception(f"Author ID: {id} not found")
+        except Exception as e:
+            raise Exception(f"🛑 error {e}")

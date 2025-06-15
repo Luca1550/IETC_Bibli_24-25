@@ -17,7 +17,7 @@ class WorkerService:
         self._person_repo: PersonRepo = PersonRepo()
         self.person_service = PersonService()
 
-    def add_worker(self, person: Person) -> WorkerDTO | str:
+    def add_worker(self, id : int, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str) -> WorkerDTO | str:
         """
         Adds a new worker to the repository.
         arguments:
@@ -26,21 +26,27 @@ class WorkerService:
         - Returns a Worker object if added successfully, otherwise returns an error message.
         """
         try:
+            person = self.person_service.add_person(
+                first_name,
+                last_name,
+                national_number,
+                email,
+                street,
+                cp,
+                city
+            )
             if isinstance(person, Person):
-                new_worker = Worker(
-                    id=None,
-                    id_person=person.id
+                worker = Worker(
+                    id=None,  # ID will be assigned by the repository
+                    id_person=person.id,
                 )
-                if self._worker_repo.add_worker(new_worker):
-                    person = self._person_repo.get_by_id(person.id)
-                    return WorkerDTO(
-                        id_worker=new_worker.id,
-                        person=person
-                    )
+                self._worker_repo.add_worker(worker)
+                return WorkerDTO(id_worker=worker.id, person=person)
             else:
-                raise TypeError("Provided person is not a valid Person object.")
+                raise Exception("Failed to add person.")
         except Exception as e:
-            return f"🛑 Error [{e}]"
+            print(f"🛑 Error [{e}]")
+            return str(e)
 
     def delete_worker(self, id: int) -> bool:
         """
