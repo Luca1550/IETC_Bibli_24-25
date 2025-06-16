@@ -39,12 +39,14 @@ class ReservationService:
                 )
                 
             result=self._reservation_repo.add_reservation(new_reservation)
-            if result and id_member: 
-                new_reservation_member= ReservationMember(
-                    #faut check le id c'est pas bon
-                    id_reservation=result.id_reservation,
-                    id_member=id_member
-                )
+            if result and hasattr(result, 'id') and result.id is not None:
+                #je check si l'id existe bien dans result 
+                if id_member:
+                    new_reservation_member= ReservationMember(
+                        #j'avais mis id_exemplar donc pas bon
+                        id_reservation=result.id,
+                        id_member=id_member
+                    )
                 reservation_member_result = self._reservation_member_repo.add_reservation_member(new_reservation_member) 
             return result
         
