@@ -2,6 +2,7 @@ import customtkinter as ctk
 from ui.components import MenuNavigation, LoginPage
 from ui.pages.library import LibraryPage
 from ui.pages.book import BookPage
+from ui.pages.reservation import ReservationPage
 
 class MainApp(ctk.CTk):
     """
@@ -68,7 +69,7 @@ class MainApp(ctk.CTk):
             return BookPage(self.page_container)
 
         def page_Réservation():
-            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Réservation")
+            return ReservationPage(self.page_container)
 
         def page_Emprunt():
             return ctk.CTkLabel(self.page_container, text="Contenu de la Page Emprunt")
