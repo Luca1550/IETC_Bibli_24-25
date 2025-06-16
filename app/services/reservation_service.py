@@ -2,7 +2,7 @@
 from repositories.models import Reservation,Member,Exemplar,Library,ReservationMember
 from repositories import ReservationRepo,ExemplarRepo,MemberRepo,ReservationMemberRepo,BookRepo,LibraryRepo
 from .models import ReservationDTO
-from datetime import date
+from datetime import date, datetime
 
 class ReservationService:
 
@@ -19,15 +19,19 @@ class ReservationService:
 #ajoute
 #on a un probleme ok ca va add tout ca mais alors je dois aussi add dans mon dto et comment on va relier le nom de la personne avec son id
 #ahhh bah par le dto en fait donc quand je vais faire un add je vais donner son nom, je vais le check dans le dto par son id qui va etre renvoyé ici 
-    def add_reservation(self,id_exemplar:int,id_member:int,reservation_date:date|None) ->Reservation:
+    def add_reservation(self,id_exemplar:int,id_member:int,reservation_date:date|None = None) ->Reservation:
         self.paramres_wt_DTO = self.get_parameter_reservation_wtDTO()
 
 
         try:
             if reservation_date is None:
-                actual_reservation_date = date.today()
+                actual_reservation_date = date.today().isoformat()
             else:
-                actual_reservation_date = reservation_date
+                if isinstance(reservation_date, str):
+                    parsed_date = datetime.fromisoformat(reservation_date).date()
+                    actual_reservation_date = parsed_date.isoformat()
+                else:
+                    actual_reservation_date = reservation_date.isoformat()
             validation_result = self.check_value(id_exemplar, actual_reservation_date)
             if isinstance(validation_result, str):
                 return validation_result 
@@ -77,11 +81,46 @@ class ReservationService:
         except Exception as e:
             print(f"🛑 Error getting reservations: [{e}]")
             return []
-    def delete_reservation(self):
-        pass
-
-    def update_reservation(self):
-        pass
+    def delete_reservation(self,id_reservation:int):
+        try:
+            reservations = self._reservation_repo.get_reservation_parameters()
+            reservationsDTO = self._reservation_member_repo.get_reservation_member_byId(id_reservation)
+            for res in reservations:
+                if res.id == id_reservation:
+                    self._reservation_repo.delete_reservation(res.id, res.id_exemplar, res.reservation_date)
+            for res in reservationsDTO:
+                if res.id_reservation == id_reservation:
+                    self._reservation_member_repo.delete_reservation_member(res.id_reservation, res.id_member)
+            return True
+        except Exception as e:
+            print(f"🛑 Error deleting reservation: [{e}]")
+            return False
+    def update_reservation(self,id_reservation:int,id_exemplar:int,id_member:int,reservation_date:date|None = None):
+        try:
+            reservation: Reservation = self._reservation_repo.get_by_id(id_reservation)
+            if not isinstance(reservation, Reservation):
+                raise Exception(f"Reservation with ID: {id_reservation} was not found.")
+            if reservation.id_exemplar != id_exemplar:
+                reservation.id_exemplar = id_exemplar
+            if reservation.reservation_date != reservation_date:
+                reservation.reservation_date = reservation_date
+            self._reservation_repo.update_reservation(reservation)
+            if id_member:
+                reservation_member = self._reservation_member_repo.get_reservation_member_byId(id_reservation)
+                if not reservation_member:
+                    new_reservation_member = ReservationMember(
+                        id_reservation=id_reservation,
+                        id_member=id_member
+                    )
+                    self._reservation_member_repo.add_reservation_member(new_reservation_member)
+                else:
+                    reservation_member.id_member = id_member
+                    self._reservation_member_repo.update_reservation_member(reservation_member)
+            return reservation
+        except Exception as e:
+            print(f"🛑 Error updating reservation: [{e}]")
+            return None
+            
     def get_parameter_reservation_wtDTO(self):
         return self._reservation_repo.get_reservation_parameters()
     

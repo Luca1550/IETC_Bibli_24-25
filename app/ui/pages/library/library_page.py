@@ -36,7 +36,6 @@ class LibraryPage(ctk.CTkFrame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)  
 
-        # le truc sticky nsew est globalement pour dire que la page s'etire dans toutes la grille du nord ouest,.... 
         self.main_panel = ctk.CTkFrame(self)
         self.main_panel.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         
