@@ -62,6 +62,9 @@ class BookAddPage(ctk.CTkToplevel):
         self.collection_entry = ctk.CTkEntry(collection_frame, placeholder_text="No collection")
         self.collection_entry.pack(side="left", fill="x", expand=True)
         ctk.CTkButton(collection_frame, text="✏️", width=30, command=lambda: self.open_selection_frame(
+            "Select Collection",
+            self.collection_service.get_all(),
+            self.selected_collection,
             lambda c: c.name,
             [lambda c: c.name],
             self.collection_entry
