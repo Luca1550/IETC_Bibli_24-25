@@ -89,18 +89,18 @@ class BookFrame(ctk.CTkFrame):
         
 
         # Book title
-        title_label = ctk.CTkLabel(
+        self.title_label = ctk.CTkLabel(
             self.top_frame, 
             text=f"{self.book.title}", 
             font= ctk.CTkFont(size=16, weight="bold"),
             corner_radius=10,
             height=35
         )
-        title_label.pack(side="left", anchor="w", padx=5,
+        self.title_label.pack(side="left", anchor="w", padx=5,
             pady=5)
         
         # Date
-        date_label = ctk.CTkLabel(
+        self.date_label = ctk.CTkLabel(
             self.top_frame, 
             text=f"Publication Date: {self.book.date}",
             corner_radius=25,
@@ -108,22 +108,22 @@ class BookFrame(ctk.CTkFrame):
             fg_color=Color.background_color(),
             font = self.tag_font
         )
-        date_label.pack(side="right", anchor="w", padx=5)
+        self.date_label.pack(side="right", anchor="w", padx=5)
         
         # Collection
-        collection_name = self.book.collection.name if self.book.collection else "No collection"
-        collection_label = ctk.CTkLabel(
+        self.collection_name = self.book.collection.name if self.book.collection else "No collection"
+        self.collection_label = ctk.CTkLabel(
             self.top_frame, 
-            text=f"Collection: {collection_name}",
+            text=f"Collection: {self.collection_name}",
             corner_radius=25,
             height=25,
             fg_color=Color.background_color(),
             font = self.tag_font
         )
-        collection_label.pack(side="right", anchor="w", padx=5)
+        self.collection_label.pack(side="right", anchor="w", padx=5)
 
         # Price
-        price_label = ctk.CTkLabel(
+        self.price_label = ctk.CTkLabel(
             self.top_frame, 
             text=f"Price: {self.book.price} €",
             corner_radius=25,
@@ -131,93 +131,81 @@ class BookFrame(ctk.CTkFrame):
             fg_color=Color.background_color(),
             font = self.tag_font
         )
-        price_label.pack(side="right", anchor="w", padx=5)
+        self.price_label.pack(side="right", anchor="w", padx=5)
         
         # Author 
-        author_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
-        author_frame.pack(fill="x", padx=5)
-        author_title_label = ctk.CTkLabel(author_frame, text=f"Author(s)", font=self.title_font)
-        author_title_label.pack(side="left", anchor="w", pady=2, padx=(5,5))
+        self.author_labels=[]
+        self.author_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
+        self.author_frame.pack(fill="x", padx=5)
+        self.author_title_label = ctk.CTkLabel(self.author_frame, text=f"Author(s)", font=self.title_font)
+        self.author_title_label.pack(side="left", anchor="w", pady=2, padx=(5,5))
         separator = ctk.CTkFrame(self.left_frame, height=2, fg_color="gray")
         separator.pack(fill="x", padx=10, pady=5)
         for author in self.book.authors:
-            author_label = ctk.CTkLabel(
-                author_frame, 
+            label = self.author_label = ctk.CTkLabel(
+                self.author_frame, 
                 text=f"{author.person.first_name} {author.person.last_name}",
                 corner_radius=25,
                 height=25,
                 fg_color=Color.primary_color(),
                 font = self.tag_font
             )
-            author_label.pack(side="left", anchor="w", pady=2, padx=5)
+            label.pack(side="left", anchor="w", pady=2, padx=5)
+            self.author_labels.append(label)
         # Editor 
-        editor_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
-        editor_frame.pack(fill="x", padx=5)
-        editor_title_label = ctk.CTkLabel(editor_frame, text=f"Editor(s)", font=self.title_font)
-        editor_title_label.pack(side="left", anchor="w", pady=2, padx=(5,0))
+        self.editor_labels = []
+        self.editor_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
+        self.editor_frame.pack(fill="x", padx=5)
+        self.editor_title_label = ctk.CTkLabel(self.editor_frame, text=f"Editor(s)", font=self.title_font)
+        self.editor_title_label.pack(side="left", anchor="w", pady=2, padx=(5,0))
         separator = ctk.CTkFrame(self.left_frame, height=2, fg_color="gray")
         separator.pack(fill="x", padx=10, pady=5)
         for editor in self.book.editors:
-            editor_label = ctk.CTkLabel(
-                editor_frame, 
+            label = self.editor_label = ctk.CTkLabel(
+                self.editor_frame, 
                 text=f"{editor.name}",
                 corner_radius=25,
                 height=25,
                 fg_color=Color.primary_color(),
                 font = self.tag_font
             )
-            editor_label.pack(side="left", anchor="w",  pady=2, padx=5)
-        
+            label.pack(side="left", anchor="w",  pady=2, padx=5)
+            self.editor_labels.append(label)
         # Theme
-        theme_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
-        theme_frame.pack(fill="x", padx=5)
-        theme_title_label = ctk.CTkLabel(theme_frame, text=f"Theme(s)", font=self.title_font)
+        self.theme_labels = []
+        self.theme_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
+        self.theme_frame.pack(fill="x", padx=5)
+        theme_title_label = ctk.CTkLabel(self.theme_frame, text=f"Theme(s)", font=self.title_font)
         theme_title_label.pack(side="left", anchor="w", pady=2, padx=(5,0))
         for theme in self.book.themes:
-            theme_label = ctk.CTkLabel(
-                theme_frame, 
-                text=f"{theme.name}",
+            label = ctk.CTkLabel(
+                self.theme_frame, 
+                text=theme.name,
                 corner_radius=25,
                 height=25,
                 fg_color=Color.primary_color(),
-                font = self.tag_font
+                font=self.tag_font
             )
-            theme_label.pack(side="left", anchor="w",  pady=2, padx=5)
+            label.pack(side="left", anchor="w", pady=2, padx=5)
+            self.theme_labels.append(label)
         
         # Exemplar
-        exemplars_frame = ctk.CTkScrollableFrame(self.right_frame, fg_color=None, scrollbar_button_color=Color.primary_color(), width=350)
-        exemplars_frame.pack(fill="both", expand=True, padx=15)
+        # --- Au début de ta classe, au lieu de self.exemplar_labels ---
+        self.exemplar_widgets = {}  # Dictionnaire : clé = exemplar.id, valeur = frame
 
-        exemplars = self.exemplar_service.get_all_by_isbn(self.book.isbn)
-        if exemplars:
-            for exemplar in exemplars:
-                exemplar_frame = ctk.CTkFrame(
-                    exemplars_frame,
-                    corner_radius=25,
-                    height=25,
-                    fg_color=Color.primary_color()
-                    )
-                exemplar_frame.pack(expand=True, fill="x", pady=5, padx=10)
-                exemplar_label = ctk.CTkLabel(
-                    exemplar_frame, 
-                    text=f"Réf : {exemplar.id} | Localisation : {exemplar.location} | {exemplar.status.name.lower()}",
-                    font = self.tag_font
-                )
-                exemplar_label.pack(side="left", pady=5, padx=15)
-                status = ctk.CTkLabel(
-                    exemplar_frame, 
-                    text=f"",
-                    font = self.tag_font,
-                    fg_color=Color.status_color(int(exemplar.status.value)),
-                    height=25,
-                    width=25,
-                    corner_radius=25
-                )
-                status.pack(side="right", pady=5, padx=5)
-        else:
-            exemplar_title_label = ctk.CTkLabel(exemplars_frame, text="No exemplar", font=self.title_font)
-            exemplar_title_label.pack(anchor="w", pady=2, padx=5)
-    
+        # --- Création de ta scrollable frame (inchangée) ---
+        self.exemplars_frame = ctk.CTkScrollableFrame(
+            self.right_frame,
+            fg_color=None,
+            scrollbar_button_color=Color.primary_color(),
+            width=350
+        )
+        self.exemplars_frame.pack(fill="both", expand=True, padx=15)
+
+        # --- Création initiale des exemplaires ---
+        self.exemplars = self.exemplar_service.get_all_by_isbn(self.book.isbn)
+        self.display_exemplars(self.exemplars)
+
     def confirm_delete(self):
         """
             Open a confirmation window for book deletion.
@@ -262,6 +250,124 @@ class BookFrame(ctk.CTkFrame):
         )
         no_btn.pack(side="right", padx=10)
 
+    def update_themes(self, new_themes):
+        for label in self.theme_labels:
+            if label not in new_themes:
+                label.destroy()
+            
+        for theme in new_themes:
+            if theme not in self.theme_labels:
+                label = ctk.CTkLabel(
+                    self.theme_frame, 
+                    text=theme.name,
+                    corner_radius=25,
+                    height=25,
+                    fg_color=Color.primary_color(),
+                    font=self.tag_font
+                )
+                label.pack(side="left", anchor="w", pady=2, padx=5)
+                self.theme_labels.append(label)
+ 
+    def update_editors(self, new_editors):
+        for label in self.editor_labels:
+            if label not in new_editors:
+                label.destroy()
+            
+        for editor in new_editors:
+            if editor not in self.editor_labels:
+                label = ctk.CTkLabel(
+                    self.editor_frame, 
+                    text=editor.name,
+                    corner_radius=25,
+                    height=25,
+                    fg_color=Color.primary_color(),
+                    font=self.tag_font
+                )
+                label.pack(side="left", anchor="w", pady=2, padx=5)
+                self.editor_labels.append(label)
+
+    def update_authors(self, new_authors):
+        for label in self.author_labels:
+            if label not in new_authors:
+                label.destroy()
+            
+        for author in new_authors:
+            if author not in self.author_labels:
+                label = ctk.CTkLabel(
+                    self.author_frame, 
+                    text=f"{author.person.first_name} {author.person.last_name}",
+                    corner_radius=25,
+                    height=25,
+                    fg_color=Color.primary_color(),
+                    font=self.tag_font
+                )
+                label.pack(side="left", anchor="w", pady=2, padx=5)
+                self.author_labels.append(label)
+
+    def update_exemplars(self, new_exemplars):
+        new_ids = set(e.id for e in new_exemplars)
+        current_ids = set(self.exemplar_widgets.keys())
+
+        for eid in current_ids - new_ids:
+            self.exemplar_widgets[eid].destroy()
+            del self.exemplar_widgets[eid]
+
+        for exemplar in new_exemplars:
+            if exemplar.id not in self.exemplar_widgets:
+                self.display_exemplars([exemplar])
+
+    def display_exemplars(self, exemplar_list):
+        if not exemplar_list:
+            self.exemplar_title_label = ctk.CTkLabel(self.exemplars_frame, text="No exemplar", font=self.title_font)
+            self.exemplar_title_label.pack(anchor="w", pady=2, padx=5)
+            return
+
+        for exemplar in exemplar_list:
+            if exemplar.id not in self.exemplar_widgets:
+                frame = ctk.CTkFrame(
+                    self.exemplars_frame,
+                    corner_radius=25,
+                    height=25,
+                    fg_color=Color.primary_color()
+                )
+                frame.pack(expand=True, fill="x", pady=5, padx=10)
+
+                ctk.CTkLabel(
+                    frame,
+                    text=f"Réf : {exemplar.id} | Localisation : {exemplar.location} | {exemplar.status.name.lower()}",
+                    font=self.tag_font
+                ).pack(side="left", pady=5, padx=15)
+
+                ctk.CTkLabel(
+                    frame,
+                    text="",
+                    font=self.tag_font,
+                    fg_color=Color.status_color(int(exemplar.status.value)),
+                    height=25,
+                    width=25,
+                    corner_radius=25
+                ).pack(side="right", pady=5, padx=5)
+
+                self.exemplar_widgets[exemplar.id] = frame
+
+    def update_authors(self, new_authors):
+        for label in self.author_labels:
+            if label not in new_authors:
+                label.destroy()
+            
+        for author in new_authors:
+            if author not in self.author_labels:
+                label = ctk.CTkLabel(
+                    self.author_frame, 
+                    text=f"{author.person.first_name} {author.person.last_name}",
+                    corner_radius=25,
+                    height=25,
+                    fg_color=Color.primary_color(),
+                    font=self.tag_font
+                )
+                label.pack(side="left", anchor="w", pady=2, padx=5)
+                self.author_labels.append(label)
+
 
 class BookPage(ctk.CTkFrame):
     """
@@ -278,6 +384,7 @@ class BookPage(ctk.CTkFrame):
         self.theme_service = ThemeService()
         self.book_service = BookService()
         self.exemplar_service = ExemplarService()
+        self.all_items_widgets : dict[str, ctk.CTkFrame] = {} 
         self.books = []
         self.filtered_books = []        
         self.setup_ui()
@@ -355,38 +462,42 @@ class BookPage(ctk.CTkFrame):
         """
             displays the list of books in the scrollable frame.
         """
-        # cleaning existing widgets in the scrollable frame
-        for widget in self.scroll_frame.winfo_children():
-            widget.destroy()
-        
-        if not self.filtered_books:
-            no_books_label = ctk.CTkLabel(
-                self.scroll_frame,
-                text="📚 No book found",
-                font=ctk.CTkFont(size=16),
-                text_color="gray",
-            )
-            no_books_label.pack(pady=50)
-            return
-        
-        # displaying each book in a BookFrame
+        filtered_isbns = {book.isbn for book in self.filtered_books}
+
+        for isbn, widget in self.all_items_widgets.items():
+            if isbn in filtered_isbns:
+                widget.pack(fill="x", padx=(0, 10), pady=5)  
+            else:
+                widget.pack_forget()  
+
         for book in self.filtered_books:
-            book_frame = BookFrame(
-                self.scroll_frame,
-                book,
-                delete_callback=self.delete_book,
-                edit_callback=self.edit_book,
-                exemplar_service=self.exemplar_service
-            )
-            book_frame.pack(fill="x", padx=(0,10), pady=5)
-    
+            if book.isbn not in self.all_items_widgets:
+                frame = BookFrame(
+                    self.scroll_frame,
+                    book,
+                    delete_callback=self.delete_book,
+                    edit_callback=self.edit_book,
+                    exemplar_service=self.exemplar_service
+                )
+                frame.pack(fill="x", padx=(0, 10), pady=5)
+                self.all_items_widgets[book.isbn] = frame
+        
     def edit_book(self,book):
         """
         open a page to edit a book
         """
         edit_page = BookEditPage(book=book,book_service=self.book_service,on_success=self.refresh)
         self.wait_window(edit_page)
-        self.refresh()
+        widget = self.all_items_widgets[book.isbn]
+        updated_book = self.book_service.get_by_isbn(book.isbn)
+        widget.title_label.configure(text=updated_book.title)
+        widget.date_label.configure(text=f"Publication Date: {updated_book.date}")
+        widget.collection_label.configure(text=f"Collection: {updated_book.collection.name}")
+        widget.price_label.configure(text=f"Price: {updated_book.price} €")
+        widget.update_editors(book.editors)
+        widget.update_themes(book.themes)
+        widget.update_authors(book.authors)
+        widget.update_exemplars(ExemplarService().get_all_by_isbn(updated_book.isbn))
         
     def add_book(self):
         """
@@ -410,7 +521,8 @@ class BookPage(ctk.CTkFrame):
         """
         try:
             self.book_service.delete_book(book.isbn)
-            self.load_books()
+            widget = self.all_items_widgets.pop(book.isbn)
+            widget.destroy()
             self.show_success("Book successfully deleted !")
         except Exception as e:
             PopUpMessage(self, f"{e}")
