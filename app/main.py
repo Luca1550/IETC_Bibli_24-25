@@ -1,6 +1,5 @@
 import customtkinter as ctk
 from ui.components import MenuNavigation, LoginPage
-from ui.pages.library import LibraryPage
 from ui.pages.book import BookPage
 from ui.pages.reservation import ReservationPage
 
@@ -45,8 +44,6 @@ class MainApp(ctk.CTk):
 
         self.page_container = ctk.CTkFrame(self)
         self.page_container.grid(row=1, column=0, sticky="nsew", padx=10, pady=10)
-        self.page_container.grid_rowconfigure(0, weight=1)
-        self.page_container.grid_columnconfigure(0, weight=1)
 
         self.page_container.grid_rowconfigure(0, weight=1)
         self.page_container.grid_columnconfigure(0, weight=1)
@@ -78,7 +75,7 @@ class MainApp(ctk.CTk):
             return ctk.CTkLabel(self.page_container, text="Contenu de la Page Membres")
 
         def page_Config():
-            return LibraryPage(self.page_container)
+            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Config")
 
         def page_Employes():
             return ctk.CTkLabel(self.page_container, text="Contenu de la Page Employes")

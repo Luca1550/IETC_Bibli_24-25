@@ -66,3 +66,14 @@ class BookThemeRepo:
             if book_theme.isbn == isbn:
                 self.book_theme_json.remove(book_theme)
         self._save_all()
+        
+    def exist(self, attribute : str, value : object) -> bool:
+        """
+        Checks if a given attribute of an object is unique in the repository.
+        arguments:
+        - attribute: The attribute to check for uniqueness.
+        - value: The value to check against the specified attribute.
+        returns:
+        - True if the value is unique, False if it already exists in the repository.
+        """
+        return any(getattr(theme, attribute, None) == value for theme in self.book_theme_json)

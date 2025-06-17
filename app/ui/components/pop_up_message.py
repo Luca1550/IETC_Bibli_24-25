@@ -16,8 +16,9 @@ class PopUpMessage(customtkinter.CTkToplevel):
         super().__init__(parent)
         self.geometry("600x200")
         self.title("Notification")
-        self.lift() 
-        self.focus_set() 
+        self.focus_set()
+        self.grab_set()
+        self.lift()
         self.attributes("-topmost", True) 
 
         if "error" in message.lower():

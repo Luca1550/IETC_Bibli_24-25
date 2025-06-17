@@ -1,5 +1,6 @@
 from .models import Exemplar
 from tools import JsonStorage
+from enums import Status
 import pathlib
 
 class ExemplarRepo():
@@ -43,3 +44,60 @@ class ExemplarRepo():
         if id:
             return next((e for e in self._exemplar_json if e.id == id), None)
         return False
+    
+    def get_all(self, isbn : str) -> list[Exemplar]:
+        """
+        Retrieves all Exemplar objects from the repository.
+        returns:
+        - Returns a list of all Exemplar objects.
+        """
+        exemplars = []
+        for exemplar in self._exemplar_json:
+            if exemplar.isbn == isbn:
+                exemplars.append(exemplar)
+        return exemplars
+
+    def get_disponibility(self, isbn : str) -> Exemplar | bool:
+        if isbn:
+            return next((e for e in self._exemplar_json if e.isbn == isbn and e.status == Status(1)), None)
+        return False
+    
+    def delete_exemplar(self, exemplar : Exemplar) -> bool:
+        """
+        Deletes an Exemplar object from the repository and saves the changes to the JSON file.
+        arguments:
+        - exemplar: Exemplar object to be deleted.
+        returns:
+        - True if the exemplar was deleted successfully, False otherwise.
+        """
+        if isinstance(exemplar, Exemplar):
+            self._exemplar_json.remove(exemplar)
+            self._save_all()
+            return True
+        return False
+    
+    def update_status(self, examplar : Exemplar) -> bool:
+        """
+        Updates an existing Exemplar object in the repository and saves the changes to the JSON file.
+        arguments:
+        - examplar: Exemplar object to be updated.
+        returns:
+        - True if the examplar was updated successfully, otherwise returns False.
+        """
+        if isinstance(examplar, Exemplar):
+            self._exemplar_json[self._exemplar_json.index(examplar)] = examplar
+            self._save_all()
+            return True
+        return False
+
+    def check(self, attribute : str, value : object) -> bool:
+        """
+        Checks if a given attribute of an object is unique in the repository.
+        arguments:
+        - attribute: The attribute to check for uniqueness.
+        - value: The value to check against the specified attribute.
+        returns:
+        - True if the value is unique, False if it already exists in the repository.
+        """
+        return any(getattr(exemplar, attribute, None) == value for exemplar in self._exemplar_json)
+    

@@ -1,4 +1,5 @@
-from repositories import ThemeRepo
+from repositories import ThemeRepo,BookThemeRepo
+from repositories.models import Theme
 
 class ThemeService :
     """
@@ -10,6 +11,7 @@ class ThemeService :
         Initializes the ThemeService with a ThemeRepo instance.
         """
         self.theme_repo = ThemeRepo()
+        self.book_theme_repo = BookThemeRepo()
         
     def add_theme(self,name):
         """
@@ -18,6 +20,8 @@ class ThemeService :
         :return: None
         """
         try:
+            if not self.theme_repo.is_unique("name",name):
+                raise Exception ("This theme already exists")
             self.theme_repo.add_theme(name)
         except:
             return f"Error adding theme: {name}"
@@ -28,10 +32,13 @@ class ThemeService :
         :param name: The name of the theme to delete.
         :return: A message indicating the result of the deletion.
         """
-        if self.theme_repo.delete_theme(name):
-            return f"Theme : {name} deleted"
-        else:
-            return f"Theme : {name} not found"
+        theme = self.theme_repo.get_by_name(name)
+        if isinstance(theme,Theme):
+            if self.book_theme_repo.exist("id_theme",theme.id):
+                raise Exception("Cannot delete, already used womewhere else.")
+            if self.theme_repo.delete_theme(name):
+                return f"Theme : {name} deleted"
+        raise Exception ("Theme not found")
         
     def get_by_name(self,name):
         """

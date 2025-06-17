@@ -1,4 +1,5 @@
-from repositories import CollectionRepo
+from repositories import CollectionRepo, BookRepo
+from repositories.models import Collection
 
 class CollectionService :
     """
@@ -10,6 +11,7 @@ class CollectionService :
         Initializes the CollectionService with a CollectionRepo instance.
         """
         self.collection_repo = CollectionRepo()
+        self.book_repo = BookRepo()
         
     def add_collection(self,name):
         """
@@ -18,7 +20,9 @@ class CollectionService :
         :return: None
         """
         try:
-            self.collection_repo.add_collection(name)
+            if not self.collection_repo.is_unique("name",name):
+                raise Exception("This collection already exists")
+            return self.collection_repo.add_collection(name)
         except:
             return f"Error adding collection: {name}"
     
@@ -79,17 +83,35 @@ class CollectionService :
     
     def delete_collection(self,name):
         """
-        Deletes a collection with the given name.
-        :param name: The name of the collection to delete.
-        :return: A message indicating the result of the deletion.
+        Deletes a collection by its name.
+        arguments:
+        - name: The name of the collection to delete.
+        returns:
+        - True if the deletion was successful.
+        - Raises an exception if the collection is referenced elsewhere or not found.
         """
-        if self.collection_repo.delete_collection(name):
-            return f"Collection : {name} deleted"
-        else:
-            return f"Collection : {name} not found"
+        try:
+            collection = self.collection_repo.get_by_name(name)
+            if isinstance(collection, Collection):
+                self.delete_collection_by_id(collection.id)
+        except Exception as e:
+            raise Exception(f"🛑 error {e}")
         
     def delete_collection_by_id(self,id):
-        if self.collection_repo.delete_collection(id):
-            return f"Collection : {id} deleted"
-        else:
-            return f"Collection : {id} not found"
+        """
+        Deletes a collection by its ID.
+        arguments:
+        - id: The unique identifier of the collection.
+        returns:
+        - True if the deletion was successful.
+        - Raises an exception if the collection is referenced elsewhere or not found.
+        """
+        try:
+            collection = self.get_by_id(id)
+            if not self.book_repo.is_unique("id_collection", collection.id):
+                raise Exception("Cannot delete, already used womewhere else.")
+            if self.collection_repo.delete_collection(collection.name):
+                return True
+            raise Exception(f"Collection ID: {id} not found")
+        except Exception as e:
+            raise Exception(f"🛑 error {e}")

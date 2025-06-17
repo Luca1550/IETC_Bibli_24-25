@@ -1,4 +1,4 @@
-from repositories import EditorRepo
+from repositories import EditorRepo, BookEditorRepo
 
 class EditorService :
     """
@@ -10,18 +10,24 @@ class EditorService :
         Initializes the EditorService with a EditorRepo instance.
         """
         self.editor_repo = EditorRepo()
+        self.book_editor_repo = BookEditorRepo()
         
     def add_editor(self,name):
         """
         Adds a new editor with the given name.
-        :param name: The name of the editor to add.
-        :return: None
+        arguments:
+        - name: The name of the editor to add.
+        returns:
+        - True if the editor was added successfully.
+        - Raises an exception if the editor already exists or if there is an error during the addition.
         """
         try:
-            self.editor_repo.add_editor(name)
-        except:
-            return f"Error adding editor: {name}"
-    
+            if not self.editor_repo.is_unique("name",name):
+                raise Exception("This editor already exists")
+            return self.editor_repo.add_editor(name)
+        except Exception as e:
+            raise Exception(f"error adding editor: {name} - {e}")
+
     def get_by_name(self,name):
         """
         Retrieves a editor by its name.
@@ -77,13 +83,23 @@ class EditorService :
         else:
             return f"Editor {name} not found"
     
-    def delete_editor(self,name):
+    def delete_editor(self,id : int):
         """
-        Deletes a editor with the given name.
-        :param name: The name of the editor to delete.
-        :return: A message indicating the result of the deletion.
+        Deletes an editor by their ID.
+
+        Arguments:
+        - id: The unique identifier of the editor.
+
+        Returns:
+        - True if the deletion was successful.
+        - Raises an exception if the editor is referenced elsewhere or not found.
         """
-        if self.editor_repo.delete_editor(name):
-            return f"Editor : {name} deleted"
-        else:
-            return f"Editor : {name} not found"
+        try:    
+            if self.book_editor_repo.exist("id_editor", id):
+                raise Exception("Cannot delete, already used womehere else.")
+            editor = self.editor_repo.get_by_id(id)
+            if self.editor_repo.delete_editor(editor):
+                return True
+            raise Exception(f"Editor ID: {id} not found")
+        except Exception as e:
+            raise Exception(f"🛑 error {e}")
