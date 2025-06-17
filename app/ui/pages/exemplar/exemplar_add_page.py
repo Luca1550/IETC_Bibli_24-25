@@ -9,7 +9,7 @@ class AddExemplarPage(ctk.CTkToplevel):
         self.focus_set()
         self.grab_set()
         self.lift()
-        self.geometry("400x250")
+        self.geometry("400x150")
         self.title(f"Add exemplar for {book.title}")
         self.protocol("WM_DELETE_WINDOW", self.destroy)
         self.exemplar_service = exemplar_service
@@ -18,9 +18,10 @@ class AddExemplarPage(ctk.CTkToplevel):
         ctk.CTkLabel(self, text="Location", anchor="w").pack(fill="x", padx=20)
         self.location_entry = ctk.CTkEntry(self)
         self.location_entry.pack(fill="x", padx=20)
-
-        ctk.CTkButton(self, text="✅ Add exemplar", command=self.confirm_action).pack(pady=10)
-        ctk.CTkButton(self, text="➕ Add exemplar and continue", command=self.confirm_and_continue).pack(pady=10)
+        button_frame = ctk.CTkFrame(self)
+        button_frame.pack(fill="x", pady=5, padx=20)
+        ctk.CTkButton(button_frame, text="✅ Add exemplar", command=self.confirm_action).pack(side="right", pady=5, padx=5)
+        ctk.CTkButton(button_frame, text="➕ Add exemplar and continue", command=self.confirm_and_continue).pack(side="right",pady=5, padx=5)
         ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(pady=(0,10))
 
 

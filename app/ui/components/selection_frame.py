@@ -157,6 +157,8 @@ class SelectionFrame(ctk.CTkToplevel):
         if self.externe_selected_items != self.selected_items:
             self.externe_selected_items[:] = self.selected_items
         if self.entry_to_update:
+            self.entry_to_update.configure(state="normal")
             self.entry_to_update.delete(0, "end")
             self.entry_to_update.insert(0, str(", ".join(self.display_model(item) if self.attributes_to_entry is None else self.attributes_to_entry(item) for item in self.selected_items)))
+            self.entry_to_update.configure(state="disabled")
         self.destroy()

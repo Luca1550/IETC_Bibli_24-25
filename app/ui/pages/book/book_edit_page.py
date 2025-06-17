@@ -157,20 +157,16 @@ class BookEditPage(ctk.CTkToplevel):
         exemplars_frame = ctk.CTkFrame(self, fg_color="transparent")
         exemplars_frame.pack(fill="x", padx=20)
         exemplars = self.exemplar_service.get_all_by_isbn(self.book.isbn)
-        if exemplars:
-            exemplar_frame = ctk.CTkFrame(
-                    exemplars_frame,
-                    )
-            exemplar_frame.pack(side="left", expand=True, fill="x")
-            exemplar_label = ctk.CTkLabel(
-                exemplar_frame, 
-                text=f"{len(exemplars)} exemplar(s)",
-                font = self.tag_font
-            )
-            exemplar_label.pack(side="left", pady=5, padx=15)
-        else:
-            exemplar_title_label = ctk.CTkLabel(exemplars_frame, text="No exemplar", font=self.title_font)
-            exemplar_title_label.pack(side="left", anchor="w", pady=2, padx=5)
+        exemplar_frame = ctk.CTkFrame(
+                exemplars_frame,
+                )
+        exemplar_frame.pack(side="left", expand=True, fill="x")
+        self.exemplar_label = ctk.CTkLabel(
+            exemplar_frame, 
+            text=f"{len(exemplars)} exemplar(s)" if exemplars else "No exemplar(s)",
+            font = self.tag_font
+        )
+        self.exemplar_label.pack(side="left", pady=5, padx=15)
 
         edit_exemplar_button = ctk.CTkButton(exemplars_frame, text="✏️", width=30, command=lambda:self.open_delete_frame(
             title="examplar update",
@@ -178,11 +174,11 @@ class BookEditPage(ctk.CTkToplevel):
             display_model_method=lambda exemplar: f"{exemplar.id} | {exemplar.location} | {exemplar.status}",
             delete_method=lambda exemplar: self.exemplar_service.delete_exemplar(exemplar),
             item_to_delete=lambda exemplar: exemplar.id,
-            entry_to_update=exemplar_label if exemplar_label else None,
+            entry_to_update=self.exemplar_label if self.exemplar_label else None,
             display_entry_to_update=lambda exemplar: f"{len(exemplar)} exemplar(s)"
         ))
         edit_exemplar_button.pack(side="right", padx=(5, 0))
-        ctk.CTkButton(exemplars_frame,text="➕",width=30,command=lambda : self.open_add_exemplar_page(exemplar_label)).pack(side="right", padx=(5, 0))
+        ctk.CTkButton(exemplars_frame,text="➕",width=30,command=lambda : self.open_add_exemplar_page(self.exemplar_label if self.exemplar_label else "")).pack(side="right", padx=(5, 0))
 
         
         ctk.CTkButton(self, text="✅ Save", command=self.confirm_action).pack(pady=10)
