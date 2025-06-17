@@ -20,39 +20,36 @@ class ReservationService:
 #on a un probleme ok ca va add tout ca mais alors je dois aussi add dans mon dto et comment on va relier le nom de la personne avec son id
 #ahhh bah par le dto en fait donc quand je vais faire un add je vais donner son nom, je vais le check dans le dto par son id qui va etre renvoyé ici 
     def add_reservation(self,id_exemplar:int,id_member:int,reservation_date:date|None = None) ->Reservation:
-        self.paramres_wt_DTO = self.get_parameter_reservation_wtDTO()
-
 
         try:
             if reservation_date is None:
                 actual_reservation_date = date.today().isoformat()
             else:
                 if isinstance(reservation_date, str):
-                    parsed_date = datetime.fromisoformat(reservation_date).date()
-                    actual_reservation_date = parsed_date.isoformat()
+                    actual_reservation_date = datetime.fromisoformat(reservation_date).date().isoformat()
                 else:
                     actual_reservation_date = reservation_date.isoformat()
-            validation_result = self.check_value(id_exemplar, actual_reservation_date)
-            if isinstance(validation_result, str):
-                return validation_result 
-                
             new_reservation = Reservation(
                 id=None,
                 id_exemplar=id_exemplar,
                 reservation_date=actual_reservation_date
                 )
-                
+            
+
             result=self._reservation_repo.add_reservation(new_reservation)
-            if result and hasattr(result, 'id') and result.id is not None:
+            reservation_member_result = None
+            paramres=self.get_parameter_reservation()
+            if result :
                 #je check si l'id existe bien dans result 
+
                 if id_member:
+                    id_new_res = paramres[-1].id_exemplar
                     new_reservation_member= ReservationMember(
-                        #j'avais mis id_exemplar donc pas bon
-                        id_reservation=result.id,
+                        id_reservation=id_new_res,
                         id_member=id_member
                     )
-                reservation_member_result = self._reservation_member_repo.add_reservation_member(new_reservation_member) 
-            return result
+                    reservation_member_result = self._reservation_member_repo.add_reservation_member(new_reservation_member) 
+            return result,reservation_member_result
         
         except Exception as e:
             import traceback
@@ -61,7 +58,7 @@ class ReservationService:
     def get_all(self):
         try:
             reservations = self._reservation_repo.get_reservation_parameters()
-            result = []
+            result : list[ReservationDTO] = []
 
             for res in reservations:
                 res_id = res.id
@@ -121,15 +118,13 @@ class ReservationService:
             print(f"🛑 Error updating reservation: [{e}]")
             return None
             
-    def get_parameter_reservation_wtDTO(self):
+    def get_parameter_reservation(self):
         return self._reservation_repo.get_reservation_parameters()
     
     def check_value(self,id_exemplar:int,reservation_date:date|None)-> Exception | bool:
         try:
             if not id_exemplar >= 0 or  not isinstance(id_exemplar, (int)):
                 raise Exception("Invalid id exemplar.")
-            #if not id_member >= 0 or not isinstance(id_member, (int)):
-            #    raise Exception("Invalid idmember.")
             if not isinstance(reservation_date, (date)):
                 raise Exception("Invalid reservationdate: it must be a date like YYYY-MM-DD")
         except Exception as e:

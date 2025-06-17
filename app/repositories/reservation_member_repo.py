@@ -14,11 +14,11 @@ class ReservationMemberRepo:
     def _save_all(self):
         JsonStorage.save_all(self.PATH_RESERVATION_MEMBER_JSON, self._reservation_member_json)
     
-    def add_reservation_member(self,id_member:int,id_reservation:int):
-        new_member = ReservationMember(id_reservation=id_reservation, id_member=id_member)
-        self._reservation_member_json.append(new_member)
+    def add_reservation_member(self,reservation_member: ReservationMember):
+    
+        self._reservation_member_json.append( reservation_member)
         self._save_all()
-        return new_member
+        return True
     
     def update_reservation_member(self,id_member:int,id_reservation:int):
         for exist_res in self._reservation_member_json:
