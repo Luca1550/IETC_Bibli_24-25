@@ -18,6 +18,9 @@ class BookAddPage(ctk.CTkToplevel):
         attributes are seprarated by a blank line for better readability.
         """
         super().__init__()
+        self.grab_set()
+        self.focus_set()
+        self.lift
         self.book_service = book_service
         self.author_service = author_service
         self.collection_service = CollectionService()

@@ -190,10 +190,7 @@ class BookFrame(ctk.CTkFrame):
             self.theme_labels.append(label)
         
         # Exemplar
-        # --- Au début de ta classe, au lieu de self.exemplar_labels ---
-        self.exemplar_widgets = {}  # Dictionnaire : clé = exemplar.id, valeur = frame
-
-        # --- Création de ta scrollable frame (inchangée) ---
+        self.exemplar_widgets = {} 
         self.exemplars_frame = ctk.CTkScrollableFrame(
             self.right_frame,
             fg_color=None,
@@ -201,8 +198,6 @@ class BookFrame(ctk.CTkFrame):
             width=350
         )
         self.exemplars_frame.pack(fill="both", expand=True, padx=15)
-
-        # --- Création initiale des exemplaires ---
         self.exemplars = self.exemplar_service.get_all_by_isbn(self.book.isbn)
         self.display_exemplars(self.exemplars)
 
@@ -214,12 +209,10 @@ class BookFrame(ctk.CTkFrame):
         confirm_window.title("Confirm deletion")
         confirm_window.geometry("300x150")
         confirm_window.resizable(False, False)
-        confirm_window.grab_set()  # Modal
-        
-        # Window centering
+        confirm_window.grab_set() 
+       
         confirm_window.transient(self.winfo_toplevel())
         
-        # Message
         message = ctk.CTkLabel(
             confirm_window,
             text=f"Are you sure you want to delete \n'{self.book.title}' ?",
@@ -227,7 +220,6 @@ class BookFrame(ctk.CTkFrame):
         )
         message.pack(pady=20)
         
-        # Buttons
         button_frame = ctk.CTkFrame(confirm_window, fg_color="transparent")
         button_frame.pack(pady=10)
         
@@ -316,12 +308,7 @@ class BookFrame(ctk.CTkFrame):
             if exemplar.id not in self.exemplar_widgets:
                 self.display_exemplars([exemplar])
 
-    def display_exemplars(self, exemplar_list):
-        if not exemplar_list:
-            self.exemplar_title_label = ctk.CTkLabel(self.exemplars_frame, text="No exemplar", font=self.title_font)
-            self.exemplar_title_label.pack(anchor="w", pady=2, padx=5)
-            return
-
+    def display_exemplars(self, exemplar_list):        
         for exemplar in exemplar_list:
             if exemplar.id not in self.exemplar_widgets:
                 frame = ctk.CTkFrame(
