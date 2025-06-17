@@ -14,62 +14,74 @@ class WorkerPage(ctk.CTkFrame):
         """
         super().__init__(parent, **kwargs)
         self.worker_service = WorkerService()
+        self.workers = self.worker_service.get_all_workers()
         self.setup_ui()
 
     def setup_ui(self):
         """
         Sets up the user interface components for the WorkerPage.
         """
-        self.grid_rowconfigure(0, weight=0)
-        self.grid_rowconfigure(1, weight=0)
-        self.grid_rowconfigure(2, weight=0)
-        self.grid_columnconfigure(0, weight=1)
 
-        self.add_worker_button = ctk.CTkButton(self, text="Ajouter un travailleur", command=self.add_worker)
-        self.add_worker_button.grid(row=0, column=0,sticky="w",padx=10, pady=10)
- 
-        self.delete_worker_button = ctk.CTkButton(self, text="Supprimer un travailleur", command=self.delete_worker)
-        self.delete_worker_button.grid(row=1, column=0,sticky="w",padx=10, pady=10)
+        ## Grid configuration for the layout
+        rows = 9
+        rows_weights = [1,1,1,1,1,1,1,1,1]
+        columns = 9
+        columns_weights = [1,2,1,1,1,1,1,1,1]
 
-        self.display_workers_button = ctk.CTkButton(self, text="Afficher les travailleurs", command=self.display_workers)
-        self.display_workers_button.grid(row=2, column=0,sticky="w",padx=10, pady=10)
+        for row, w in enumerate(rows_weights):
+            self.grid_rowconfigure(row, weight=w)
 
-    def add_worker(self):
-        """
-        Opens a window to add a new worker.
-        """
-        self.add_worker_window = ctk.CTkToplevel(self)
-        self.add_worker_window.title("Ajouter un travailleur")
+        for column, w in enumerate(columns_weights):
+            self.grid_columnconfigure(column, weight=w)
 
-        self.first_name_entry = ctk.CTkEntry(self.add_worker_window, placeholder_text="Prénom")
-        self.first_name_entry.pack(padx=10, pady=10)
+        ## UI Components
 
-        self.last_name_entry = ctk.CTkEntry(self.add_worker_window, placeholder_text="Nom de famille")
-        self.last_name_entry.pack(padx=10, pady=10)
+        self.add_worker_frame = ctk.CTkFrame(self)
+        self.add_worker_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-        self.national_number_entry = ctk.CTkEntry(self.add_worker_window, placeholder_text="Numéro national")
-        self.national_number_entry.pack(padx=10, pady=10)
+        # Make column 0 expandable (to center content)
+        self.add_worker_frame.grid_columnconfigure(0, weight=1)
 
-        self.email_entry = ctk.CTkEntry(self.add_worker_window, placeholder_text="Email")
-        self.email_entry.pack(padx=10, pady=10)
+        # Widgets
+        self.title_label = ctk.CTkLabel(self.add_worker_frame, text="Ajout employé", font=("Arial", 24))
+        self.title_label.grid(row=0, column=0, padx=10, pady=10, sticky="n")
 
-        self.street_entry = ctk.CTkEntry(self.add_worker_window, placeholder_text="Rue")
-        self.street_entry.pack(padx=10, pady=10)
+        self.first_name_entry = ctk.CTkEntry(self.add_worker_frame, placeholder_text="Prénom")
+        self.first_name_entry.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
 
-        self.cp_entry = ctk.CTkEntry(self.add_worker_window, placeholder_text="Code postal")
-        self.cp_entry.pack(padx=10, pady=10)
+        self.last_name_entry = ctk.CTkEntry(self.add_worker_frame, placeholder_text="Nom de famille")
+        self.last_name_entry.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
 
-        self.city_entry = ctk.CTkEntry(self.add_worker_window, placeholder_text="Ville")
-        self.city_entry.pack(padx=10, pady=10)
+        self.national_number_entry = ctk.CTkEntry(self.add_worker_frame, placeholder_text="Numéro national")
+        self.national_number_entry.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
 
-        self.add_button = ctk.CTkButton(self.add_worker_window, text="Ajouter", command=self.adding_worker)
-        self.add_button.pack(padx=10, pady=10)
-    
+        self.email_entry = ctk.CTkEntry(self.add_worker_frame, placeholder_text="Email")
+        self.email_entry.grid(row=4, column=0, padx=10, pady=10, sticky="ew")
+
+        self.street_entry = ctk.CTkEntry(self.add_worker_frame, placeholder_text="Rue")
+        self.street_entry.grid(row=5, column=0, padx=10, pady=10, sticky="ew")
+
+        self.cp_entry = ctk.CTkEntry(self.add_worker_frame, placeholder_text="Code postal")
+        self.cp_entry.grid(row=6, column=0, padx=10, pady=10, sticky="ew")
+
+        self.city_entry = ctk.CTkEntry(self.add_worker_frame, placeholder_text="Ville")
+        self.city_entry.grid(row=7, column=0, padx=10, pady=10, sticky="ew")
+
+        self.add_button = ctk.CTkButton(self.add_worker_frame, text="Ajouter", command=self.adding_worker)
+        self.add_button.grid(row=8, column=0, padx=10, pady=10, sticky="ew")
+
+        self.worker_list_frame = ctk.CTkFrame(self)
+        self.worker_list_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        self.worker_list_frame.grid_columnconfigure(0, weight=1)
+
+        self.display_workers()
+
     def adding_worker(self):
         """
         Confirms the addition of a new worker and performs the addition.
         """
-        id = None  # ID will be assigned by the repository
+        id = None  
+        # ID will be assigned by the repository
         first_name = self.first_name_entry.get()
         last_name = self.last_name_entry.get()
         national_number = self.national_number_entry.get()
@@ -78,50 +90,79 @@ class WorkerPage(ctk.CTkFrame):
         cp = self.cp_entry.get()
         city = self.city_entry.get()
 
-        if first_name and last_name:
+        if first_name and last_name and national_number and email and street and cp and city:
             try:
-                self.worker_service.add_worker(first_name, last_name, national_number, email, street, cp, city)
-                PopUpMessage.pop_up("Succès", "Travailleur ajouté avec succès.")
+                self.worker_service.add_worker(id, first_name, last_name, national_number, email, street, cp, city)
+                PopUpMessage.pop_up(self, "Travailleur ajouté avec succès.")
+                self.display_workers()
+                # Clear the input fields after adding
+                self.first_name_entry.delete(0, 'end')
+                self.last_name_entry.delete(0, 'end')
+                self.national_number_entry.delete(0, 'end')
+                self.email_entry.delete(0, 'end')
+                self.street_entry.delete(0, 'end')
+                self.cp_entry.delete(0, 'end')
+                self.city_entry.delete(0, 'end')
             except Exception as e:
-                PopUpMessage.pop_up("Erreur", f"Erreur lors de l'ajout du travailleur: {str(e)}")
+                PopUpMessage.pop_up(self, f"Erreur lors de l'ajout du travailleur: {str(e)}")
         else:
-            PopUpMessage.pop_up("Erreur", "Veuillez remplir tous les champs.")
-
-    def delete_worker(self):
-        """
-        Opens a window to delete a worker.
-        """
-        self.delete_worker_window = ctk.CTkToplevel(self)
-        self.delete_worker_window.title("Supprimer un travailleur")
-
-        self.worker_id_entry = ctk.CTkEntry(self.delete_worker_window, placeholder_text="ID du travailleur")
-        self.worker_id_entry.pack(padx=10, pady=10)
-
-        self.delete_button = ctk.CTkButton(self.delete_worker_window, text="Supprimer", command=self.deleting_worker)
-        self.delete_button.pack(padx=10, pady=10)
-
-    def deleting_worker(self):
-        """
-        Confirms the deletion of a worker and performs the deletion.
-        """
-        worker_id = self.worker_id_entry.get()
-        if worker_id:
-            try:
-                self.worker_service.delete_worker(worker_id)
-                PopUpMessage.pop_up("Succès", "Travailleur supprimé avec succès.")
-            except Exception as e:
-                PopUpMessage.pop_up("Erreur", f"Erreur lors de la suppression du travailleur: {str(e)}")
-        else:
-            PopUpMessage.pop_up("Erreur", "Veuillez entrer un ID de travailleur valide.")
-
+            PopUpMessage.pop_up(self, "Veuillez remplir tous les champs.")
 
     def display_workers(self):
         """
-        Displays the list of workers in a popup message.
+        Displays the list of workers in the right-side frame.
         """
+        # Clear previous widgets
+        for widget in self.worker_list_frame.winfo_children():
+            widget.destroy()
+
         workers = self.worker_service.get_all_workers()
         if workers:
-            worker_list = "\n".join([f"{worker.id}: {worker.first_name} {worker.last_name}" for worker in workers])
-            PopUpMessage.pop_up("Liste des travailleurs", worker_list)
+            row_index = 0
+            for worker in workers:
+                id_label = ctk.CTkLabel(
+                    self.worker_list_frame,
+                    text=f"ID: {worker.id_worker}",
+                    font=ctk.CTkFont(size=16, weight="bold")
+                )
+                id_label.grid(row=row_index, column=0, sticky="w", padx=15, pady=(5, 0))
+                row_index += 1
+
+                name_label = ctk.CTkLabel(
+                    self.worker_list_frame,
+                    text=f"Nom: {worker.person.last_name}, Prénom: {worker.person.first_name}",
+                    font=ctk.CTkFont(size=16)
+                )
+                name_label.grid(row=row_index, column=0, sticky="w", padx=15, pady=(0, 5))
+                row_index += 1
+
+                delete_button = ctk.CTkButton(
+                    self.worker_list_frame,
+                    text="Supprimer",
+                    command=lambda w_id=worker.id_worker: self.delete_worker(w_id)
+                )
+                delete_button.grid(row=row_index, column=0, sticky="e", padx=10, pady=(0, 10))
+                row_index += 1
         else:
-            PopUpMessage.pop_up("Liste des travailleurs", "Aucun travailleur trouvé.")
+            no_workers_label = ctk.CTkLabel(
+                self.worker_list_frame,
+                text="Aucun travailleur trouvé.",
+                font=ctk.CTkFont(size=16, weight="bold")
+            )
+            no_workers_label.grid(row=0, column=0, padx=15, pady=(5, 0))
+
+
+    def delete_worker(self, worker_id):
+        """
+        Deletes a worker from the JSON file and updates the display.
+        """
+        self.worker_service.delete_worker(worker_id)
+        self.display_workers()
+        PopUpMessage.pop_up(self, "Travailleur supprimé avec succès.")
+        self.first_name_entry.delete(0, 'end')
+        self.last_name_entry.delete(0, 'end')
+        self.national_number_entry.delete(0, 'end')
+        self.email_entry.delete(0, 'end')
+        self.street_entry.delete(0, 'end')
+        self.cp_entry.delete(0, 'end')
+        self.city_entry.delete(0, 'end')
