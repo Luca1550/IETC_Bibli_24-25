@@ -1,5 +1,3 @@
-import itertools
-
 class Base:
     """
     Base class providing a unique, auto-incrementing ID for its subclasses.
@@ -7,14 +5,23 @@ class Base:
     Each subclass inheriting from Base will have its own independent ID counter,
     ensuring unique IDs within that specific class type.
     """
-    _id_iter = itertools.count(1)
 
-    def __init__(self, id: int|None = None):
+    def __init_subclass__(cls):
         """
-        Initializes a new instance with a unique ID.
+        This method is called automatically when a subclass is created.
+        It ensures that each new subclass gets its own independent ID counter,
+        starting from 1.
+        """
+        super().__init_subclass__()
+        cls._next_id = 1
+
+    def __init__(self, id: int | None = None):
+        """
+        Initializes a new instance with a unique ID specific to its class.
 
         If an 'id' is provided, it will be used. Otherwise, a new unique ID
-        is generated using the class's internal counter. If an ID is provided,
+        is generated using the class's internal counter. If an ID is provided
+        and it's greater than or equal to the current next available ID,
         the class's ID counter is updated to ensure future auto-generated IDs
         are higher than the provided one.
 
@@ -22,21 +29,9 @@ class Base:
             id (int | None): An optional unique identifier for the instance.
             If None, a new ID is generated.
         """
-        self.id = id if id is not None else next(self._id_iter)
-        if id:
-            self.update_id_iter(id)
-
-    @classmethod
-    def update_id_iter(cls, start_at: int):
-        """
-        Updates the class's ID counter to ensure subsequent auto-generated IDs
-        are greater than a specified value.
-
-        This method is typically called when loading existing data (e.g., from a database or file)
-        to prevent ID collisions with newly created instances. The counter is
-        set to start incrementing from 'start_at + 1'.
-
-        Args:
-            start_at (int): The maximum existing ID found. The next auto-generated
-        """
-        cls._id_iter = itertools.count(start_at + 1)
+        if id is not None:
+            self.id = id
+            self.__class__._next_id = self.id + 1
+        else:
+            self.id = self.__class__._next_id
+            self.__class__._next_id += 1
