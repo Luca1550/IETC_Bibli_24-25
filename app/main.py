@@ -1,6 +1,9 @@
 import customtkinter as ctk
 from ui.components import MenuNavigation, LoginPage
 from ui.pages import BookPage,LibraryPage
+from ui.pages.library import LibraryPage
+from ui.pages.book import BookPage
+from ui.pages.worker import WorkerPage
 
 class MainApp(ctk.CTk):
     """
@@ -76,8 +79,8 @@ class MainApp(ctk.CTk):
         def config_page():
             return LibraryPage(self.page_container)
 
-        def employees_page():
-            return ctk.CTkLabel(self.page_container, text="Employees")
+        def worker_page():
+            return WorkerPage(self.page_container)
 
         page_switch = {
             "Home": home_page,
@@ -86,7 +89,7 @@ class MainApp(ctk.CTk):
             "Borrow":borrow_page,
             "Members":members_page,
             "Config":config_page,
-            "Employees":employees_page
+            "Workers":worker_page
         }
 
         self.current_page = page_switch.get(page_name, lambda: ctk.CTkLabel(self.page_container, text="Unknown Page"))()
