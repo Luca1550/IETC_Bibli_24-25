@@ -525,7 +525,12 @@ class BookPage(ctk.CTkFrame):
         else:
             self.filtered_books = [
                 book for book in self.books
-                if query in book.title.lower()
+                if query in book.title.lower() 
+                or any (query in editor.name.lower() for editor in book.editors)
+                or any (query in theme.name.lower() for theme in book.themes)
+                or query in book.collection.name.lower()
+                or any (query in author.person.first_name.lower() for author in book.authors)
+                or any (query in author.person.last_name.lower() for author in book.authors)
             ]
         
         self.display_books()
