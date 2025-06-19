@@ -37,7 +37,7 @@ class MenuNavigation(ctk.CTkFrame):
         self.btn_reservation_page = ctk.CTkButton(self, text="Reservation", command=lambda: self.select_page("Reservation"))
         self.btn_borrow_page = ctk.CTkButton(self, text="Borrow", command=lambda: self.select_page("Borrow"))
         self.btn_members_page = ctk.CTkButton(self, text="Members", command=lambda: self.select_page("Members"))
-        self.btn_employees_page = ctk.CTkButton(self, text="Employees", command=lambda: self.select_page("Employees"))
+        self.btn_workers_page = ctk.CTkButton(self, text="Workers", command=lambda: self.select_page("Workers"))
         self.btn_config_page = ctk.CTkButton(self, text="Config", command=lambda: self.select_page("Config"))
         
 
@@ -46,7 +46,8 @@ class MenuNavigation(ctk.CTkFrame):
             "Books": self.btn_book_page,
             "Reservation": self.btn_reservation_page,
             "Borrow": self.btn_borrow_page,
-            "Members": self.btn_members_page
+            "Members": self.btn_members_page,
+            "Workers": self.btn_workers_page
         }
 
         
@@ -59,15 +60,15 @@ class MenuNavigation(ctk.CTkFrame):
                 height=50,
             )
             btn.grid(row=0, column=idx, padx=10, pady=20, sticky="ew")
-        
-        self.btn_employees_page.configure(
+
+        self.btn_workers_page.configure(
             fg_color="#dd5019",
             hover_color="#cf714c",
             text_color="white",
             width=120,
             height=50,
         )
-        self.btn_employees_page.grid(row=0, column=8, pady=20, sticky="e")
+        self.btn_workers_page.grid(row=0, column=8, pady=20, sticky="e")
 
         self.btn_config_page.configure(
             fg_color="#dd5019",

@@ -50,7 +50,7 @@ class MainApp(ctk.CTk):
         self.page_container.grid_rowconfigure(0, weight=1)
         self.page_container.grid_columnconfigure(0, weight=1)
 
-        self.change_page("Accueil")
+        self.change_page("Home")
 
 
     def change_page(self, page_name):
