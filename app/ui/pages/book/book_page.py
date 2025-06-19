@@ -210,7 +210,7 @@ class BookFrame(ctk.CTkFrame):
         confirm_window.geometry("300x150")
         confirm_window.resizable(False, False)
         confirm_window.grab_set() 
-       
+        
         confirm_window.transient(self.winfo_toplevel())
         
         message = ctk.CTkLabel(
@@ -259,7 +259,7 @@ class BookFrame(ctk.CTkFrame):
                 )
                 label.pack(side="left", anchor="w", pady=2, padx=5)
                 self.theme_labels.append(label)
- 
+
     def update_editors(self, new_editors):
         for label in self.editor_labels:
             if label not in new_editors:
@@ -525,7 +525,12 @@ class BookPage(ctk.CTkFrame):
         else:
             self.filtered_books = [
                 book for book in self.books
-                if query in book.title.lower()
+                if query in book.title.lower() 
+                or any (query in editor.name.lower() for editor in book.editors)
+                or any (query in theme.name.lower() for theme in book.themes)
+                or query in book.collection.name.lower()
+                or any (query in author.person.first_name.lower() for author in book.authors)
+                or any (query in author.person.last_name.lower() for author in book.authors)
             ]
         
         self.display_books()
