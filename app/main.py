@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from ui.components import MenuNavigation, LoginPage
-from ui.pages.book import BookPage
+from ui.pages import BookPage,LibraryPage
 
 class MainApp(ctk.CTk):
     """
