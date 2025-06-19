@@ -12,7 +12,7 @@ class MainApp(ctk.CTk):
         Initializes the MainApp class, sets up the main window, and creates the login frame.
         """
         super().__init__()
-        self.title("BIBLIOTHEQUE")
+        self.title("Library")
         self.geometry("1280x720")
 
         self.grid_rowconfigure(1, weight=1)  
@@ -58,38 +58,38 @@ class MainApp(ctk.CTk):
         if self.current_page:
             self.current_page.destroy()
 
-        def page_Accueil():
-            return ctk.CTkLabel(self.page_container, text="Bienvenue dans la Bibliothèque")
+        def home_page():
+            return ctk.CTkLabel(self.page_container, text="Welcome in the Library")
 
-        def page_Livres():
+        def book_page():
             return BookPage(self.page_container)
 
-        def page_Réservation():
-            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Réservation")
+        def reservation_page():
+            return ctk.CTkLabel(self.page_container, text="Reservation")
 
-        def page_Emprunt():
-            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Emprunt")
+        def borrow_page():
+            return ctk.CTkLabel(self.page_container, text="Borrow")
 
-        def page_Membres():
-            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Membres")
+        def members_page():
+            return ctk.CTkLabel(self.page_container, text="Members")
 
-        def page_Config():
-            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Config")
+        def config_page():
+            return ctk.CTkLabel(self.page_container, text="Config")
 
-        def page_Employes():
-            return ctk.CTkLabel(self.page_container, text="Contenu de la Page Employes")
+        def employees_page():
+            return ctk.CTkLabel(self.page_container, text="Employees")
 
         page_switch = {
-            "Accueil": page_Accueil,
-            "Livres": page_Livres,
-            "Réservation": page_Réservation,
-            "Emprunt":page_Emprunt,
-            "Membres":page_Membres,
-            "Config":page_Config,
-            "Employes":page_Employes
+            "Home": home_page,
+            "Books": book_page,
+            "Reservation": reservation_page,
+            "Borrow":borrow_page,
+            "Members":members_page,
+            "Config":config_page,
+            "Employees":employees_page
         }
 
-        self.current_page = page_switch.get(page_name, lambda: ctk.CTkLabel(self.page_container, text="Page inconnue"))()
+        self.current_page = page_switch.get(page_name, lambda: ctk.CTkLabel(self.page_container, text="Unknown Page"))()
         self.current_page.grid(row=0, column=0, sticky="nsew")
 
 if __name__ == "__main__":
