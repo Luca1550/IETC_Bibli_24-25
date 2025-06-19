@@ -47,7 +47,6 @@ class MenuNavigation(ctk.CTkFrame):
             "Reservation": self.btn_reservation_page,
             "Borrow": self.btn_borrow_page,
             "Members": self.btn_members_page,
-            "Workers": self.btn_workers_page
         }
 
         
