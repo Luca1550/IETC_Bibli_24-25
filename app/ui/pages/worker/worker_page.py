@@ -131,12 +131,20 @@ class WorkerPage(ctk.CTkFrame):
                 id_label.grid(row=row_index, column=0, sticky="w", padx=15, pady=(5, 0))
                 row_index += 1
 
-                name_label = ctk.CTkLabel(
+                last_name_label = ctk.CTkLabel(
                     self.worker_list_frame,
-                    text=f"Nom: {worker.person.last_name}, Prénom: {worker.person.first_name}",
+                    text=f"Nom: {worker.person.last_name}",
                     font=ctk.CTkFont(size=16)
                 )
-                name_label.grid(row=row_index, column=0, sticky="w", padx=15, pady=(0, 5))
+                last_name_label.grid(row=row_index, column=0, sticky="w", padx=15)
+                row_index += 1
+
+                first_name_label = ctk.CTkLabel(
+                    self.worker_list_frame,
+                    text=f"Prénom: {worker.person.first_name}",
+                    font=ctk.CTkFont(size=16)
+                )
+                first_name_label.grid(row=row_index, column=0, sticky="w", padx=15)
                 row_index += 1
 
                 delete_button = ctk.CTkButton(
