@@ -74,7 +74,7 @@ class MainApp(ctk.CTk):
             return ctk.CTkLabel(self.page_container, text="Members")
 
         def config_page():
-            return ctk.CTkLabel(self.page_container, text="Config")
+            return LibraryPage(self.page_container)
 
         def employees_page():
             return ctk.CTkLabel(self.page_container, text="Employees")
