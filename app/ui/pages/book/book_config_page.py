@@ -481,26 +481,6 @@ class AddAuthorPage(ctk.CTkToplevel):
         self.last_name_entry = ctk.CTkEntry(self)
         self.last_name_entry.pack(fill="x", padx=20)
         
-        ctk.CTkLabel(self, text="National number", anchor="w").pack(fill="x", padx=20)
-        self.national_number_entry = ctk.CTkEntry(self)
-        self.national_number_entry.pack(fill="x", padx=20)
-        
-        ctk.CTkLabel(self, text="Email", anchor="w").pack(fill="x", padx=20)
-        self.email_entry = ctk.CTkEntry(self)
-        self.email_entry.pack(fill="x", padx=20)
-        
-        ctk.CTkLabel(self, text="Street", anchor="w").pack(fill="x", padx=20)
-        self.street_entry = ctk.CTkEntry(self)
-        self.street_entry.pack(fill="x", padx=20)
-        
-        ctk.CTkLabel(self, text="CP", anchor="w").pack(fill="x", padx=20)
-        self.cp_entry = ctk.CTkEntry(self)
-        self.cp_entry.pack(fill="x", padx=20)
-        
-        ctk.CTkLabel(self, text="City", anchor="w").pack(fill="x", padx=20)
-        self.city_entry = ctk.CTkEntry(self)
-        self.city_entry.pack(fill="x", padx=20)
-        
         ctk.CTkButton(self, text="✅ Add Author", command=self.confirm_action).pack(pady=10)
         ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(pady=(0,10))
         
@@ -508,12 +488,7 @@ class AddAuthorPage(ctk.CTkToplevel):
         try:
             self.author_service.add_author(
                 first_name=self.first_name_entry.get(),
-                last_name=self.last_name_entry.get(),
-                national_number=self.national_number_entry.get(),
-                email=self.email_entry.get(),
-                street=self.street_entry.get(),
-                cp=self.cp_entry.get(),
-                city=self.city_entry.get()
+                last_name=self.last_name_entry.get()
             )
 
             PopUpMessage.pop_up(self, "Author added ✅")

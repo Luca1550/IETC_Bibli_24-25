@@ -16,7 +16,7 @@ class AuthorService:
         self.person_service = PersonService()
         self.book_author_repo = BookAuthorRepo()
     
-    def add_author(self, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str) -> Author:
+    def add_author(self, first_name : str, last_name : str | None) -> Author | Exception:
         """
         Adds a new author to the system.
         :param person: Person object containing the details of the author to be added.
@@ -24,8 +24,28 @@ class AuthorService:
         :return: A message indicating success or failure.
         """
         try:
-            person = self.person_service.add_person(first_name=first_name, last_name=last_name, national_number=national_number, email=email, street=street, cp=cp, city=city)
+            person = self.person_service.add_person(first_name, last_name, None, None, None, None, None)
             self.author_repo.add_author(Author(id=None,id_person=person.id))
+        except Exception as e:
+            raise Exception(f"🛑 error adding author: {e}")
+        
+    def update_author(self, id : int, first_name : str, last_name : str | None) -> Author | Exception:
+        """
+        Updates an existing author's details.
+        arguments:
+        - id: Unique identifier of the author to be updated.
+        - first_name: New first name of the author.
+        - last_name: New last name of the author.
+        returns:
+        - Returns an error message if there was an issue updating the author.
+        """
+        try:
+            author = self.author_repo.get_by_id(id)
+            if not author:
+                raise Exception(f"Author with the given ID : {id} was not found.")
+            person = self.person_service.get_by_id(author.id_person)
+            if person:
+                self.person_service.update_person(person.id, first_name, last_name, None, None, None, None, None)
         except Exception as e:
             raise Exception(f"🛑 error adding author: {e}")
     
