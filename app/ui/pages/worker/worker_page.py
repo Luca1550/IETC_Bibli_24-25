@@ -25,8 +25,8 @@ class WorkerPage(ctk.CTkFrame):
         ## Grid configuration for the layout
         rows = 9
         rows_weights = [1,1,1,1,1,1,1,1,1]
-        columns = 9
-        columns_weights = [1,2,1,1,1,1,1,1,1]
+        columns = 2
+        columns_weights = [1,2]
 
         for row, w in enumerate(rows_weights):
             self.grid_rowconfigure(row, weight=w)
@@ -92,17 +92,19 @@ class WorkerPage(ctk.CTkFrame):
 
         if first_name and last_name and national_number and email and street and cp and city:
             try:
-                self.worker_service.add_worker(id, first_name, last_name, national_number, email, street, cp, city)
-                PopUpMessage.pop_up(self, "Travailleur ajouté avec succès.")
-                self.display_workers()
-                # Clear the input fields after adding
-                self.first_name_entry.delete(0, 'end')
-                self.last_name_entry.delete(0, 'end')
-                self.national_number_entry.delete(0, 'end')
-                self.email_entry.delete(0, 'end')
-                self.street_entry.delete(0, 'end')
-                self.cp_entry.delete(0, 'end')
-                self.city_entry.delete(0, 'end')
+                if self.worker_service.add_worker(id, first_name, last_name, national_number, email, street, cp, city):
+                    PopUpMessage.pop_up(self, "Travailleur ajouté avec succès.")
+                    self.display_workers() 
+
+                    # Clear the input fields after adding
+                    self.first_name_entry.delete(0, 'end')
+                    self.last_name_entry.delete(0, 'end')
+                    self.national_number_entry.delete(0, 'end')
+                    self.email_entry.delete(0, 'end')
+                    self.street_entry.delete(0, 'end')
+                    self.cp_entry.delete(0, 'end')
+                    self.city_entry.delete(0, 'end')
+
             except Exception as e:
                 PopUpMessage.pop_up(self, f"Erreur lors de l'ajout du travailleur: {str(e)}")
         else:
@@ -112,11 +114,12 @@ class WorkerPage(ctk.CTkFrame):
         """
         Displays the list of workers in the right-side frame.
         """
-        # Clear previous widgets
-        for widget in self.worker_list_frame.winfo_children():
-            widget.destroy()
+
+        self.worker_service = WorkerService()
+        # Fetch all workers from the service
 
         workers = self.worker_service.get_all_workers()
+        print([worker.id_worker for worker in workers])  # Debugging line to check worker IDs
         if workers:
             row_index = 0
             for worker in workers:
@@ -159,10 +162,3 @@ class WorkerPage(ctk.CTkFrame):
         self.worker_service.delete_worker(worker_id)
         self.display_workers()
         PopUpMessage.pop_up(self, "Travailleur supprimé avec succès.")
-        self.first_name_entry.delete(0, 'end')
-        self.last_name_entry.delete(0, 'end')
-        self.national_number_entry.delete(0, 'end')
-        self.email_entry.delete(0, 'end')
-        self.street_entry.delete(0, 'end')
-        self.cp_entry.delete(0, 'end')
-        self.city_entry.delete(0, 'end')
