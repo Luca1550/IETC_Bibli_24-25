@@ -4,6 +4,7 @@ from ui.pages import BookPage,LibraryPage
 from ui.pages.library import LibraryPage
 from ui.pages.book import BookPage
 from ui.pages.worker import WorkerPage
+from ui.pages.member import MemberPage
 
 class MainApp(ctk.CTk):
     """
@@ -74,7 +75,7 @@ class MainApp(ctk.CTk):
             return ctk.CTkLabel(self.page_container, text="Borrow")
 
         def members_page():
-            return ctk.CTkLabel(self.page_container, text="Members")
+            return MemberPage(self.page_container)
 
         def config_page():
             return LibraryPage(self.page_container)

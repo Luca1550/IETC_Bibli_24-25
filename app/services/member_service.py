@@ -1,8 +1,6 @@
 import re
-from repositories.models import Member
-from repositories.models import Person
-from repositories import MemberRepo
-from repositories import PersonRepo
+from repositories.models import Member, Person
+from repositories import MemberRepo, PersonRepo
 from services import PersonService
 from services.models import MemberDTO
 from datetime import date
@@ -15,7 +13,7 @@ class MemberService:
     def __init__(self):
         self._member_repo = MemberRepo()
         self._person_repo = PersonRepo()
-        self.person_service = PersonService()
+        self._person_service = PersonService()
 
 
     def add_member(self, id : int, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str, membership_entrydate : date, subscribed : bool, archived : bool) -> MemberDTO:
@@ -24,7 +22,7 @@ class MemberService:
         :param member: Member object to be added.
         :return: True if the member was added successfully, False otherwise.
         """
-        person = self.person_service.add_person(
+        person = self._person_service.add_person(
             first_name,
             last_name,
             national_number,
@@ -58,7 +56,7 @@ class MemberService:
         :param member: Member object to be updated.
         :return: True if the member was updated successfully, False otherwise.
         """
-        person = self.person_service.update_person(
+        person = self._person_service.update_person(
             id,
             first_name,
             last_name,
@@ -105,7 +103,18 @@ class MemberService:
         :param member: Member object to be deleted.
         :return: True if the member was deleted successfully, False otherwise.
         """
-        return self._member_repo.delete_member(member)
+        try:
+            member = self._member_repo.get_member_by_id(id)
+            if member:
+                self._member_repo.delete_member(member)
+                self._person_service.delete_person(member.id_person)
+                return True
+            else:
+                raise Exception(f"Member with the given ID : {id} was not found.")
+        except Exception as e:
+            print(f"🛑 Error [{e}]")
+            return False
+    
 
     def get_all_members(self) -> list[MemberDTO]:
         """

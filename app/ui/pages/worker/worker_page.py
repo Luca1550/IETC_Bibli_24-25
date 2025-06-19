@@ -119,7 +119,6 @@ class WorkerPage(ctk.CTkFrame):
         # Fetch all workers from the service
 
         workers = self.worker_service.get_all_workers()
-        print([worker.id_worker for worker in workers])  # Debugging line to check worker IDs
         if workers:
             row_index = 0
             for worker in workers:
