@@ -22,9 +22,11 @@ class ReservationMemberRepo:
     
     def update_reservation_member(self,id_member:int,id_reservation:int):
         for exist_res in self._reservation_member_json:
-            if exist_res.id == id_reservation:
+            if exist_res.id_reservation == id_reservation:
                 exist_res.id_member = id_member
                 self._save_all()
+                return True
+        return False
 
     def get_reservation_member(self,id_member:int,id_reservation:int):
         Listmemb : list[Member] = []
@@ -44,6 +46,6 @@ class ReservationMemberRepo:
             if things.id_reservation == id_reservation and things.id_member == id_member:
                 self._reservation_member_json.remove(things)
                 self._save_all()
-            return True
+                return True
         return False
     

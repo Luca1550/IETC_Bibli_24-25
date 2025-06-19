@@ -17,15 +17,20 @@ class ReservationRepo():
             return True
         return False 
 
-
+    def get_by_id(self,id):
+        for reservation in self.reservation_json:
+            if reservation.id == id:
+                return reservation
+        return None
     def get_reservation_parameters(self):
         return self.reservation_json
 
     def update_reservation(self, reservation : Reservation):
         for i, reserv in enumerate(self.reservation_json):
-            if isinstance(reserv, dict):
-                    if reserv.get('id') == reservation.id:
-                        self.reservation_json[i] = reservation.__dict__  
+            if isinstance(reserv, Reservation):
+                    if reserv.id == reservation.id:
+                        print(f"Updating reservation with ID: {reservation.id}")
+                        self.reservation_json[i] = reservation
                         self._save_all()
                         return True
         return False

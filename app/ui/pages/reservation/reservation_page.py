@@ -62,7 +62,7 @@ class ReservationPage(ctk.CTkFrame):
             #ici je vais du coup rajouter les autres infos de livre etc 
             self.reservation_listbox.insert("end", f"{res.id_exemplar} - {res.reservation_date}\n")
             self.indexbook[idx] = res 
-        self.reservation_listbox.bind("<<ListboxSelect>>", self.reservation_select)
+        #self.reservation_listbox.bind("<<ListboxSelect>>", self.reservation_select)
 
         self.right_panel = ctk.CTkFrame(self.main_panel)
         self.right_panel.grid(row=0, column=1, sticky="nsew")
@@ -70,14 +70,16 @@ class ReservationPage(ctk.CTkFrame):
         self.form_title = ctk.CTkLabel(self.right_panel, text="Nouvelle Réservation", font=ctk.CTkFont(size=18, weight="bold"))
         self.form_title.pack(pady=(10, 10))
 
+        self.reservation_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_reservation")
+        self.reservation_entry.pack(pady=5, padx=20, fill="x")
         self.name_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_exemplar")
         self.name_entry.pack(pady=5, padx=20, fill="x")
         self.member_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_member")
         self.member_entry.pack(pady=5, padx=20, fill="x")
         self.date_entry = ctk.CTkEntry(self.right_panel, placeholder_text="Date (YYYY-MM-DD)")
         self.date_entry.pack(pady=5, padx=20, fill="x")
-
-        self.submit_button = ctk.CTkButton(self.right_panel, text="Réserver",command=self.add_reservation)
+        self.submit_button = ctk.CTkButton(self.right_panel, text="update",command=self.update_reservation)
+        #self.submit_button = ctk.CTkButton(self.right_panel, text="Réserver",command=self.add_reservation)
         self.submit_button.pack(pady=20)
     def add_reservation(self):
         try:
@@ -94,7 +96,25 @@ class ReservationPage(ctk.CTkFrame):
         except ValueError as e:
             PopUpMessage.pop_up(self, f"Input error: {e}")
 
-    def spiderManMeme(self):
+    def update_reservation(self):
+        try:
+            id_reservation = int(self.reservation_entry.get())
+            id_exemplar = int(self.name_entry.get())
+            id_member = int(self.member_entry.get())
+            reservation_date = str(self.date_entry.get())
+            newreservation=self.reservation_service.update_reservation(id_reservation,id_exemplar,id_member,reservation_date)
+            if isinstance(newreservation, str):
+                PopUpMessage.pop_up(self, newreservation)
+            else:
+                PopUpMessage.pop_up(self, "reservation updated successfully!")
+                self.destroy()
+        except ValueError as e:
+            PopUpMessage.pop_up(self, f"Input error: {e}")
+        self.destroy()
+
+    
+
+    """def spiderManMeme(self):
         #ici je veux qu'on tape le nom du livre et boom 
         #
         # 🕷️   ->  🕷️
@@ -115,7 +135,7 @@ class ReservationPage(ctk.CTkFrame):
             for book in books :
                 if book.title == title:
                     book.isbn == isbn
-                    id_exemplar = self.exemplar_service.geon
+                    id_exemplar = self.exemplar_service.get(id)
 
 
 
@@ -135,5 +155,5 @@ class ReservationPage(ctk.CTkFrame):
     #         self.date_entry.insert(0, res.date)
 
     #         # Changer le bouton en "Mettre à jour"
-    #         #self.submit_button.configure(text="Mettre à jour", command=self.update_reservation)
+    #         #self.submit_button.configure(text="Mettre à jour", command=self.update_reservation)"""
     

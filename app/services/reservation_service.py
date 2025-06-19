@@ -34,7 +34,7 @@ class ReservationService:
                 id_exemplar=id_exemplar,
                 reservation_date=actual_reservation_date
                 )
-            
+            #ici je dois changer le statuut de exemplar 
 
             result=self._reservation_repo.add_reservation(new_reservation)
             reservation_member_result = None
@@ -78,6 +78,17 @@ class ReservationService:
         except Exception as e:
             print(f"🛑 Error getting reservations: [{e}]")
             return []
+        
+    def get_by_id(self,id:int):
+        try:
+            reservationsDTO = self.get_all()
+            for reservation in reservationsDTO : 
+                if reservation.id == id:
+                    return reservation
+            else:
+                raise Exception(f"Reservation with the given ID : {id} was not found.")
+        except Exception as e:
+            return f"🛑 Error [{e}]"
     def delete_reservation(self,id_reservation:int):
         try:
             reservations = self._reservation_repo.get_reservation_parameters()
@@ -92,27 +103,24 @@ class ReservationService:
         except Exception as e:
             print(f"🛑 Error deleting reservation: [{e}]")
             return False
-    def update_reservation(self,id_reservation:int,id_exemplar:int,id_member:int,reservation_date:date|None = None):
+    def update_reservation(self,id:int,id_exemplar:int,id_member:int,reservation_date:date|None = None):
         try:
-            reservation: Reservation = self._reservation_repo.get_by_id(id_reservation)
+            reservation: Reservation = self._reservation_repo.get_by_id(id)
+            reservatio_DTO: ReservationDTO = self.get_by_id(id)
+
             if not isinstance(reservation, Reservation):
-                raise Exception(f"Reservation with ID: {id_reservation} was not found.")
-            if reservation.id_exemplar != id_exemplar:
+                raise Exception(f"Reservation with ID: {id} was not found.")
+            if id_exemplar is not None:
                 reservation.id_exemplar = id_exemplar
-            if reservation.reservation_date != reservation_date:
+            if reservation_date is not None:
                 reservation.reservation_date = reservation_date
+            print(reservation)
             self._reservation_repo.update_reservation(reservation)
-            if id_member:
-                reservation_member = self._reservation_member_repo.get_reservation_member_byId(id_reservation)
-                if not reservation_member:
-                    new_reservation_member = ReservationMember(
-                        id_reservation=id_reservation,
-                        id_member=id_member
-                    )
-                    self._reservation_member_repo.add_reservation_member(new_reservation_member)
-                else:
-                    reservation_member.id_member = id_member
-                    self._reservation_member_repo.update_reservation_member(reservation_member)
+            #ici je dois changer le statuut de exemplar 
+            if id_member is not None:
+                self._reservation_member_repo.delete_reservation_member(id_reservation=id,id_member=reservatio_DTO.member.id)
+                new_res_member = ReservationMember(id_reservation=id, id_member=id_member)
+                self._reservation_member_repo.add_reservation_member(new_res_member)
             return reservation
         except Exception as e:
             print(f"🛑 Error updating reservation: [{e}]")
