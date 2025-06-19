@@ -210,7 +210,7 @@ class BookFrame(ctk.CTkFrame):
         confirm_window.geometry("300x150")
         confirm_window.resizable(False, False)
         confirm_window.grab_set() 
-       
+        
         confirm_window.transient(self.winfo_toplevel())
         
         message = ctk.CTkLabel(
@@ -259,7 +259,7 @@ class BookFrame(ctk.CTkFrame):
                 )
                 label.pack(side="left", anchor="w", pady=2, padx=5)
                 self.theme_labels.append(label)
- 
+
     def update_editors(self, new_editors):
         for label in self.editor_labels:
             if label not in new_editors:
