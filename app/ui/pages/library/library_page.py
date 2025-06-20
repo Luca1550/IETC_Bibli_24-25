@@ -64,7 +64,6 @@ class LibraryPage(ctk.CTkFrame):
         if self.paramlib:
 
             lib_params=self.paramlib[0]
-            print("ouii",lib_params.__dict__)
             self.entries={}
             for i,(key, value) in enumerate(lib_params.__dict__.items(),start=1):
                 if key != "id":
