@@ -17,7 +17,8 @@ class CollectionService :
         """
         Adds a new collection with the given name.
         :param name: The name of the collection to add.
-        :return: None
+        :return: The newly created collection object.
+        :raises Exception: If the collection name is invalid or if a collection with the same name
         """
         try:
             self._check_collection_value (name)
@@ -118,6 +119,9 @@ class CollectionService :
             raise Exception(f"🛑 error {e}")
     
     def _check_collection_value(self,name:str):
+        """
+        Validates the collection name.
+        """
         if not name or len(name.strip())<1:
             raise Exception ("Collection cannot be empty.")
         return True

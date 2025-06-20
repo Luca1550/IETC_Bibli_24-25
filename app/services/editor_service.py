@@ -106,6 +106,9 @@ class EditorService :
             raise Exception(f"🛑 error {e}")
         
     def _check_editor_value(self,name:str):
+        """
+        Validates the editor name.
+        """
         if not name or len(name.strip())<1:
             raise Exception ("Editor cannot be empty.")
         return True
