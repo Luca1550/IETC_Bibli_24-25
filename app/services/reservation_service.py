@@ -4,6 +4,8 @@ from repositories import ReservationRepo,ExemplarRepo,MemberRepo,ReservationMemb
 from .models import ReservationDTO
 from datetime import date, datetime
 
+
+#NOTE POUR JULEN/ BUG RECUP DE L ID MEMBER ET RECUP AVEC LE NOM 
 class ReservationService:
 
     def __init__(self):
@@ -19,6 +21,29 @@ class ReservationService:
 #ajoute
 #on a un probleme ok ca va add tout ca mais alors je dois aussi add dans mon dto et comment on va relier le nom de la personne avec son id
 #ahhh bah par le dto en fait donc quand je vais faire un add je vais donner son nom, je vais le check dans le dto par son id qui va etre renvoyé ici 
+
+
+#je dois encore rrajouter une fonction qui permet en donnant le isbn d'avoir l'id de l'exemplar je vais utiliser le get all by isbn 
+    def get_exemplar_by_name(self, title: str) -> int | None:
+        try:
+            books = self._book_repo.get_all()
+            for b in books:
+                # Accès en mode dictionnaire si les objets sont des dicts
+                book_title = b.title 
+                isbn = b.isbn 
+                print("Checking book title:", book_title, "ISBN:", isbn)
+                if book_title.lower() == title.lower():
+                    exemplars = self._exemplar_repo.get_all(isbn)
+                    print("book found for book title:", title, "ISBN:", isbn)
+                    if exemplars:
+                        print("Exemplars found for book title:", title, "ISBN:", isbn)
+                        return exemplars[0].id
+            raise Exception(f"Book with title '{title}' not found.")
+        except Exception as e:
+            print(f"🛑 Error getting exemplar by book title: [{e}]")
+            return None
+
+        
     def add_reservation(self,id_exemplar:int,id_member:int,reservation_date:date|None = None) ->Reservation:
 
         try:
@@ -154,3 +179,16 @@ class ReservationService:
                 raise Exception("Invalid reservationdate: it must be a date like YYYY-MM-DD")
         except Exception as e:
             return f"🛑 Error [{e}]"
+    #pour le add je dois encore changer le statut et check si ils sont deja reservé ou pas
+    #ca ca va etre utile pour la liste
+    def get_isbn_by_id_exemplar(self, id_exemplar: int):
+        try:
+            exemplar = self._exemplar_repo.get_by_id(id_exemplar)
+            if isinstance(exemplar, Exemplar):
+                book = self._book_repo.get_by_isbn(exemplar.isbn)
+                if book:
+                    return book.isbn
+            raise Exception(f"Exemplar with ID {id_exemplar} not found.")
+        except Exception as e:
+            print(f"🛑 Error getting ISBN by exemplar ID: [{e}]")
+            return ""

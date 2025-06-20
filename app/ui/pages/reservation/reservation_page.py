@@ -59,9 +59,10 @@ class ReservationPage(ctk.CTkFrame):
         self.paramres = self.reservation_service.get_all()
         self.indexbook = {}
         for idx,res in enumerate(self.paramres):
-            #ici je vais du coup rajouter les autres infos de livre etc 
-            self.reservation_listbox.insert("end", f"{res.id_exemplar} - {res.reservation_date}\n")
-            self.indexbook[idx] = res 
+            #ici je vais du coup rajouter les autres infos de livre etc pour la listbox
+            
+            self.reservation_listbox.insert("end", f"{res.id_exemplar} - {res.reservation_date} \n")
+            self.indexbook[idx] = res
         self.reservation_listbox.bind("<<ListboxSelect>>", self.reservation_select)
 
         self.right_panel = ctk.CTkFrame(self.main_panel)
@@ -70,8 +71,8 @@ class ReservationPage(ctk.CTkFrame):
         self.form_title = ctk.CTkLabel(self.right_panel, text="New Réservation", font=ctk.CTkFont(size=18, weight="bold"))
         self.form_title.pack(pady=(10, 10))
         
-        self.name_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_exemplar")
-        self.name_entry.pack(pady=5, padx=20, fill="x")
+        self.title_entry = ctk.CTkEntry(self.right_panel, placeholder_text="title")
+        self.title_entry.pack(pady=5, padx=20, fill="x")
         self.member_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_member")
         self.member_entry.pack(pady=5, padx=20, fill="x")
         self.date_entry = ctk.CTkEntry(self.right_panel, placeholder_text="Date (YYYY-MM-DD)")
@@ -81,7 +82,11 @@ class ReservationPage(ctk.CTkFrame):
         self.submit_button.pack(pady=20)
     def add_reservation(self):
         try:
-            id_exemplar = int(self.name_entry.get())
+            title = self.title_entry.get()
+            id_exemplar = self.reservation_service.get_exemplar_by_name(title)
+            if id_exemplar is None:
+                PopUpMessage.pop_up(self, "Exemplar not found for the given title.")
+                return
             id_member = int(self.member_entry.get())
             reservation_date = str(self.date_entry.get())
             newreservation=self.reservation_service.add_reservation(id_exemplar,id_member,reservation_date)
@@ -107,7 +112,6 @@ class ReservationPage(ctk.CTkFrame):
             else:
                 PopUpMessage.pop_up(self, "reservation updated successfully!")
                 self.destroy()
-            self.submit_button.configure(text="Réserver", command=self.add_reservation)
         except ValueError as e:
             PopUpMessage.pop_up(self, f"Input error: {e}")
         self.destroy()
@@ -139,7 +143,7 @@ class ReservationPage(ctk.CTkFrame):
 
 
 """
-    #check apres ca crée un bug 
+    
     def reservation_select(self, event):
         selection = event.widget.curselection()
         if selection:
@@ -147,6 +151,10 @@ class ReservationPage(ctk.CTkFrame):
             selected_res = self.indexbook.get(index)
             self.reservation_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_reservation")
             self.reservation_entry.pack(pady=5, padx=20, fill="x")
+            self.submit_button.destroy() 
+
+            self.submit_button = ctk.CTkButton(self.right_panel, text="Update", command=self.update_reservation)
+            self.submit_button.pack(pady=20)
             if selected_res:
                 self.selected_reservation = selected_res
 
@@ -165,6 +173,5 @@ class ReservationPage(ctk.CTkFrame):
                 self.date_entry.delete(0, tk.END)
                 self.date_entry.insert(0, selected_res.reservation_date)
 
-                self.submit_button.configure(text="Update", command=self.update_reservation)
-
+                
         
