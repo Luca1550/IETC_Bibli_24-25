@@ -11,12 +11,12 @@ class ThemeRepo:
     """
     PATH_THEME_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "theme.json"
     
+    theme_json : list[Theme] = JsonStorage.load_all(PATH_THEME_JSON)
     def __init__(self):
         """
         Initializes the ThemeRepo instance.
         Loads existing themes from the JSON file into the theme_json attribute.
         """
-        self.theme_json : list[Theme] = JsonStorage.load_all(self.PATH_THEME_JSON)
         
     def add_theme(self,name:str):
         """

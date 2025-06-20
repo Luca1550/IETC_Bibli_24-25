@@ -10,12 +10,12 @@ class WorkerRepo:
     """
     PATH_WORKER_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "worker.json"
 
+    _worker_json : list[Worker] = JsonStorage.load_all(PATH_WORKER_JSON)
     def __init__(self):
         """
         Initializes the WorkerRepo instance and loads all Worker data from the JSON file.
         If the JSON file does not exist, it initializes an empty list for Worker data.
         """
-        self._worker_json : list[Worker] = JsonStorage.load_all(self.PATH_WORKER_JSON)
 
     def _save_all(self):
         """

@@ -9,11 +9,11 @@ class ExemplarRepo():
     """
     PATH_EXEMPLAR_JSON = pathlib.Path(__file__).parent.parent.parent / "database" / "exemplar.json"
 
+    _exemplar_json : list[Exemplar] = JsonStorage.load_all(PATH_EXEMPLAR_JSON)
     def __init__(self):
         """
         Initializes the ExemplarRepo and loads all exemplars from the JSON file.
         """
-        self._exemplar_json : list[Exemplar] = JsonStorage.load_all(self.PATH_EXEMPLAR_JSON)
     
     def _save_all(self):
         """

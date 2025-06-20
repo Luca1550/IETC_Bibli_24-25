@@ -10,12 +10,12 @@ class PersonRepo:
     """
     PATH_PERSON_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "person.json"
 
+    _person_json : list[Person] = JsonStorage.load_all(PATH_PERSON_JSON)
     def __init__(self):
         """
         Initializes the PersonRepo instance and loads all Person data from the JSON file.
         If the JSON file does not exist, it initializes an empty list for Person data.
         """
-        self._person_json : list[Person] = JsonStorage.load_all(self.PATH_PERSON_JSON)
 
     def _save_all(self):
         """

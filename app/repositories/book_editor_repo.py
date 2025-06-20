@@ -9,13 +9,13 @@ class BookEditorRepo:
     This class provides methods to add book-editor relationships and retrieve editors by book ISBN.
     """
     PATH_BOOK_EDITOR_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "book_editor.json"
+    book_editor_json : list[BookEditor] = JsonStorage.load_all(PATH_BOOK_EDITOR_JSON)
     
     def __init__(self):
         """
         Initializes the BookEditorRepo instance.
         Loads all book-editor relationships from the JSON file.
         """
-        self.book_editor_json : list[BookEditor] = JsonStorage.load_all(self.PATH_BOOK_EDITOR_JSON)
         self._editor_repo : EditorRepo = EditorRepo()
     
     def _save_all(self):
