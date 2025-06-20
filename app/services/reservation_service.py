@@ -88,7 +88,9 @@ class ReservationService:
             else:
                 raise Exception(f"Reservation with the given ID : {id} was not found.")
         except Exception as e:
-            return f"🛑 Error [{e}]"
+            print(f"🛑 Error getting reservation by ID: [{e}]")
+            return None
+
     def delete_reservation(self,id_reservation:int):
         try:
             """reservation: Reservation = self._reservation_repo.get_by_id(id_reservation)

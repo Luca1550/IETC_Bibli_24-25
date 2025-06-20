@@ -62,24 +62,22 @@ class ReservationPage(ctk.CTkFrame):
             #ici je vais du coup rajouter les autres infos de livre etc 
             self.reservation_listbox.insert("end", f"{res.id_exemplar} - {res.reservation_date}\n")
             self.indexbook[idx] = res 
-        #self.reservation_listbox.bind("<<ListboxSelect>>", self.reservation_select)
+        self.reservation_listbox.bind("<<ListboxSelect>>", self.reservation_select)
 
         self.right_panel = ctk.CTkFrame(self.main_panel)
         self.right_panel.grid(row=0, column=1, sticky="nsew")
 
-        self.form_title = ctk.CTkLabel(self.right_panel, text="Nouvelle Réservation", font=ctk.CTkFont(size=18, weight="bold"))
+        self.form_title = ctk.CTkLabel(self.right_panel, text="New Réservation", font=ctk.CTkFont(size=18, weight="bold"))
         self.form_title.pack(pady=(10, 10))
-
-        self.reservation_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_reservation")
-        self.reservation_entry.pack(pady=5, padx=20, fill="x")
+        
         self.name_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_exemplar")
         self.name_entry.pack(pady=5, padx=20, fill="x")
         self.member_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_member")
         self.member_entry.pack(pady=5, padx=20, fill="x")
         self.date_entry = ctk.CTkEntry(self.right_panel, placeholder_text="Date (YYYY-MM-DD)")
         self.date_entry.pack(pady=5, padx=20, fill="x")
-        self.submit_button = ctk.CTkButton(self.right_panel, text="update",command=self.update_reservation)
-        #self.submit_button = ctk.CTkButton(self.right_panel, text="Réserver",command=self.add_reservation)
+    
+        self.submit_button = ctk.CTkButton(self.right_panel, text="Réserver",command=self.add_reservation)
         self.submit_button.pack(pady=20)
     def add_reservation(self):
         try:
@@ -92,7 +90,8 @@ class ReservationPage(ctk.CTkFrame):
             else:
                 PopUpMessage.pop_up(self, "reservation added successfully!")
                 self.destroy()
-                
+            self.submit_button.configure(text="Réserver", command=self.add_reservation)
+
         except ValueError as e:
             PopUpMessage.pop_up(self, f"Input error: {e}")
 
@@ -108,6 +107,7 @@ class ReservationPage(ctk.CTkFrame):
             else:
                 PopUpMessage.pop_up(self, "reservation updated successfully!")
                 self.destroy()
+            self.submit_button.configure(text="Réserver", command=self.add_reservation)
         except ValueError as e:
             PopUpMessage.pop_up(self, f"Input error: {e}")
         self.destroy()
@@ -138,22 +138,33 @@ class ReservationPage(ctk.CTkFrame):
                     id_exemplar = self.exemplar_service.get(id)
 
 
-
+"""
     #check apres ca crée un bug 
-    # def reservation_select(self,event):
-    #     selection = event.widget.curselection()
-    #     if selection:
-    #         index = selection[0]
-    #         res = self.reservation_map.get(index)
-    #         self.selected_reservation = res
+    def reservation_select(self, event):
+        selection = event.widget.curselection()
+        if selection:
+            index = selection[0]
+            selected_res = self.indexbook.get(index)
+            self.reservation_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_reservation")
+            self.reservation_entry.pack(pady=5, padx=20, fill="x")
+            if selected_res:
+                self.selected_reservation = selected_res
 
-    #         # Remplir le formulaire avec la réservation sélectionnée
-    #         self.name_entry.delete(0, "end")
-    #         self.name_entry.insert(0, res.nom)
+                for key, value in vars(self.selected_reservation).items():
+                    print(f"{key}: {value}")
 
-    #         self.date_entry.delete(0, "end")
-    #         self.date_entry.insert(0, res.date)
+                self.reservation_entry.delete(0, tk.END)
+                self.reservation_entry.insert(0, selected_res.id_reservation)
 
-    #         # Changer le bouton en "Mettre à jour"
-    #         #self.submit_button.configure(text="Mettre à jour", command=self.update_reservation)"""
-    
+                self.name_entry.delete(0, tk.END)
+                self.name_entry.insert(0, selected_res.id_exemplar)
+
+                self.member_entry.delete(0, tk.END)
+                self.member_entry.insert(0, selected_res.id_member)
+
+                self.date_entry.delete(0, tk.END)
+                self.date_entry.insert(0, selected_res.reservation_date)
+
+                self.submit_button.configure(text="Update", command=self.update_reservation)
+
+        
