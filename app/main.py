@@ -69,7 +69,7 @@ class MainApp(ctk.CTk):
         def book_page():
             return BookPage(self.page_container)
 
-        def page_Réservation():
+        def reservation_page():
             return ReservationPage(self.page_container)
 
         def borrow_page():
