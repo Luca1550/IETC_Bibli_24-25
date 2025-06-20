@@ -4,6 +4,7 @@ from repositories import MemberRepo, PersonRepo
 from services import PersonService
 from services.models import MemberDTO
 from datetime import date
+from typing import Optional
 
 class MemberService:
     """
@@ -50,7 +51,7 @@ class MemberService:
         else:
             raise Exception("Failed to add person.")
 
-    def update_member(self, id: int, first_name: str, last_name: str, national_number: str, email: str, street: str, cp: str, city: str, membership_entrydate: date, subscribed: bool, archived: bool) -> bool:
+    def update_member(self, id: int, first_name: str, last_name: str, national_number: str, email: str, street: str, cp: str, city: str, subscribed: bool, archived: bool) -> bool:
         """
         Updates an existing Member object in the repository.
         :param member: Member object to be updated.
@@ -70,7 +71,6 @@ class MemberService:
             member = Member(
                 id=id,
                 id_person=person.id,
-                membership_entrydate=membership_entrydate,
                 subscribed=subscribed,
                 archived=archived
             )
