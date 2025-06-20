@@ -20,11 +20,12 @@ class CollectionService :
         :return: None
         """
         try:
+            self._check_collection_value (name)
             if not self.collection_repo.is_unique("name",name):
                 raise Exception("This collection already exists")
             return self.collection_repo.add_collection(name)
-        except:
-            return f"Error adding collection: {name}"
+        except Exception as e:
+            raise Exception(f"🛑 Error adding collection: {name} - {e}")
     
     def get_by_name(self,name):
         """
@@ -115,3 +116,8 @@ class CollectionService :
             raise Exception(f"Collection ID: {id} not found")
         except Exception as e:
             raise Exception(f"🛑 error {e}")
+    
+    def _check_collection_value(self,name:str):
+        if not name or len(name.strip())<1:
+            raise Exception ("Collection cannot be empty.")
+        return True

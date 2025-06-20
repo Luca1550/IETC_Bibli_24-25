@@ -24,6 +24,7 @@ class AuthorService:
         :return: A message indicating success or failure.
         """
         try:
+            self._check_author_value(first_name,last_name)
             person = self.person_service.add_person(first_name, last_name, None, None, None, None, None)
             self.author_repo.add_author(Author(id=None,id_person=person.id))
         except Exception as e:
@@ -91,3 +92,10 @@ class AuthorService:
             raise Exception(f"Author ID: {id} not found")
         except Exception as e:
             raise Exception(f"🛑 error {e}")
+    
+    def _check_author_value(self,first_name:str,last_name:str):
+        if not first_name or len(first_name.strip())<1:
+            raise Exception ("First name cannot be empty.")
+        if not last_name or len(last_name.strip())<1:
+            raise Exception ("Last name cannot be empty.")
+        return True

@@ -22,11 +22,12 @@ class EditorService :
         - Raises an exception if the editor already exists or if there is an error during the addition.
         """
         try:
+            self._check_editor_value (name)
             if not self.editor_repo.is_unique("name",name):
-                raise Exception("This editor already exists")
+                raise Exception("This Editor already exists")
             return self.editor_repo.add_editor(name)
         except Exception as e:
-            raise Exception(f"error adding editor: {name} - {e}")
+            raise Exception(f"🛑 Error adding editor: {name} - {e}")
 
     def get_by_name(self,name):
         """
@@ -103,3 +104,8 @@ class EditorService :
             raise Exception(f"Editor ID: {id} not found")
         except Exception as e:
             raise Exception(f"🛑 error {e}")
+        
+    def _check_editor_value(self,name:str):
+        if not name or len(name.strip())<1:
+            raise Exception ("Editor cannot be empty.")
+        return True
