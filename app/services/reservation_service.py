@@ -91,14 +91,25 @@ class ReservationService:
             return f"🛑 Error [{e}]"
     def delete_reservation(self,id_reservation:int):
         try:
-            reservations = self._reservation_repo.get_reservation_parameters()
-            reservationsDTO = self._reservation_member_repo.get_reservation_member_byId(id_reservation)
-            for res in reservations:
+            """reservation: Reservation = self._reservation_repo.get_by_id(id_reservation)
+            reservation_DTO: ReservationDTO = self.get_by_id(id_reservation)
+            for res in reservation:
                 if res.id == id_reservation:
                     self._reservation_repo.delete_reservation(res.id, res.id_exemplar, res.reservation_date)
-            for res in reservationsDTO:
+            for res in reservation_DTO:
                 if res.id_reservation == id_reservation:
-                    self._reservation_member_repo.delete_reservation_member(res.id_reservation, res.id_member)
+                    self._reservation_member_repo.delete_reservation_member(res.id_reservation, res.id_member)"""
+            reservation = self._reservation_repo.get_by_id(id_reservation)
+            reservation_dto = self.get_by_id(id_reservation)
+
+            if isinstance(reservation, Reservation):
+                self._reservation_repo.delete_reservation(reservation)
+            
+            if reservation_dto and isinstance(reservation_dto.member, Member):
+                self._reservation_member_repo.delete_reservation_member(
+                    id_member=reservation_dto.member.id,
+                    id_reservation=id_reservation
+                )
             return True
         except Exception as e:
             print(f"🛑 Error deleting reservation: [{e}]")
@@ -106,10 +117,12 @@ class ReservationService:
     def update_reservation(self,id:int,id_exemplar:int,id_member:int,reservation_date:date|None = None):
         try:
             reservation: Reservation = self._reservation_repo.get_by_id(id)
-            reservatio_DTO: ReservationDTO = self.get_by_id(id)
+            reservation_DTO: ReservationDTO = self.get_by_id(id)
 
             if not isinstance(reservation, Reservation):
                 raise Exception(f"Reservation with ID: {id} was not found.")
+            if not isinstance(reservation_DTO, ReservationDTO):
+                raise Exception(f"DTO for reservation ID: {id} was not found.")
             if id_exemplar is not None:
                 reservation.id_exemplar = id_exemplar
             if reservation_date is not None:
@@ -118,7 +131,9 @@ class ReservationService:
             self._reservation_repo.update_reservation(reservation)
             #ici je dois changer le statuut de exemplar 
             if id_member is not None:
-                self._reservation_member_repo.delete_reservation_member(id_reservation=id,id_member=reservatio_DTO.member.id)
+                print('' * 50)
+                print(f"reservation_DTO.member.id: {reservation_DTO.member.id}, id: {id}")
+                self._reservation_member_repo.delete_reservation_member(id_member=reservation_DTO.member.id, id_reservation=id)
                 new_res_member = ReservationMember(id_reservation=id, id_member=id_member)
                 self._reservation_member_repo.add_reservation_member(new_res_member)
             return reservation
