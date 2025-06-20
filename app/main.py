@@ -1,8 +1,6 @@
 import customtkinter as ctk
 from ui.components import MenuNavigation, LoginPage
-from ui.pages import BookPage,LibraryPage
-from ui.pages.library import LibraryPage
-from ui.pages.book import BookPage
+from ui.pages import BookPage,LibraryPage, HomePage
 from ui.pages.worker import WorkerPage
 
 class MainApp(ctk.CTk):
@@ -62,7 +60,7 @@ class MainApp(ctk.CTk):
             self.current_page.destroy()
 
         def home_page():
-            return ctk.CTkLabel(self.page_container, text="Welcome in the Library")
+            return HomePage(self.page_container)
 
         def book_page():
             return BookPage(self.page_container)
