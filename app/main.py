@@ -17,7 +17,7 @@ class MainApp(ctk.CTk):
         Initializes the MainApp class, sets up the main window, and creates the login frame.
         """
         super().__init__()
-        self.title("Library")
+        self.title("")
         self.geometry("1280x720")
 
         self.grid_rowconfigure(1, weight=1)  

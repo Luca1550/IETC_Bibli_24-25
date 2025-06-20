@@ -26,7 +26,7 @@ class LibraryPage(ctk.CTkFrame):
 
         Configures the grid layout for the main panel to take up the entire window
         and adapts to resizing. Initializes the main panel and sets its layout.
-        Displays the title "Bibliothèque" at the top of the form.
+        Displays the title "Library" at the top of the form.
 
         Depending on the number of library parameters retrieved, either
         initializes the form for updating library parameters or adding a new library.
@@ -40,7 +40,7 @@ class LibraryPage(ctk.CTkFrame):
         self.main_panel.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         
 
-        self.form_title = ctk.CTkLabel(self.main_panel, text="Bibliothèque", font=ctk.CTkFont(size=18, weight="bold"))
+        self.form_title = ctk.CTkLabel(self.main_panel, text="Library Configuration", font=ctk.CTkFont(size=18, weight="bold"))
         self.form_title.grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
         self.paramlib = self.library_service.get_library_parameters()
