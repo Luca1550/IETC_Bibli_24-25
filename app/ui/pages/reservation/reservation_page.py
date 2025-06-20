@@ -73,13 +73,14 @@ class ReservationPage(ctk.CTkFrame):
         self.title_entry = ctk.CTkEntry(self.right_panel, placeholder_text="title")
         self.title_entry.pack(pady=5, padx=20, fill="x")
         self.edit_reservation_button = ctk.CTkButton(self.right_panel, text="✏️", width=30, command=lambda:self.open_selection_frame(
-            title="reservation",
+            title="Book",
             all_items=self.book_service.get_all(),
             selected_items=self.book_selected,
             display_model_method=lambda book: f"{book.title}",
             attributes_to_search=[lambda book: {book.title}],
             entry_to_update=self.title_entry
         ))
+        
         self.edit_reservation_button.pack(pady=(10, 10))
         
         # self.member_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_member")
