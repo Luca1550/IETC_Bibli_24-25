@@ -1,5 +1,4 @@
 import customtkinter as ctk
-from services import LibraryService
 
 class MenuNavigation(ctk.CTkFrame):
     """
@@ -16,8 +15,6 @@ class MenuNavigation(ctk.CTkFrame):
         :param kwargs: Additional keyword arguments.
         """
         super().__init__(parent, *args, **kwargs)
-        self.library_service = LibraryService()
-        self.library = self.library_service.get_library_parameters()
 
         self.on_menu_select = on_menu_select
         self.current_active = None
@@ -40,9 +37,6 @@ class MenuNavigation(ctk.CTkFrame):
         self.btn_reservation_page = ctk.CTkButton(self, text="Reservation", command=lambda: self.select_page("Reservation"))
         self.btn_borrow_page = ctk.CTkButton(self, text="Borrow", command=lambda: self.select_page("Borrow"))
         self.btn_members_page = ctk.CTkButton(self, text="Members", command=lambda: self.select_page("Members"))
-        library_name = self.library[0].name if self.library else ""
-        self.library_title = ctk.CTkLabel(self, text=library_name, font=ctk.CTkFont(size=30))
-        self.library_title.grid(row=0, column=5, padx=10, pady=20, sticky="ew")
         self.btn_workers_page = ctk.CTkButton(self, text="Workers", command=lambda: self.select_page("Workers"))
         self.btn_config_page = ctk.CTkButton(self, text="Config", command=lambda: self.select_page("Config"))
         
