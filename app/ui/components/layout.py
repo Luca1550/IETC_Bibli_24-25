@@ -42,7 +42,7 @@ class MenuNavigation(ctk.CTkFrame):
         self.btn_members_page = ctk.CTkButton(self, text="Members", command=lambda: self.select_page("Members"))
         library_name = self.library[0].name if self.library else ""
         self.library_title = ctk.CTkLabel(self, text=library_name, font=ctk.CTkFont(size=30))
-        self.library_title.grid(row=0, column=5, padx=10, pady=20, sticky="w")
+        self.library_title.grid(row=0, column=5, padx=10, pady=20, sticky="ew")
         self.btn_workers_page = ctk.CTkButton(self, text="Workers", command=lambda: self.select_page("Workers"))
         self.btn_config_page = ctk.CTkButton(self, text="Config", command=lambda: self.select_page("Config"))
         

@@ -2,7 +2,7 @@ from .base import Base
 
 class Library(Base):
     
-    def __init__(self, id:int | None, name:str, fine_per_day: float, subscribe_amout:float, limit_borrow:int,borrow_price_with_sub:float, borrow_price_without_sub:float, borrow_delay:int, url_logo:str,limit_reservation:int):
+    def __init__(self, id:int | None, name:str, fine_per_day: float, subscribe_amout:float, limit_borrow:int,borrow_price_with_sub:float, borrow_price_without_sub:float, borrow_delay:int,limit_reservation:int):
         """
         Initializes a new Library instance with a unique ID and a name.
         If an ID is provided, it will be used; otherwise, a new unique ID is generated.
@@ -15,7 +15,6 @@ class Library(Base):
             borrow_price_with_sub (float): Borrowing price for subscribers.
             borrow_price_without_sub (float): Borrowing price for non-subscribers.
             borrow_delay (int): Allowed borrowing delay in days.
-            url_logo (str): URL to the library's logo image.
         """
 
         super().__init__(id)
@@ -26,5 +25,4 @@ class Library(Base):
         self.borrow_price_with_sub = borrow_price_with_sub
         self.borrow_price_without_sub = borrow_price_without_sub
         self.borrow_delay = borrow_delay
-        self.url_logo = url_logo
         self.limit_reservation = limit_reservation
