@@ -32,21 +32,21 @@ class MenuNavigation(ctk.CTkFrame):
         """
         Creates the navigation buttons for the menu.
         """
-        self.btn_page_Accueil = ctk.CTkButton(self, text="Accueil", command=lambda: self.select_page("Accueil"))
-        self.btn_page_Livres = ctk.CTkButton(self, text="Livres", command=lambda: self.select_page("Livres"))
-        self.btn_page_Réservation = ctk.CTkButton(self, text="Réservation", command=lambda: self.select_page("Réservation"))
-        self.btn_page_Emprunt = ctk.CTkButton(self, text="Emprunt", command=lambda: self.select_page("Emprunt"))
-        self.btn_page_Membres = ctk.CTkButton(self, text="Membres", command=lambda: self.select_page("Membres"))
-        self.btn_page_Employes = ctk.CTkButton(self, text="Employes", command=lambda: self.select_page("Employes"))
-        self.btn_page_Config = ctk.CTkButton(self, text="Config", command=lambda: self.select_page("Config"))
+        self.btn_home_page = ctk.CTkButton(self, text="Home", command=lambda: self.select_page("Home"))
+        self.btn_book_page = ctk.CTkButton(self, text="Books", command=lambda: self.select_page("Books"))
+        self.btn_reservation_page = ctk.CTkButton(self, text="Reservation", command=lambda: self.select_page("Reservation"))
+        self.btn_borrow_page = ctk.CTkButton(self, text="Borrow", command=lambda: self.select_page("Borrow"))
+        self.btn_members_page = ctk.CTkButton(self, text="Members", command=lambda: self.select_page("Members"))
+        self.btn_workers_page = ctk.CTkButton(self, text="Workers", command=lambda: self.select_page("Workers"))
+        self.btn_config_page = ctk.CTkButton(self, text="Config", command=lambda: self.select_page("Config"))
         
 
         self.buttons = {
-            "Accueil": self.btn_page_Accueil,
-            "Livres": self.btn_page_Livres,
-            "Réservation": self.btn_page_Réservation,
-            "Emprunt": self.btn_page_Emprunt,
-            "Membres": self.btn_page_Membres
+            "Home": self.btn_home_page,
+            "Books": self.btn_book_page,
+            "Reservation": self.btn_reservation_page,
+            "Borrow": self.btn_borrow_page,
+            "Members": self.btn_members_page,
         }
 
         
@@ -59,24 +59,24 @@ class MenuNavigation(ctk.CTkFrame):
                 height=50,
             )
             btn.grid(row=0, column=idx, padx=10, pady=20, sticky="ew")
-        
-        self.btn_page_Employes.configure(
-            fg_color="#dd5019",
-            hover_color="#cf714c",
-            text_color="white",
-            width=120,
-            height=50,
-        )
-        self.btn_page_Employes.grid(row=0, column=8, pady=20, sticky="e")
 
-        self.btn_page_Config.configure(
+        self.btn_workers_page.configure(
             fg_color="#dd5019",
             hover_color="#cf714c",
             text_color="white",
             width=120,
             height=50,
         )
-        self.btn_page_Config.grid(row=0, column=9, padx=10, pady=20, sticky="s")
+        self.btn_workers_page.grid(row=0, column=8, pady=20, sticky="e")
+
+        self.btn_config_page.configure(
+            fg_color="#dd5019",
+            hover_color="#cf714c",
+            text_color="white",
+            width=120,
+            height=50,
+        )
+        self.btn_config_page.grid(row=0, column=9, padx=10, pady=20, sticky="s")
 
         
 
@@ -124,15 +124,15 @@ class LoginPage(ctk.CTkFrame):
 
         self.grid_columnconfigure(0, weight=1)
 
-        ctk.CTkLabel(self, text="Connexion", font=ctk.CTkFont(size=24, weight="bold")).grid(row=0, column=0, pady=(20, 10))
+        ctk.CTkLabel(self, text="Login", font=ctk.CTkFont(size=24, weight="bold")).grid(row=0, column=0, pady=(20, 10))
 
-        self.username_entry = ctk.CTkEntry(self, placeholder_text="Nom d'utilisateur")
+        self.username_entry = ctk.CTkEntry(self, placeholder_text="Username")
         self.username_entry.grid(row=1, column=0, padx=40, pady=10)
 
-        self.password_entry = ctk.CTkEntry(self, placeholder_text="Mot de passe", show="*")
+        self.password_entry = ctk.CTkEntry(self, placeholder_text="Password", show="*")
         self.password_entry.grid(row=2, column=0, padx=40, pady=10)
 
-        self.login_button = ctk.CTkButton(self, text="Se connecter", command=self.check_connexion)
+        self.login_button = ctk.CTkButton(self, text="Login", command=self.check_connexion)
         self.login_button.grid(row=3, column=0, padx=40, pady=20)
 
         self.error_label = ctk.CTkLabel(self, text="", text_color="red")
@@ -154,4 +154,4 @@ class LoginPage(ctk.CTkFrame):
             self.error_label.configure(text="")
             self.on_login()  
         else:
-            self.error_label.configure(text="Identifiants incorrects")
+            self.error_label.configure(text="Incorrect Credentials")

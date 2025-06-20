@@ -15,7 +15,7 @@ class WorkerService:
         """
         self._worker_repo: WorkerRepo = WorkerRepo()
         self._person_repo: PersonRepo = PersonRepo()
-        self.person_service = PersonService()
+        self._person_service = PersonService()
 
     def add_worker(self, id : int, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str) -> WorkerDTO | str:
         """
@@ -26,7 +26,7 @@ class WorkerService:
         - Returns a Worker object if added successfully, otherwise returns an error message.
         """
         try:
-            person = self.person_service.add_person(
+            person = self._person_service.add_person(
                 first_name,
                 last_name,
                 national_number,
@@ -46,7 +46,7 @@ class WorkerService:
                 raise Exception("Failed to add person.")
         except Exception as e:
             print(f"🛑 Error [{e}]")
-            return str(e)
+            raise Exception(str(e))
 
     def delete_worker(self, id: int) -> bool:
         """
@@ -60,6 +60,7 @@ class WorkerService:
             worker = self._worker_repo.get_by_id(id)
             if worker:
                 self._worker_repo.delete_worker(worker)
+                self._person_service.delete_person(worker.id_person)
                 return True
             else:
                 raise Exception(f"Worker with the given ID : {id} was not found.")
@@ -76,7 +77,7 @@ class WorkerService:
         - True if the worker was updated successfully, otherwise returns False.
         """
     
-        if self.person_service.update_person(
+        if self._person_service.update_person(
             id,
             first_name,
             last_name,
