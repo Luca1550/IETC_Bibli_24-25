@@ -8,12 +8,12 @@ class AuthorRepo:
     """
     PATH_AUTHOR_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "author.json"
     
+    author_json : list[Author] = JsonStorage.load_all(PATH_AUTHOR_JSON)
     def __init__(self):
         """
         Initializes the AuthorRepo instance and loads authors from the JSON file.
         If the file does not exist, it initializes an empty list of authors.
         """
-        self.author_json : list[Author] = JsonStorage.load_all(self.PATH_AUTHOR_JSON)
     
     def add_author(self,author:Author):
         """

@@ -10,12 +10,12 @@ class BookAuthorRepo:
     """
     PATH_BOOK_AUTHOR_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "book_author.json"
     
+    book_author_json : list[BookAuthor] = JsonStorage.load_all(PATH_BOOK_AUTHOR_JSON)
     def __init__(self):
         """
         Initializes the BookAuthorRepo instance.
         Loads all book-author relationships from the JSON file.
         """
-        self.book_author_json : list[BookAuthor] = JsonStorage.load_all(self.PATH_BOOK_AUTHOR_JSON)
         self._author_repo : AuthorRepo = AuthorRepo()
     
     def _save_all(self):

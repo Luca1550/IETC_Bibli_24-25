@@ -112,7 +112,6 @@ class AuthorService:
         """
         first_name = first_name.strip().lower()
         last_name = last_name.strip().lower()
-
         for author in self.author_repo.get_all():
             person = self.person_repo.get_by_id(author.id_person)
             if person and person.first_name.strip().lower() == first_name and person.last_name.strip().lower() == last_name:

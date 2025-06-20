@@ -11,12 +11,12 @@ class BookRepo:
     """
     PATH_BOOK_JSON = pathlib.Path(__file__).parent.parent.parent / "database" / "book.json"
     
+    book_json : list[Book] = JsonStorage.load_all(PATH_BOOK_JSON)
     def __init__(self):
         """
         Initializes the BookRepo instance.
         Loads existing books from the JSON file into the book_json attribute.
         """
-        self.book_json : list[Book] = JsonStorage.load_all(self.PATH_BOOK_JSON)
     
     def _save_all(self):
         """

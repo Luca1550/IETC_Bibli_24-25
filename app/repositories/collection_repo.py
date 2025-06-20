@@ -11,12 +11,12 @@ class CollectionRepo:
     """
     PATH_COLLECTION_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "collection.json"
     
+    collection_json : list[Collection] = JsonStorage.load_all(PATH_COLLECTION_JSON)
     def __init__(self):
         """
         Initializes the CollectionRepo instance.
         Loads existing collections from the JSON file into the collection_json attribute.
         """
-        self.collection_json : list[Collection] = JsonStorage.load_all(self.PATH_COLLECTION_JSON)
     
     def add_collection(self,name:str):
         """
