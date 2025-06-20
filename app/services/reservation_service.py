@@ -3,7 +3,7 @@ from repositories.models import Reservation,Member,Exemplar,Library,ReservationM
 from repositories import ReservationRepo,ExemplarRepo,MemberRepo,ReservationMemberRepo,BookRepo,LibraryRepo
 from .models import ReservationDTO
 from datetime import date, datetime
-
+from services import ExemplarService,LibraryService
 
 #NOTE POUR JULEN/ BUG RECUP DE L ID MEMBER ET RECUP AVEC LE NOM 
 class ReservationService:
@@ -14,7 +14,8 @@ class ReservationService:
         self._member_repo = MemberRepo()
         self._reservation_member_repo= ReservationMemberRepo()
         self._book_repo = BookRepo()
-        
+        self.exemplar_service = ExemplarService()
+        self.library_service = LibraryService()
 
 
 #faut que je rajoute le temps de reservation dans library du coup je dois aussi aller rechercher l'id de library pour avoir l'info et calculer ta grosse mere  
@@ -44,7 +45,7 @@ class ReservationService:
             return None
 
         
-    def add_reservation(self,id_exemplar:int,id_member:int,reservation_date:date|None = None) ->Reservation:
+    def add_reservation(self,isbn:str,id_member:int,reservation_date:date|None = None) ->Reservation:
 
         try:
             if reservation_date is None:
@@ -54,21 +55,28 @@ class ReservationService:
                     actual_reservation_date = datetime.fromisoformat(reservation_date).date().isoformat()
                 else:
                     actual_reservation_date = reservation_date.isoformat()
+            exemplar=self.exemplar_service.get_disponibility(isbn)
+            if not exemplar:
+                id_exemplars=self.exemplar_service.get_all_by_isbn(isbn)
+                #la il faudra changer avec la date du borrow pour la 61
+                exemplar= any([exemplar for exemplar in id_exemplars if exemplar.status == 2])
+
             new_reservation = Reservation(
                 id=None,
-                id_exemplar=id_exemplar,
+                id_exemplar=exemplar.id,
                 reservation_date=actual_reservation_date
                 )
+            print("id_exemplar  ",exemplar.id)
+            self.exemplar_service.update_status(exemplar.id,3)
             #ici je dois changer le statuut de exemplar 
 
             result=self._reservation_repo.add_reservation(new_reservation)
             reservation_member_result = None
-            paramres=self.get_parameter_reservation()
             if result :
                 #je check si l'id existe bien dans result 
 
                 if id_member:
-                    id_new_res = paramres[-1].id_exemplar
+                    id_new_res = new_reservation.id
                     new_reservation_member= ReservationMember(
                         id_reservation=id_new_res,
                         id_member=id_member
@@ -90,7 +98,7 @@ class ReservationService:
                 res_exemplar = res.id_exemplar
                 res_date = res.reservation_date
                 member = self._reservation_member_repo.get_reservation_member_byId(res_id)
-
+                print("COUCOUUUU",member)
                 reservation_dto = ReservationDTO(
                     id_reservation=res_id,
                     id_exemplar=res_exemplar,

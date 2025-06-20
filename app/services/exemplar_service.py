@@ -91,7 +91,7 @@ class ExemplarService:
         try:
             exemplar = self.get_by_id(id)
             if isinstance(exemplar, Exemplar):
-                exemplar.status = status
+                exemplar.status = Status(value=status)
                 if self._exemplar_repo.update_status(exemplar):
                     return True
                 raise Exception("Failed to update exemplar status")
