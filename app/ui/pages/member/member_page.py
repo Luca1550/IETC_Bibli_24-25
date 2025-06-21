@@ -237,7 +237,7 @@ class MemberPage(ctk.CTkFrame):
         self.city_entry = ctk.CTkEntry(self.add_member_frame, placeholder_text="City")
         self.city_entry.grid(row=7, column=0, padx=10, pady=10, sticky="ew")
 
-        self.subrscribed_checkbox = ctk.CTkCheckBox(
+        self.subscribed_checkbox = ctk.CTkCheckBox(
             self.add_member_frame,
             text="Subscribed",
             onvalue=True,
@@ -245,7 +245,7 @@ class MemberPage(ctk.CTkFrame):
             # Default to False
             variable=ctk.BooleanVar(value=False)  
         )
-        self.subrscribed_checkbox.grid(row=8, column=0, padx=10, pady=10, sticky="ew")
+        self.subscribed_checkbox.grid(row=8, column=0, padx=10, pady=10, sticky="ew")
 
         self.add_button = ctk.CTkButton(self.add_member_frame, text="Add Member", command=self.adding_member)
         self.add_button.grid(row=9, column=0, padx=10, pady=10, sticky="ew")
@@ -268,8 +268,8 @@ class MemberPage(ctk.CTkFrame):
 
         rows = 9
         rows_weights = [1,1,1,1,1,1,1,1,1]
-        columns = 1
-        columns_weights = [1]
+        columns = 2
+        columns_weights = [1,2]
 
         for row, w in enumerate(rows_weights):
             self.update_member_frame.grid_rowconfigure(row, weight=w)
@@ -277,53 +277,112 @@ class MemberPage(ctk.CTkFrame):
         for column, w in enumerate(columns_weights):
             self.update_member_frame.grid_columnconfigure(column, weight=w)
 
+
+        self.first_name_label = ctk.CTkLabel(
+            self.update_member_frame,
+            text="First Name :",
+            font=ctk.CTkFont(size=13)
+        )
+        self.first_name_label.grid(row=0, column=0, padx=10, sticky="w")
+
         self.first_name_entry = ctk.CTkEntry(self.update_member_frame)
         self.first_name_entry.insert(0, member.person.first_name)
-        self.first_name_entry.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+        self.first_name_entry.grid(row=0, column=1, padx=10, sticky="ew")
+
+        self.last_name_label = ctk.CTkLabel(
+            self.update_member_frame,
+            text="Last Name :",
+            font=ctk.CTkFont(size=13)
+        )
+        self.last_name_label.grid(row=1, column=0, padx=10, sticky="w")
 
         self.last_name_entry = ctk.CTkEntry(self.update_member_frame)
         self.last_name_entry.insert(0, member.person.last_name)
-        self.last_name_entry.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
+        self.last_name_entry.grid(row=1, column=1, padx=10, sticky="ew")
+
+        self.national_number_label = ctk.CTkLabel(
+            self.update_member_frame,
+            text="National Number :",
+            font=ctk.CTkFont(size=13)
+        )
+        self.national_number_label.grid(row=2, column=0, padx=10, sticky="w")
 
         self.national_number_entry = ctk.CTkEntry(self.update_member_frame)
         self.national_number_entry.insert(0, member.person.national_number)
-        self.national_number_entry.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
+        self.national_number_entry.grid(row=2, column=1, padx=10, sticky="ew")
+
+        self.email_label = ctk.CTkLabel(
+            self.update_member_frame,
+            text="Email :",
+            font=ctk.CTkFont(size=13)
+        )
+        self.email_label.grid(row=3, column=0, padx=10, sticky="w")
 
         self.email_entry = ctk.CTkEntry(self.update_member_frame)
         self.email_entry.insert(0, member.person.email)
-        self.email_entry.grid(row=4, column=0, padx=10, pady=10, sticky="ew")
+        self.email_entry.grid(row=3, column=1, padx=10, sticky="ew")
+
+        self.street_label = ctk.CTkLabel(
+            self.update_member_frame,
+            text="Street :",
+            font=ctk.CTkFont(size=13)
+                )
+        self.street_label.grid(row=4, column=0, padx=10, sticky="w")
 
         self.street_entry = ctk.CTkEntry(self.update_member_frame)
         self.street_entry.insert(0, member.person.street)
-        self.street_entry.grid(row=5, column=0, padx=10, pady=10, sticky="ew")
+        self.street_entry.grid(row=4, column=1, padx=10, sticky="ew")
+
+        self.cp_label = ctk.CTkLabel(
+            self.update_member_frame,
+            text="Postal Code :",
+            font=ctk.CTkFont(size=13)
+        )
+        self.cp_label.grid(row=5, column=0, padx=10, sticky="w")
 
         self.cp_entry = ctk.CTkEntry(self.update_member_frame)
         self.cp_entry.insert(0, member.person.cp)
-        self.cp_entry.grid(row=6, column=0, padx=10, pady=10, sticky="ew")
+        self.cp_entry.grid(row=5, column=1, padx=10, sticky="ew")
+
+        self.city_label = ctk.CTkLabel(
+            self.update_member_frame,
+            text="City :",
+            font=ctk.CTkFont(size=13)
+        )
+        self.city_label.grid(row=6, column=0, padx=10, sticky="w")
 
         self.city_entry = ctk.CTkEntry(self.update_member_frame)
         self.city_entry.insert(0, member.person.city)
-        self.city_entry.grid(row=7, column=0, padx=10, pady=10, sticky="ew")
+        self.city_entry.grid(row=6, column=1, padx=10, sticky="ew")
+
+        self.membership_entrydate_label = ctk.CTkLabel(
+            self.update_member_frame,
+            text="Membership Entry Date :",
+            font=ctk.CTkFont(size=13)
+        )
+        self.membership_entrydate_label.grid(row=7, column=0, padx=10, sticky="w")
 
         self.membership_entrydate_entry = ctk.CTkEntry(self.update_member_frame)
         self.membership_entrydate_entry.insert(0, member.membership_entrydate)
-        self.membership_entrydate_entry.grid(row=8, column=0, padx=10, pady=10, sticky="ew")
+        self.membership_entrydate_entry.grid(row=7, column=1, padx=10, sticky="ew")
 
-        self.subrscribed_checkbox = ctk.CTkCheckBox(
+        self.subscribed_checkbox = ctk.CTkCheckBox(
             self.update_member_frame,
             text="Subscribed",
             onvalue=True,
             offvalue=False,
-            variable=ctk.BooleanVar(value=member.subscribed)  # Set to current subscription status
+            # Set to current subscription status
+            variable=ctk.BooleanVar(value=member.subscribed)  
         )
-        self.subrscribed_checkbox.grid(row=9, column=0, padx=10, pady=10, sticky="ew")
+        self.subscribed_checkbox.grid(row=9, column=0, padx=10, sticky="ew")
 
         self.archived_checkbox = ctk.CTkCheckBox(
             self.update_member_frame,
             text="Archived",
             onvalue=True,
             offvalue=False,
-            variable=ctk.BooleanVar(value=member.archived)  # Set to current archived status
+            # Set to current archived status
+            variable=ctk.BooleanVar(value=member.archived) 
         )
         self.archived_checkbox.grid(row=9, column=1, padx=10, pady=10, sticky="ew")
 
@@ -347,7 +406,7 @@ class MemberPage(ctk.CTkFrame):
         cp = self.cp_entry.get()
         city = self.city_entry.get()
         membership_entrydate = self.membership_entrydate_entry.get()
-        subscribed = self.subrscribed_checkbox.get()
+        subscribed = self.subscribed_checkbox.get()
         archived = self.archived_checkbox.get() 
 
         if first_name and last_name and national_number and email and street and cp and city and membership_entrydate:
@@ -408,7 +467,7 @@ class MemberPage(ctk.CTkFrame):
             city=city,
             membership_entrydate=membership_entrydate,
             archived=archived,
-            subscribed=self.subrscribed_checkbox.get()
+            subscribed=self.subscribed_checkbox.get()
         )
 
         if member_added:
