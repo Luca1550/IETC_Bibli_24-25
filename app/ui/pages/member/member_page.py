@@ -4,6 +4,7 @@ from services import MemberService
 from ui.components import PopUpMessage
 import datetime
 from datetime import datetime
+from tools import Color
 
 class MemberPage(ctk.CTkFrame):
     """
@@ -45,31 +46,29 @@ class MemberPage(ctk.CTkFrame):
         self.member_frame.grid_columnconfigure(0, weight=1)
         self.member_frame.grid_columnconfigure(1, weight=0)
 
+        self.search_bar_frame = ctk.CTkFrame(self.member_frame)
+        self.search_bar_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.search_bar_frame.grid_columnconfigure(0, weight=1)
+        self.search_bar_frame.grid_columnconfigure(1, weight=0)
+
         ## Search bar that changes the displayed member, the bar is the same height as the button
         self.search_bar = ctk.CTkEntry(
-            self.member_frame,
+            self.search_bar_frame,
             placeholder_text="Search Member",
             width=200
         )
         self.search_bar.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
         self.search_bar.bind("<KeyRelease>", self.filter_members)
 
-        self.subscribed_only_checkbox = ctk.CTkCheckBox(
-            self.member_frame,
-            text="Subscribed only",
-            command=self.filter_members
-        )
-        self.subscribed_only_checkbox.grid(row=0, column=1, padx=10, pady=10, sticky="w")
-
         ## button that opens a dialog to add a new member
         self.add_member_button = ctk.CTkButton(
-            self.member_frame,
+            self.search_bar_frame,
             text="➕",
             command=self.add_member,
             width=40,
             height=40,
         )
-        self.add_member_button.grid(row=0, column=2, padx=10, pady=10, sticky="ne")
+        self.add_member_button.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
         ## Frame that contains the list of members
         self.member_list_frame = ctk.CTkScrollableFrame(
@@ -83,8 +82,7 @@ class MemberPage(ctk.CTkFrame):
         self.borrows_by_member_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
 
     def filter_members(self, event=None):
-        query = self.search_bar.get().lower()
-        subscribed_only = self.subscribed_only_checkbox.get()  
+        query = self.search_bar.get().lower() 
 
         all_members = self.member_service.get_all_members()
 
@@ -97,7 +95,7 @@ class MemberPage(ctk.CTkFrame):
                 query in m.person.city.lower() or
                 query in m.person.cp.lower() or
                 query in str(m.id_member))
-                and (m.subscribed if subscribed_only else True) 
+                
             )
         ]
 
@@ -159,21 +157,6 @@ class MemberPage(ctk.CTkFrame):
                 subscribed_label.grid(row=row_index, column=0, sticky="w", padx=15)
                 row_index += 1
 
-                delete_button = ctk.CTkButton(
-                    self.member_list_frame,
-                    text="Delete",
-                    command=lambda m_id=member.id_member: self.delete_member(m_id)
-                )
-                delete_button.grid(row=row_index, column=0, sticky="w", padx=10, pady=(0, 10))
-
-                show_borrowed_books_button = ctk.CTkButton(
-                    self.member_list_frame,
-                    text="Show Borrowed Books",
-                    command=lambda m_id=member.id_member: self.display_borrows_by_member(m_id)
-                )
-                show_borrowed_books_button.grid(row=row_index, column=1, sticky="w", padx=10, pady=(0, 10))
-                row_index += 1
-
                 edit_button = ctk.CTkButton(
                     self.member_list_frame,
                     text="Edit",
@@ -182,6 +165,26 @@ class MemberPage(ctk.CTkFrame):
                 )
                 edit_button.grid(row=row_index, column=0, sticky="w", padx=10, pady=(0, 10))
                 row_index += 1
+                
+                show_borrowed_books_button = ctk.CTkButton(
+                    self.member_list_frame,
+                    text="Show Borrowed Books",
+                    command=lambda m_id=member.id_member: self.display_borrows_by_member(m_id),
+                    width=160
+                )
+                show_borrowed_books_button.grid(row=row_index, column=0, sticky="w", padx=10, pady=(0, 10))
+                row_index += 1
+
+                delete_button = ctk.CTkButton(
+                    self.member_list_frame,
+                    text="Delete",
+                    command=lambda m_id=member.id_member: self.delete_member(m_id),
+                    width=240,
+                    fg_color=Color.secondary_color(),
+                    hover_color=Color.error_color()
+                )
+                delete_button.grid(row=row_index, column=0, sticky="w", padx=10, pady=(0, 10))
+
                 
         else:
             no_members_label = ctk.CTkLabel(

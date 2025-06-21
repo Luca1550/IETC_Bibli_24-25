@@ -79,8 +79,6 @@ class MemberService:
 
         raise Exception("Person update failed.")
 
-
-
     def get_member_by_id(self, id: int) -> MemberDTO | None:
         """
         Retrieves a Member object by its ID.
@@ -115,9 +113,9 @@ class MemberService:
             else:
                 raise Exception(f"Member with the given ID : {id} was not found.")
         except Exception as e:
-            print(f"🛑 Error [{e}]")
-            return False 
-
+            raise(f"🛑 Error [{e}]")
+            return False
+        
     def get_all_members(self) -> list[MemberDTO]:
         """
         Retrieves all Member objects from the repository.

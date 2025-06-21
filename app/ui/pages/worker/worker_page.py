@@ -70,7 +70,7 @@ class WorkerPage(ctk.CTkFrame):
         self.add_button = ctk.CTkButton(self.add_worker_frame, text="Add", command=self.adding_worker)
         self.add_button.grid(row=8, column=0, padx=10, pady=10, sticky="ew")
 
-        self.worker_list_frame = ctk.CTkFrame(self)
+        self.worker_list_frame = ctk.CTkScrollableFrame(self)
         self.worker_list_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
         self.worker_list_frame.grid_columnconfigure(0, weight=1)
 
