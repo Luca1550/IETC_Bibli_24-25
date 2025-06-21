@@ -144,13 +144,13 @@ class LoginPage(ctk.CTkFrame):
         If the credentials match, it calls the `on_login` callback; otherwise, it displays an error message.
         """
         # Predefined credentials for testing
-        userTest = ""
-        passwordTest = ""
+        userStandart = ""
+        passwordStandart = ""
 
         username = self.username_entry.get()
         password = self.password_entry.get()
 
-        if username == userTest and password == passwordTest :
+        if username == userStandart and password == passwordStandart:
             self.error_label.configure(text="")
             self.on_login()  
         else:
