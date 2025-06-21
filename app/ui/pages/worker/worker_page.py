@@ -119,7 +119,6 @@ class WorkerPage(ctk.CTkFrame):
         # Fetch all workers from the service
 
         workers = self.worker_service.get_all_workers()
-        print([worker.id_worker for worker in workers])  # Debugging line to check worker IDs
         if workers:
             row_index = 0
             for worker in workers:
@@ -161,7 +160,6 @@ class WorkerPage(ctk.CTkFrame):
                 font=ctk.CTkFont(size=16, weight="bold")
             )
             no_workers_label.grid(row=0, column=0, padx=15, pady=(5, 0))
-
 
     def delete_worker(self, worker_id):
         """
