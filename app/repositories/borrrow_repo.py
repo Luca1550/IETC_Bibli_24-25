@@ -42,3 +42,6 @@ class BorrowRepository:
             if days_overdue > 0:
                 #je dois remplacer le chiffre par le truc de library
                 return days_overdue * 900000000
+    
+    def _save_all(self):
+    JsonStorage.save_all(self.PATH_RESERVATION_JSON, self.reservation_json)  
