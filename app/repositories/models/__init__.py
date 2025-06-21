@@ -18,3 +18,5 @@ from .reservation_member import ReservationMember
 from .paiement import Paiement
 from .paiement_member import PaiementMember
 
+from .borrow import Borrow
+from .borrow_member import BorrowMember
