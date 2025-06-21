@@ -104,7 +104,6 @@ class PersonService:
             if not re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email):
                 raise Exception("Invalid email format: Please enter a valid email address.")
         if cp:
-            print(len(cp))
             if not cp.isnumeric()  or not (4 <= len(cp) <= 5):
                 raise Exception("Invalid postal code format: It must be a numeric value with at least 4 digits.")
         return True

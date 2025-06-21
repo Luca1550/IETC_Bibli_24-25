@@ -45,7 +45,7 @@ class WorkerService:
             else:
                 raise Exception("Failed to add person.")
         except Exception as e:
-            print(f"🛑 Error [{e}]")
+            raise(f"🛑 Error [{e}]")
             raise Exception(str(e))
 
     def delete_worker(self, id: int) -> bool:
@@ -65,7 +65,7 @@ class WorkerService:
             else:
                 raise Exception(f"Worker with the given ID : {id} was not found.")
         except Exception as e:
-            print(f"🛑 Error [{e}]")
+            raise(f"🛑 Error [{e}]")
             return False
 
     def update_worker(self, id : int, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str) -> bool | str:
@@ -112,7 +112,7 @@ class WorkerService:
             else:
                 raise Exception(f"Worker with the given ID : {id} was not found.")
         except Exception as e:
-            print(f"🛑 Error [{e}]")
+            raise(f"🛑 Error [{e}]")
             raise Exception(f"🛑 Error [{e}]")
         
     def get_all_workers(self) -> list[WorkerDTO]:
@@ -133,6 +133,6 @@ class WorkerService:
                     ))
             return worker_dtos
         except Exception as e:
-            print(f"🛑 Error [{e}]")
+            raise(f"🛑 Error [{e}]")
             raise Exception(f"🛑 Error [{e}]")
 
