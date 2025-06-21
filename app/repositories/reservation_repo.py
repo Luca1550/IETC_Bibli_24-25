@@ -52,7 +52,6 @@ class ReservationRepo():
         for i, reserv in enumerate(self.reservation_json):
             if isinstance(reserv, Reservation):
                     if reserv.id == reservation.id:
-                        print(f"Updating reservation with ID: {reservation.id}")
                         self.reservation_json[i] = reservation
                         self._save_all()
                         return True

@@ -39,7 +39,6 @@ class ReservationMemberRepo:
     def get_reservation_member_byId(self, id_reservation: int):
         for reservation_member in self._reservation_member_json:
             if reservation_member.id_reservation == id_reservation:
-                print("coucou c est moi", reservation_member.id_member)
                 return self.member_repo.get_member_by_id(reservation_member.id_member)
         return None
     def delete_reservation_member(self,id_member:int,id_reservation:int):
