@@ -373,6 +373,10 @@ class MemberPage(ctk.CTkFrame):
                 PopUpMessage.pop_up(self, f"Error 2 updating member: {str(e)}")
                 self.update_member_frame.destroy()
                 self.display_members()
+        else: 
+            PopUpMessage.pop_up(self, "Please fill in all fields.")
+            self.update_member_frame.destroy()
+            self.display_members()
 
     def adding_member(self):
         
