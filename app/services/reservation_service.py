@@ -1,5 +1,5 @@
-from repositories.models import Reservation,Member,Exemplar,Library,ReservationMember
-from repositories import ReservationRepo,ExemplarRepo,MemberRepo,ReservationMemberRepo,BookRepo,LibraryRepo
+from repositories.models import Reservation,Member,Exemplar,Library,ReservationMember,ArchiveReservation
+from repositories import ReservationRepo,ExemplarRepo,MemberRepo,ReservationMemberRepo,BookRepo,ArchiveReservationRepo
 from .models import ReservationDTO
 from datetime import date, datetime
 from services import ExemplarService,LibraryService
@@ -17,6 +17,7 @@ class ReservationService:
         self._member_repo = MemberRepo()
         self._reservation_member_repo= ReservationMemberRepo()
         self._book_repo = BookRepo()
+        self.archive_reservation_repo = ArchiveReservationRepo()
         self.exemplar_service = ExemplarService()
         self.library_service = LibraryService()
 
@@ -128,7 +129,16 @@ class ReservationService:
             
             reservation = self._reservation_repo.get_by_id(id_reservation)
             reservation_dto = self.get_by_id(id_reservation)
+            id_archive=None
+            
 
+            archive=ArchiveReservation(
+                id=id_archive,
+                id_reservation=reservation.id,
+                id_exemplar=reservation.id_exemplar,
+                reservation_date=reservation.reservation_date,
+                member=reservation_dto.member
+            )
             if isinstance(reservation, Reservation):
                 self._reservation_repo.delete_reservation(reservation)
             
@@ -137,6 +147,8 @@ class ReservationService:
                     id_member=reservation_dto.member.id,
                     id_reservation=id_reservation
                 )
+
+            self.archive_reservation_repo.add_archive_reservation(archive)
             return True
         except Exception as e:
             raise Exception(f"🛑 Error deleting reservation: [{e}]")

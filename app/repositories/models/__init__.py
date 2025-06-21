@@ -15,4 +15,5 @@ from .book_author import BookAuthor
 from .exemplar import Exemplar
 from .reservation import Reservation
 from .reservation_member import ReservationMember
+from .archive_reservation import ArchiveReservation
 
