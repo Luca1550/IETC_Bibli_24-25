@@ -10,12 +10,12 @@ class BookThemeRepo:
     """
     PATH_BOOK_THEME_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "book_theme.json"
     
+    book_theme_json : list[BookTheme] = JsonStorage.load_all(PATH_BOOK_THEME_JSON)
     def __init__(self):
         """
         Initializes the BookThemeRepo instance.
         Loads all book-theme relationships from the JSON file.
         """
-        self.book_theme_json : list[BookTheme] = JsonStorage.load_all(self.PATH_BOOK_THEME_JSON)
         self._theme_repo : ThemeRepo = ThemeRepo()
     
     def _save_all(self):

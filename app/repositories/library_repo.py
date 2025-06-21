@@ -10,12 +10,12 @@ class LibraryRepo:
 
     PATH_LIBRARY_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "library.json"
 
+    library_json : list[Library] = JsonStorage.load_all(PATH_LIBRARY_JSON)
     def __init__(self):
         """
         Initializes the Libraryrepo instance.
         Loads existing libraries from the JSON file into the library_json attribute.
         """
-        self.library_json : list[Library] = JsonStorage.load_all(self.PATH_LIBRARY_JSON)
 
     def _save_all(self):
         """

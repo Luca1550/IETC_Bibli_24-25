@@ -11,12 +11,12 @@ class EditorRepo:
     """
     PATH_EDITOR_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "editor.json"
     
+    editor_json : list[Editor] = JsonStorage.load_all(PATH_EDITOR_JSON)
     def __init__(self):
         """
         Initializes the EditorRepo instance.
         Loads existing editor from the JSON file into the editor_json attribute.
         """
-        self.editor_json : list[Editor] = JsonStorage.load_all(self.PATH_EDITOR_JSON)
     
     def add_editor(self,name:str):
         """

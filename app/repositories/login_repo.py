@@ -10,12 +10,12 @@ class LoginRepo:
     """
     PATH_LOGIN_JSON = pathlib.Path(__file__).parent.parent.parent / "database" / "login.json"
 
+    _login_json: list[Login] = JsonStorage.load_all(PATH_LOGIN_JSON)
     def __init__(self):
         """
         Initializes the LoginRepo instance and loads all Login data from the JSON file.
         If the JSON file does not exist, it initializes an empty list for Login data.
         """
-        self._login_json: list[Login] = JsonStorage.load_all(self.PATH_LOGIN_JSON)
 
     def _save_all(self):
         """

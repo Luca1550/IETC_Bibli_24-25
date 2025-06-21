@@ -19,11 +19,16 @@ class AuthorService:
     def add_author(self, first_name : str, last_name : str | None) -> Author | Exception:
         """
         Adds a new author to the system.
-        :param person: Person object containing the details of the author to be added.
-        Using the PersonService to create a new person and then adding the author to the AuthorRepo.
-        :return: A message indicating success or failure.
+        arguments:
+        - first_name: First name of the author.
+        - last_name: Last name of the author.
+        returns:
+        - Returns an error message if there was an issue adding the author.
+        - Raises an exception if the author already exists or if there is an error during the addition
         """
         try:
+            self._check_author_value(first_name,last_name)
+            self._check_author_is_unique(first_name,last_name)
             person = self.person_service.add_person(first_name, last_name, None, None, None, None, None)
             self.author_repo.add_author(Author(id=None,id_person=person.id))
         except Exception as e:
@@ -91,3 +96,23 @@ class AuthorService:
             raise Exception(f"Author ID: {id} not found")
         except Exception as e:
             raise Exception(f"🛑 error {e}")
+    
+    def _check_author_value(self,first_name:str,last_name:str):
+        """
+        Checks if the author values are valid."""
+        if not first_name or len(first_name.strip())<1:
+            raise Exception ("First name cannot be empty.")
+        if not last_name or len(last_name.strip())<1:
+            raise Exception ("Last name cannot be empty.")
+        return True
+
+    def _check_author_is_unique (self,first_name:str,last_name:str):
+        """
+        Checks if the author is unique in the system.
+        """
+        first_name = first_name.strip().lower()
+        last_name = last_name.strip().lower()
+        for author in self.author_repo.get_all():
+            person = self.person_repo.get_by_id(author.id_person)
+            if person and person.first_name.strip().lower() == first_name and person.last_name.strip().lower() == last_name:
+                raise Exception(f"Author '{first_name} {last_name}' already exists.")

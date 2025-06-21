@@ -17,14 +17,17 @@ class ThemeService :
         """
         Adds a new theme with the given name.
         :param name: The name of the theme to add.
-        :return: None
+        :return: The newly created theme object.
+        :raises Exception: If the theme name is invalid or if a theme with the same name
+        already exists.
         """
         try:
+            self._check_theme_value (name)
             if not self.theme_repo.is_unique("name",name):
-                raise Exception ("This theme already exists")
-            self.theme_repo.add_theme(name)
-        except:
-            return f"Error adding theme: {name}"
+                raise Exception("This Theme already exists")
+            return self.theme_repo.add_theme(name)
+        except Exception as e:
+            raise Exception(f"🛑 Error adding theme: {name} - {e}")
         
     def delete_theme(self,name):
         """
@@ -94,3 +97,11 @@ class ThemeService :
             return f"Theme {name} updated to {new_name}"
         else:
             return f"Theme {name} not found"
+
+    def _check_theme_value(self,name:str):
+        """
+        Checks if the theme name is valid.
+        """
+        if not name or len(name.strip())<1:
+            raise Exception ("Theme cannot be empty.")
+        return True

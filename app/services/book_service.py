@@ -178,12 +178,11 @@ class BookService:
                 return True
             raise Exception(book)
         except Exception as e:
-            print(e)
             raise Exception(f"🛑 Error [{e}]")
         
     def _check_book_value(self,isbn:str,title:str,date:datetime,price:float,authors:list[AuthorDTO],themes:list[Theme],editors:list[Editor]):
         if not isbn or len(isbn)!=13 or not isbn.isnumeric():
-            raise Exception("Invalid ISBN. must be exactly 13 characters long.")
+            raise Exception("Invalid ISBN. Must be exactly 13 characters long.")
         if not title.strip():
             raise Exception("Title cannot be empty.")
         if not date:

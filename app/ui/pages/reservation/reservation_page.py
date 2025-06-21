@@ -3,7 +3,7 @@ import customtkinter as ctk
 from tkinter import messagebox, ttk
 import tkinter as tk
 from services import ReservationService,BookService,ExemplarService
-from ui.components import PopUpMessage
+from ui.components import PopUpMessage,SelectionFrame
 
 #ok donc a gauche on va pouvoir voir les reservations et qu'elles soient clickable 
 #a droite on peut faire une reservation et quand on clique sur une reservation on a le bouton update a la place de add 
@@ -18,7 +18,7 @@ class ReservationPage(ctk.CTkFrame):
         self.exemplar_service = ExemplarService()
         self.selected_reservation= None
         self.setup_ui()
-        
+        self.book_selected =[]
     def setup_ui(self):
         
 
@@ -70,13 +70,23 @@ class ReservationPage(ctk.CTkFrame):
 
         self.form_title = ctk.CTkLabel(self.right_panel, text="New Réservation", font=ctk.CTkFont(size=18, weight="bold"))
         self.form_title.pack(pady=(10, 10))
-        
         self.title_entry = ctk.CTkEntry(self.right_panel, placeholder_text="title")
         self.title_entry.pack(pady=5, padx=20, fill="x")
-        self.member_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_member")
-        self.member_entry.pack(pady=5, padx=20, fill="x")
-        self.date_entry = ctk.CTkEntry(self.right_panel, placeholder_text="Date (YYYY-MM-DD)")
-        self.date_entry.pack(pady=5, padx=20, fill="x")
+        self.edit_reservation_button = ctk.CTkButton(self.right_panel, text="✏️", width=30, command=lambda:self.open_selection_frame(
+            title="Book",
+            all_items=self.book_service.get_all(),
+            selected_items=self.book_selected,
+            display_model_method=lambda book: f"{book.title}",
+            attributes_to_search=[lambda book: {book.title}],
+            entry_to_update=self.title_entry
+        ))
+        
+        self.edit_reservation_button.pack(pady=(10, 10))
+        
+        # self.member_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_member")
+        # self.member_entry.pack(pady=5, padx=20, fill="x")
+        # self.date_entry = ctk.CTkEntry(self.right_panel, placeholder_text="Date (YYYY-MM-DD)")
+        # self.date_entry.pack(pady=5, padx=20, fill="x")
     
         self.submit_button = ctk.CTkButton(self.right_panel, text="Réserver",command=self.add_reservation)
         self.submit_button.pack(pady=20)
@@ -116,33 +126,7 @@ class ReservationPage(ctk.CTkFrame):
             PopUpMessage.pop_up(self, f"Input error: {e}")
         self.destroy()
 
-    
-
-    """def spiderManMeme(self):
-        #ici je veux qu'on tape le nom du livre et boom 
-        #
-        # 🕷️   ->  🕷️
-        #           ^
-        #          /
-        #     🕷️
-
-
-
-        #En gros on a le nom du livre donc on regarde dans les livres qui a le mm nom et autheur du livre puis si le nom et l'auteur correspondent on a l'isbn
-        #avec l'isbn on regarde dans la liste exemplar et la on a son id 
-        #On utilise self.book_service.get_all() pour comparer title et author puis on prend l'isbn et dans 
-        #
-        books = self.book_service.get_all()
-        
-        i=0
-        while i != books[-1]:
-            for book in books :
-                if book.title == title:
-                    book.isbn == isbn
-                    id_exemplar = self.exemplar_service.get(id)
-
-
-"""
+ 
     
     def reservation_select(self, event):
         selection = event.widget.curselection()
@@ -175,3 +159,18 @@ class ReservationPage(ctk.CTkFrame):
 
                 
         
+    def open_selection_frame(self,title,all_items,selected_items,display_model_method,attributes_to_search,entry_to_update,attributes_to_entry=None):
+        """
+            opens a selection frame to choose items from a list.
+        """
+        selection_frame = SelectionFrame(
+            self,
+            title,
+            all_items,
+            selected_items,
+            display_model_method,
+            attributes_to_search,
+            entry_to_update,
+            attributes_to_entry
+        )
+        self.wait_window(selection_frame)
