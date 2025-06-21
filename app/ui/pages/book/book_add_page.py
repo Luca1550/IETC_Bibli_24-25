@@ -191,6 +191,7 @@ class BookAddPage(ctk.CTkToplevel):
             text="No",
             command=lambda: [
                 confirm_window.destroy(),
+                self.destroy()
             ]
         ).pack(side="right", padx=10)
         
