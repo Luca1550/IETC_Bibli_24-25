@@ -16,3 +16,18 @@ class MemberDTO:
         self.membership_entrydate = membership_entrydate
         self.subscribed = subscribed
         self.archived = archived
+
+    def __eq__(self, other):
+        """
+        Compares two MemberDTO objects for equality based on their ID.
+        arguments:
+            other (MemberDTO): The other MemberDTO object to compare with.
+        """
+        if isinstance(other, MemberDTO):
+            return self.id_member == other.id_member
+
+    def __hash__(self):
+        """
+        Returns a hash value for the MemberDTO object based on its ID."""
+        
+        return hash(self.id_member)
