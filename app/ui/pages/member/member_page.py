@@ -38,7 +38,6 @@ class MemberPage(ctk.CTkFrame):
 
         ## UI Components
 
-
         self.member_frame = ctk.CTkFrame(self)
         self.member_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
         self.member_frame.grid_rowconfigure(0, weight=0)
@@ -53,14 +52,24 @@ class MemberPage(ctk.CTkFrame):
             width=200
         )
         self.search_bar.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.search_bar.bind("<KeyRelease>", self.filter_members)
+
+        self.subscribed_only_checkbox = ctk.CTkCheckBox(
+            self.member_frame,
+            text="Subscribed only",
+            command=self.filter_members
+        )
+        self.subscribed_only_checkbox.grid(row=0, column=1, padx=10, pady=10, sticky="w")
 
         ## button that opens a dialog to add a new member
         self.add_member_button = ctk.CTkButton(
             self.member_frame,
-            text="Add Member",
-            command=self.add_member
+            text="➕",
+            command=self.add_member,
+            width=40,
+            height=40,
         )
-        self.add_member_button.grid(row=0, column=1, padx=10, pady=10, sticky="ne")
+        self.add_member_button.grid(row=0, column=2, padx=10, pady=10, sticky="ne")
 
         ## Frame that contains the list of members
         self.member_list_frame = ctk.CTkScrollableFrame(
@@ -70,14 +79,43 @@ class MemberPage(ctk.CTkFrame):
 
         self.display_members()
 
-    def display_members(self):
+        self.borrows_by_member_frame = ctk.CTkScrollableFrame(self)
+        self.borrows_by_member_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+
+    def filter_members(self, event=None):
+        query = self.search_bar.get().lower()
+        subscribed_only = self.subscribed_only_checkbox.get()  
+
+        all_members = self.member_service.get_all_members()
+
+        filtered_members = [
+            m for m in all_members
+            if (
+                (query in m.person.first_name.lower() or
+                query in m.person.last_name.lower() or
+                query in m.person.street.lower() or
+                query in m.person.city.lower() or
+                query in m.person.cp.lower() or
+                query in str(m.id_member))
+                and (m.subscribed if subscribed_only else True) 
+            )
+        ]
+
+        self.display_members(filtered_members)
+
+    def display_members(self, members=None):
         """
         Displays the list of members in the right-side frame.
         """
-        self.member_service = MemberService()
-        # Fetch all members from the service
 
-        members = self.member_service.get_all_members()
+        for widget in self.member_list_frame.winfo_children():
+            widget.destroy()
+
+        self.member_service = MemberService()
+
+        if members is None:
+            members = self.member_service.get_all_members()
+
         if members:
             row_index = 0
             for member in members:
@@ -264,6 +302,10 @@ class MemberPage(ctk.CTkFrame):
         self.city_entry.insert(0, member.person.city)
         self.city_entry.grid(row=7, column=0, padx=10, pady=10, sticky="ew")
 
+        self.membership_entrydate_entry = ctk.CTkEntry(self.update_member_frame)
+        self.membership_entrydate_entry.insert(0, member.membership_entrydate)
+        self.membership_entrydate_entry.grid(row=8, column=0, padx=10, pady=10, sticky="ew")
+
         self.subrscribed_checkbox = ctk.CTkCheckBox(
             self.update_member_frame,
             text="Subscribed",
@@ -271,7 +313,7 @@ class MemberPage(ctk.CTkFrame):
             offvalue=False,
             variable=ctk.BooleanVar(value=member.subscribed)  # Set to current subscription status
         )
-        self.subrscribed_checkbox.grid(row=8, column=0, padx=10, pady=10, sticky="ew")
+        self.subrscribed_checkbox.grid(row=9, column=0, padx=10, pady=10, sticky="ew")
 
         self.archived_checkbox = ctk.CTkCheckBox(
             self.update_member_frame,
@@ -280,14 +322,14 @@ class MemberPage(ctk.CTkFrame):
             offvalue=False,
             variable=ctk.BooleanVar(value=member.archived)  # Set to current archived status
         )
-        self.archived_checkbox.grid(row=8, column=1, padx=10, pady=10, sticky="ew")
+        self.archived_checkbox.grid(row=9, column=1, padx=10, pady=10, sticky="ew")
 
         self.update_button = ctk.CTkButton(
             self.update_member_frame, 
             text="Update Member", 
             command=lambda: self.perform_update_member(member_id)
         )
-        self.update_button.grid(row=9, column=0, padx=10, pady=10, sticky="ew")
+        self.update_button.grid(row=10, column=0, padx=10, pady=10, sticky="ew")
 
     def perform_update_member(self, member_id):
         """
@@ -301,30 +343,36 @@ class MemberPage(ctk.CTkFrame):
         street = self.street_entry.get()
         cp = self.cp_entry.get()
         city = self.city_entry.get()
+        membership_entrydate = self.membership_entrydate_entry.get()
         subscribed = self.subrscribed_checkbox.get()
         archived = self.archived_checkbox.get() 
 
-        member_updated = self.member_service.update_member(
-            member_id,
-            first_name=first_name,
-            last_name=last_name,
-            national_number=national_number,
-            email=email,
-            street=street,
-            cp=cp,
-            city=city,
-            subscribed=subscribed,
-            archived=archived
-        )
-
-        if member_updated:
-            PopUpMessage.pop_up(self, "Member updated successfully.")
-            self.update_member_frame.destroy()
-            self.display_members()
-        else:
-            PopUpMessage.pop_up(self, "Error updating member.")
-            self.update_member_frame.destroy()
-            self.display_members()
+        if first_name and last_name and national_number and email and street and cp and city and membership_entrydate:
+            try:
+                if self.member_service.update_member(
+                    member_id, 
+                    first_name, 
+                    last_name, 
+                    national_number, 
+                    email, 
+                    street, 
+                    cp, 
+                    city, 
+                    membership_entrydate,
+                    subscribed, 
+                    archived
+                ):
+                    PopUpMessage.pop_up(self, "Member updated successfully.")
+                    self.update_member_frame.destroy()
+                    self.display_members()  
+                else:
+                    PopUpMessage.pop_up(self, "Error 1 updating member.")
+                    self.update_member_frame.destroy()
+                    self.display_members()  
+            except Exception as e:
+                PopUpMessage.pop_up(self, f"Error 2 updating member: {str(e)}")
+                self.update_member_frame.destroy()
+                self.display_members()
 
     def adding_member(self):
         
@@ -378,3 +426,33 @@ class MemberPage(ctk.CTkFrame):
         Handles the selection of a member from the list.
         """
         PopUpMessage.pop_up(self, f"Selected Member ID: {member_id}")
+
+        self.display_borrows_by_member()
+
+    def display_borrows_by_member(self):
+        """
+        Displays the borrow history of the selected member.
+        """
+        for widget in self.borrows_by_member_frame.winfo_children():
+            widget.destroy()
+
+        self.borrows_by_member_frame.grid_rowconfigure(0, weight=1)
+        self.borrows_by_member_frame.grid_columnconfigure(0, weight=1)
+        self.borrows_by_member_frame.grid_columnconfigure(1, weight=0)
+
+        self.borrows_by_member_label = ctk.CTkLabel(
+            self.borrows_by_member_frame,
+            text="Borrowed book",
+        )
+
+        self.borrows_by_member_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+        self.return_book_button = ctk.CTkButton(
+            self.borrows_by_member_frame,
+            text="Return Book",
+            command=lambda: PopUpMessage.pop_up(self, "Return Book functionality not implemented yet.")
+        )
+        self.return_book_button.grid(row=0, column=1, padx=10, pady=10, sticky="e")
+
+
+

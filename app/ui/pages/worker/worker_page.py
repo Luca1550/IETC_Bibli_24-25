@@ -161,7 +161,6 @@ class WorkerPage(ctk.CTkFrame):
             )
             no_workers_label.grid(row=0, column=0, padx=15, pady=(5, 0))
 
-
     def delete_worker(self, worker_id):
         """
         Deletes a worker from the JSON file and updates the display.

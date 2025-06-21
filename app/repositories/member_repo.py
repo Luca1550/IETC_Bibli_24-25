@@ -88,4 +88,5 @@ class MemberRepo:
         returns:
         - A list of all Member objects.
         """
+        self._member_json = JsonStorage.load_all(self.PATH_MEMBER_JSON)
         return self._member_json
