@@ -17,3 +17,5 @@ from .reservation import Reservation
 from .reservation_member import ReservationMember
 from .archive_reservation import ArchiveReservation
 
+from .borrow import Borrow
+from .borrow_member import BorrowMember

@@ -509,7 +509,7 @@ class BookPage(ctk.CTkFrame):
         try:
             self.book_service.delete_book(book.isbn)
             widget = self.all_items_widgets.pop(book.isbn)
-            widget.destroy()
+            widget.destroy() 
             self.show_success("Book successfully deleted !")
         except Exception as e:
             PopUpMessage(self, f"{e}")
