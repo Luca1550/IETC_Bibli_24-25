@@ -15,3 +15,5 @@ from .exemplar_repo import ExemplarRepo
 from .reservation_repo import ReservationRepo
 from .reservation_member_repo import ReservationMemberRepo
 from .archive_reservation_repo import ArchiveReservationRepo
+from .borrow_repo import BorrowRepo
+from .borrow_member_repo import BorrowMemberRepo
