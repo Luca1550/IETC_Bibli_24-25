@@ -3,7 +3,7 @@ from repositories import BorrowRepo, MemberRepo, BookRepo, ExemplarRepo,BorrowMe
 from .models import BorrowDTO
 from datetime import date, datetime,timedelta
 from services import ExemplarService,LibraryService,MemberService
-
+from enums import PaiementType
 
 class BorrowService:
     def __init__(self):
@@ -58,16 +58,23 @@ class BorrowService:
             if days_overdue > 0:
                 fine =days_overdue * return_fine_per_day
                 return fine
-    
+    def check_subscribe(self,id_member:int):
+        try:
+            memberparms=self.member_service.get_member_by_id(id_member)
+
+            return memberparms.subscribed
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return f"🛑 Error [{e}]"
     def price_borrow_member(self,id_member:int):
         try:
             libparms=self.library_service.get_library_parameters()
             borrow_price_with_sub_lib = libparms[0].borrow_price_with_sub
             borrow_price_without_sub_lib = libparms[0].borrow_price_without_sub
-            memberparms=self.member_service.get_member_by_id(id_member)
-            subscribed=memberparms.subscribed
-            if subscribed == True:
+            if self.check_subscribe(id_member):
                 LaPLata = borrow_price_with_sub_lib
+                
             else:
                 LaPLata = borrow_price_without_sub_lib
             return LaPLata
@@ -75,16 +82,12 @@ class BorrowService:
             import traceback
             traceback.print_exc()
             return f"🛑 Error [{e}]"
-    def add_borrow(self, isbn:str,id_member:int, borrow_date:date|None,paiement_type:int,paiement_status:int):
+    def add_borrow(self, isbn:str,id_member:int,paiement_statut:int = True):
         
         try:
-            if borrow_date is None:
-                actual_borrow_date = date.today().isoformat()
-            else:
-                if isinstance(borrow_date, str):
-                    actual_borrow_date = datetime.fromisoformat(borrow_date).date().isoformat()
-                else:
-                    actual_borrow_date = borrow_date.isoformat()
+
+            actual_borrow_date = date.today().isoformat()
+
             exemplar=self.exemplar_service.get_disponibility(isbn)
             if not exemplar:
                 id_exemplars=self.exemplar_service.get_all_by_isbn(isbn)
@@ -92,6 +95,7 @@ class BorrowService:
                 exemplar= next((exemplar for exemplar in id_exemplars if exemplar.status.value ==1))
             return_date=self.return_borrow_date(actual_borrow_date)
             paiement_due=self.price_borrow_member(id_member)
+            
             if self.check_borrow_limit(id_member):
                 new_borrow = Borrow(
                     id=None,
@@ -99,11 +103,10 @@ class BorrowService:
                     borrow_date=actual_borrow_date,
                     return_date = return_date,
                     paiement_due = paiement_due,
-                    paiement_type = paiement_type,
+                    paiement_type = PaiementType(value=3) if self.check_subscribe(id_member) else PaiementType(value=4),
                     #paiement_status faudra voir dans l'ui cette folle
-                    paiement_status = paiement_status
+                    paiement_status = paiement_statut
                     )
-                print("id_exemplar  ",exemplar.id)
                 self.exemplar_service.update_status(exemplar.id,2)
 
                 result=self._borrow_repo.add_borrow(new_borrow)
@@ -229,3 +232,4 @@ class BorrowService:
         except Exception as e:
             raise Exception(f"🛑 Error deleting borrow: [{e}]")
         
+    #recup truc de return book pour gerer fine 

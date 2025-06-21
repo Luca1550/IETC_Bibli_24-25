@@ -2,7 +2,7 @@ import pathlib
 from repositories.models import Borrow
 from tools import JsonStorage
 from datetime import datetime,date
-from enums import Paiement_type
+from enums import PaiementType
 class BorrowRepo:
     """""Repository for managing Borrow objects.
     This class handles the storage and retrieval of borrow records in the library system."""

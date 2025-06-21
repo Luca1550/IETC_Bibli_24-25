@@ -1,6 +1,6 @@
 from repositories.models import Member
 from datetime import date,datetime
-from enums import Paiement_type
+from enums import PaiementType
 
 
 class BorrowDTO:
@@ -9,7 +9,7 @@ class BorrowDTO:
     This class is used to transfer borrow data between different layers of the application.
     """
     
-    def __init__( self, id_borrow:int, id_exemplar:int, member:Member, borrow_date:date, return_date:date, paiement_due:float, paiement_type:Paiement_type, paiement_status:bool):
+    def __init__( self, id_borrow:int, id_exemplar:int, member:Member, borrow_date:date, return_date:date, paiement_due:float, paiement_type:PaiementType, paiement_status:bool):
         """
         Initializes a BorrowDTO instance with the provided parameters.
         :param id_borrow: Unique identifier for the borrow record.

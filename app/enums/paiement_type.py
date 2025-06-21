@@ -1,6 +1,6 @@
 from enum import Enum
 
-class Paiement_type(Enum):
+class PaiementType(Enum):
     FINE=1
     LOST_BOOK=2
     BORROW_WITH_SUB=3
