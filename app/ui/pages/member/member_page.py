@@ -169,7 +169,7 @@ class MemberPage(ctk.CTkFrame):
                 show_borrowed_books_button = ctk.CTkButton(
                     self.member_list_frame,
                     text="Show Borrowed Books",
-                    command=lambda m_id=member.id_member: self.get_selected_member_history(m_id)
+                    command=lambda m_id=member.id_member: self.display_borrows_by_member(m_id)
                 )
                 show_borrowed_books_button.grid(row=row_index, column=1, sticky="w", padx=10, pady=(0, 10))
                 row_index += 1
@@ -421,15 +421,7 @@ class MemberPage(ctk.CTkFrame):
         self.display_members()
         PopUpMessage.pop_up(self, "Member deleted successfully.")
 
-    def get_selected_member_history(self, member_id):
-        """
-        Handles the selection of a member from the list.
-        """
-        PopUpMessage.pop_up(self, f"Selected Member ID: {member_id}")
-
-        self.display_borrows_by_member()
-
-    def display_borrows_by_member(self):
+    def display_borrows_by_member(self, member_id):
         """
         Displays the borrow history of the selected member.
         """
@@ -447,10 +439,16 @@ class MemberPage(ctk.CTkFrame):
 
         self.borrows_by_member_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
+        self.member_id_label = ctk.CTkLabel(
+            self.borrows_by_member_frame,
+            text=f"Member ID : {member_id}",
+        )
+        self.member_id_label.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+
         self.return_book_button = ctk.CTkButton(
             self.borrows_by_member_frame,
             text="Return Book",
-            command=lambda: PopUpMessage.pop_up(self, "Return Book functionality not implemented yet.")
+            command=lambda: PopUpMessage.pop_up(self, "Return Book functionality not implemented yet.*")
         )
         self.return_book_button.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
