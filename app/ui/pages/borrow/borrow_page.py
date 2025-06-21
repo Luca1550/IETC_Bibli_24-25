@@ -3,10 +3,6 @@ from tkinter import messagebox, ttk
 import tkinter as tk
 from services import BorrowService,BookService,ExemplarService,MemberService
 from ui.components import PopUpMessage,SelectionFrame
-from enums import Paiement_type
-#ok donc a gauche on va pouvoir voir les reservations et qu'elles soient clickable 
-#a droite on peut faire une reservation et quand on clique sur une reservation on a le bouton update a la place de add 
-#verifier pour le changement de statut 
 
 
 class BorrowPage(ctk.CTkFrame):
@@ -15,7 +11,6 @@ class BorrowPage(ctk.CTkFrame):
         self.borrow_service = BorrowService()
         self.book_service = BookService()
         self.exemplar_service = ExemplarService()
-        self.paiement_type_enum = Paiement_type()
         self.member_service = MemberService()
         self.selected_borrow= None
         self.setup_ui()
@@ -59,12 +54,7 @@ class BorrowPage(ctk.CTkFrame):
         self.borrow_listbox = tk.Listbox(self.left_panel,  height=40)
         self.borrow_listbox.pack(expand=True, fill="both", padx=10, pady=10)
 
-        self.indexbook = {}
-        for idx,res in enumerate(self.parambor):
-            
-            self.borrow_listbox.insert("end", f"{res.id_exemplar}  \n")
-            self.indexbook[idx] = res
-        #self.borrow_listbox.bind("<<ListboxSelect>>", self.borrow_select)
+        
 
         self.right_panel = ctk.CTkFrame(self.main_panel)
         self.right_panel.grid(row=0, column=1, sticky="nsew")

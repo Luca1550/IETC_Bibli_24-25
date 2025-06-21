@@ -43,6 +43,21 @@ class BorrowService:
             import traceback
             traceback.print_exc()
             return f"🛑 Error [{e}]"
+    def calculate_fine(self, return_date:date, borrow_date:date):
+        """Calculates the fine for overdue borrows.
+        arguments:
+        - return_date: The date the item was returned.
+        - borrow_date: The date the item was borrowed.
+        - fine_per_day: The fine amount per day of delay.
+        returns:
+        - The total fine amount if the item is overdue, otherwise returns 0."""
+        libparms=self.library_service.get_library_parameters()
+        return_fine_per_day = libparms[0].fine_per_day
+        if return_date and borrow_date:
+            days_overdue = (return_date - borrow_date).days
+            if days_overdue > 0:
+                fine =days_overdue * return_fine_per_day
+                return fine
     
     def price_borrow_member(self,id_member:int):
         try:
@@ -73,10 +88,11 @@ class BorrowService:
             exemplar=self.exemplar_service.get_disponibility(isbn)
             if not exemplar:
                 id_exemplars=self.exemplar_service.get_all_by_isbn(isbn)
-                exemplar= any([exemplar for exemplar in id_exemplars if exemplar.status ==1])
+                # attention si reserver quid au pire amélioration future
+                exemplar= next((exemplar for exemplar in id_exemplars if exemplar.status.value ==1))
             return_date=self.return_borrow_date(actual_borrow_date)
             paiement_due=self.price_borrow_member(id_member)
-            if self.check_borrow_limit(id_member)==True:
+            if self.check_borrow_limit(id_member):
                 new_borrow = Borrow(
                     id=None,
                     id_exemplar=exemplar.id,
@@ -106,16 +122,6 @@ class BorrowService:
             import traceback
             traceback.print_exc()
             return f"🛑 Error [{e}]"
-    # new_borrow = Borrow(
-    #                 id=None,
-    #                 id_exemplar=exemplar.id,
-    #                 borrow_date=actual_borrow_date,
-    #                 return_date = return_date,
-    #                 paiement_due = paiement_due,
-    #                 paiement_type = paiement_type,
-    #                 #paiement_status faudra voir dans l'ui cette folle
-    #                 paiement_status = paiement_status
-    #                 )    
     def get_all(self):
         try:
             borrows = self._borrow_repo.get_borrows()
@@ -154,7 +160,7 @@ class BorrowService:
         try:
             BorrowDTO = self.get_all()
             for borrow in BorrowDTO : 
-                if borrow.id == id:
+                if borrow.id_borrow == id:
                     return borrow
             else:
                 raise Exception(f"Borrow with the given ID : {id} was not found.")
@@ -162,43 +168,64 @@ class BorrowService:
             print(f"🛑 Error getting borrow by ID: [{e}]")
             return None
         
-    def update_borrow(self, id: int, id_member: int, borrow_date: date | None, paiement_type: int, paiement_status: int):
+    # def update_borrow(self, id: int, id_member: int, borrow_date: date | None, paiement_type: int, paiement_status: int):
+    #     try:
+    #         borrow: Borrow = self._borrow_repo.get_by_id(id)
+    #         borrow_dto: BorrowDTO = self.get_by_id(id)
+
+    #         if not borrow:
+    #             raise Exception(f"Borrow with ID: {id} was not found.")
+    #         if not borrow_dto:
+    #             raise Exception(f"DTO for borrow ID: {id} was not found.")
+
+    #         if borrow_date is not None:
+    #             if isinstance(borrow_date, str):
+    #                 borrow.borrow_date = datetime.fromisoformat(borrow_date).date()
+    #             elif isinstance(borrow_date, date):
+    #                 borrow.borrow_date = borrow_date
+
+    #         if not borrow.return_date:
+    #             borrow.return_date = self.return_borrow_date(borrow.borrow_date)
+
+    #         if paiement_type is not None:
+    #             borrow.paiement_type = paiement_type
+    #         if paiement_status is not None:
+    #             borrow.paiement_status = paiement_status
+
+    #         updated = self._borrow_repo.update_borrow(borrow)
+
+    #         if id_member is not None:
+    #             old_member = borrow_dto.member
+    #             if old_member:
+    #                 self._borrow_member_repo.delete_borrow_member(old_member.id_member, id)
+    #             new_link = BorrowMember(id_borrow=id, id_member=id_member)
+    #             self._borrow_member_repo.add_borrow_member(new_link)
+
+    #         return updated
+
+    #     except Exception as e:
+    #         print(f"🛑 Error updating borrow: [{e}]")
+    #         import traceback
+    #         traceback.print_exc()
+    #         return None
+
+    def delete_borrow(self,id:int):
+        """
+        Deletes a borrow by its ID."""
         try:
-            borrow: Borrow = self._borrow_repo.get_by_id(id)
-            borrow_dto: BorrowDTO = self.get_by_id(id)
+            
+            borrow = self._borrow_repo.get_by_id(id)
+            borrow_dto = self.get_by_id(id)
 
-            if not borrow:
-                raise Exception(f"Borrow with ID: {id} was not found.")
-            if not borrow_dto:
-                raise Exception(f"DTO for borrow ID: {id} was not found.")
-
-            if borrow_date is not None:
-                if isinstance(borrow_date, str):
-                    borrow.borrow_date = datetime.fromisoformat(borrow_date).date()
-                elif isinstance(borrow_date, date):
-                    borrow.borrow_date = borrow_date
-
-            if not borrow.return_date:
-                borrow.return_date = self.return_borrow_date(borrow.borrow_date)
-
-            if paiement_type is not None:
-                borrow.paiement_type = paiement_type
-            if paiement_status is not None:
-                borrow.paiement_status = paiement_status
-
-            updated = self._borrow_repo.update_borrow(borrow)
-
-            if id_member is not None:
-                old_member = borrow_dto.member
-                if old_member:
-                    self._borrow_member_repo.delete_borrow_member(old_member.id_member, id)
-                new_link = BorrowMember(id_borrow=id, id_member=id_member)
-                self._borrow_member_repo.add_borrow_member(new_link)
-
-            return updated
-
+            if isinstance(borrow, Borrow):
+                self._borrow_repo.delete_borrow(borrow)
+            
+            if borrow_dto and isinstance(borrow_dto.member, Member):
+                self._borrow_member_repo.delete_borrow_member(
+                    id_member=borrow_dto.member.id,
+                    id_borrow=id
+                )
+            return True
         except Exception as e:
-            print(f"🛑 Error updating borrow: [{e}]")
-            import traceback
-            traceback.print_exc()
-            return None
+            raise Exception(f"🛑 Error deleting borrow: [{e}]")
+        

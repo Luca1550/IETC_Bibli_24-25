@@ -63,31 +63,7 @@ class BorrowRepo:
             return True
         return False
     
-    # def check_limit_borrow(self,limit_borrow:int,id_member:int):
-    #     """Checks if the number of borrows is below the specified limit.
-    #     arguments:
-    #     - limit_borrow: The maximum number of borrows allowed.
-    #     returns:
-    #     - True if the number of borrows is below the limit, False otherwise."""
-    #     if id_member:
-    #         #chek ddans le json de borrow si nb de fois qu'il y a le meme id_member dedans est < limit_borrow
-    #         for bor in self._borrow_member_json:
-    #             if bor.member
-    #     return False
-    #     return len(self.borrow_json) < limit_borrow
-    def calculate_fine(self, return_date:date, borrow_date:date,fine_per_day:int):
-        """Calculates the fine for overdue borrows.
-        arguments:
-        - return_date: The date the item was returned.
-        - borrow_date: The date the item was borrowed.
-        - fine_per_day: The fine amount per day of delay.
-        returns:
-        - The total fine amount if the item is overdue, otherwise returns 0."""
-        if return_date and borrow_date:
-            days_overdue = (return_date - borrow_date).days
-            if days_overdue > 0:
-                fine =days_overdue * fine_per_day
-                return fine
+    
     
     def _save_all(self):
         """Saves all borrow data to the JSON file.
