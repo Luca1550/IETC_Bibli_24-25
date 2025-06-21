@@ -184,7 +184,7 @@ class MemberPage(ctk.CTkFrame):
                     hover_color=Color.error_color()
                 )
                 delete_button.grid(row=row_index, column=0, sticky="w", padx=10, pady=(0, 10))
-
+                row_index += 1
                 
         else:
             no_members_label = ctk.CTkLabel(
