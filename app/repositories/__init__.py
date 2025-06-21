@@ -14,3 +14,5 @@ from .book_author_repo import BookAuthorRepo
 from .exemplar_repo import ExemplarRepo 
 from .reservation_repo import ReservationRepo
 from .reservation_member_repo import ReservationMemberRepo
+from .paiement_repo import PaiementRepo
+from .paiement_member_repo import PaiementMemberRepo
