@@ -2,7 +2,7 @@
 import customtkinter as ctk
 from tkinter import messagebox, ttk
 import tkinter as tk
-from services import ReservationService,BookService,ExemplarService,MemberService
+from services import ReservationService,BookService,ExemplarService,MemberService,PersonService
 from ui.components import PopUpMessage,SelectionFrame
 from datetime import date 
 from datetime import datetime
@@ -19,6 +19,7 @@ class ReservationPage(ctk.CTkFrame):
         self.book_service = BookService()
         self.exemplar_service = ExemplarService()
         self.member_service = MemberService()
+        self.personne_servce= PersonService()
         self.selected_reservation= None
         self.setup_ui()
         self.book_selected =[]
@@ -63,9 +64,11 @@ class ReservationPage(ctk.CTkFrame):
         self.paramres = self.reservation_service.get_all()
         self.indexbook = {}
         for idx,res in enumerate(self.paramres):
+
             #ici je vais du coup rajouter les autres infos de livre etc pour la listbox
-            
-            self.reservation_listbox.insert("end", f"{res.id_exemplar} - {res.reservation_date} \n")
+            member_firstname=self.personne_servce.get_by_id(res.member.id_person).first_name if res.member else "Inconnu"
+            member_name=self.personne_servce.get_by_id(res.member.id_person).last_name if res.member else "Inconnu"
+            self.reservation_listbox.insert("end", f"{res.reservation_date} | Ex: {res.id_exemplar} | Membre: {member_firstname} {member_name}")
             self.indexbook[idx] = res
         self.reservation_listbox.bind("<<ListboxSelect>>", self.reservation_select)
 
@@ -144,7 +147,11 @@ class ReservationPage(ctk.CTkFrame):
         try:
             id_reservation = int(self.reservation_entry.get())
             id_exemplar = int(self.name_entry.get())
-            id_member = int(self.member_entry.get())
+            if len(self.member_selected) ==1:
+                id_member= self.member_selected[0].id_member
+            else:
+                PopUpMessage.pop_up(self, "More than one member")
+                return 
             reservation_date = str(self.date_entry.get())
             newreservation=self.reservation_service.update_reservation(id_reservation,id_exemplar,id_member,reservation_date)
             if isinstance(newreservation, str):
@@ -179,6 +186,9 @@ class ReservationPage(ctk.CTkFrame):
             self.form_title.pack(pady=(10, 10))
             self.reservation_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_reservation")
             self.reservation_entry.pack(pady=5, padx=20, fill="x")
+            self.member_entry = ctk.CTkEntry(self.right_panel, placeholder_text="Member")
+            self.member_entry.pack(pady=5, padx=20, fill="x")
+            
             self.name_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_exemplar")
             self.name_entry.pack(pady=5, padx=20, fill="x")
             self.member_entry = ctk.CTkEntry(self.right_panel, placeholder_text="id_member")
@@ -191,10 +201,24 @@ class ReservationPage(ctk.CTkFrame):
             self.submit_button.pack(pady=20)
             if selected_res:
                 self.selected_reservation = selected_res
-
+                print("MEMMMM",self.personne_servce.get_by_id(selected_res.member.id_person).first_name )
+                self.member_selected.append(selected_res.member)
                 for key, value in vars(self.selected_reservation).items():
                     print(f"{key}: {value}")
+                    # if key == "member":
+                    #     self.member_selected.append(value)
+                        # for truc in value:
 
+                self.edit_member_button = ctk.CTkButton(self.right_panel, text="✏️", width=30, command=lambda:self.open_selection_frame(
+                title="Member",
+                all_items=self.member_service.get_all_members(),
+                selected_items=self.member_selected,
+                #demander à JULIEN mais pq ma liste est vide sinon tout ok 
+                display_model_method=lambda member: f"{self.personne_servce.get_by_id(member.id_person).first_name}",
+                attributes_to_search=[lambda member: {member.person.first_name}],
+                entry_to_update=self.member_entry
+                ))
+                self.edit_member_button.pack(pady=(10, 10))
                     # self.reservation_entry.insert(0, selected_res.id_reservation)
                     # self.name_entry.insert(0, selected_res.id_exemplar)
                     # self.member_entry.insert(0, selected_res.)
