@@ -21,11 +21,8 @@ class BorrowService:
             libparms=self.library_service.get_library_parameters()
             limit_borrow = libparms[0].limit_borrow
             if id_member:
-                borrow_list_member=self._borrow_member_repo.get_borrow_members()
-                for bor in borrow_list_member:
-                    count = sum(1 for bor in borrow_list_member if bor.id_member == id_member)
-                    return count 
-            if count < limit_borrow:
+                borrow_list_member=self._borrow_member_repo.get_borrow_by_member(id_member)
+            if len(borrow_list_member) < limit_borrow:
                 return True
         except Exception as e:
             import traceback
@@ -83,9 +80,7 @@ class BorrowService:
             traceback.print_exc()
             return f"🛑 Error [{e}]"
     def add_borrow(self, isbn:str,id_member:int,paiement_statut:int = True):
-        
         try:
-
             actual_borrow_date = date.today().isoformat()
 
             exemplar=self.exemplar_service.get_disponibility(isbn)
@@ -112,15 +107,13 @@ class BorrowService:
                 result=self._borrow_repo.add_borrow(new_borrow)
                 borow_member_result = None
                 if result :
-
                     if id_member:
-                        id_new_borrow = new_borrow.id
-                        new_borrow_member= new_borrow(
-                            id_reservation=id_new_borrow,
+                        new_borrow_member= BorrowMember(
+                            id_borrow=new_borrow.id,
                             id_member=id_member
                         )
                         borow_member_result = self._borrow_member_repo.add_borrow_member(new_borrow_member) 
-            return result,borow_member_result
+            return True
         except Exception as e:
             import traceback
             traceback.print_exc()
