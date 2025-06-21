@@ -173,7 +173,6 @@ class ReservationPage(ctk.CTkFrame):
         except ValueError as e:
             PopUpMessage.pop_up(self, f"Input error: {e}")
         self.destroy()
-        self.
 
     def delete_reservation(self):
         try:
