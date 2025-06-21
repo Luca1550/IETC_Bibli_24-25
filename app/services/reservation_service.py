@@ -1,51 +1,50 @@
-# tout importer de reservation et member dans les mode, repo et aussi le dto mais aussi l'exemplar car on va prendre son id 
 from repositories.models import Reservation,Member,Exemplar,Library,ReservationMember
 from repositories import ReservationRepo,ExemplarRepo,MemberRepo,ReservationMemberRepo,BookRepo,LibraryRepo
 from .models import ReservationDTO
 from datetime import date, datetime
+from services import ExemplarService,LibraryService
 
 
-#NOTE POUR JULEN/ BUG RECUP DE L ID MEMBER ET RECUP AVEC LE NOM 
 class ReservationService:
+    """
+    Service for managing reservations in a library system."""
 
     def __init__(self):
+        """
+        Initializes the ReservationService with repositories for reservations, exemplars, members, and reservation members."""
         self._reservation_repo = ReservationRepo()
         self._exemplar_repo = ExemplarRepo()
         self._member_repo = MemberRepo()
         self._reservation_member_repo= ReservationMemberRepo()
         self._book_repo = BookRepo()
-        
+        self.exemplar_service = ExemplarService()
+        self.library_service = LibraryService()
 
 
-#faut que je rajoute le temps de reservation dans library du coup je dois aussi aller rechercher l'id de library pour avoir l'info et calculer ta grosse mere  
-#ajoute
-#on a un probleme ok ca va add tout ca mais alors je dois aussi add dans mon dto et comment on va relier le nom de la personne avec son id
-#ahhh bah par le dto en fait donc quand je vais faire un add je vais donner son nom, je vais le check dans le dto par son id qui va etre renvoyé ici 
-
-
-#je dois encore rrajouter une fonction qui permet en donnant le isbn d'avoir l'id de l'exemplar je vais utiliser le get all by isbn 
-    def get_exemplar_by_name(self, title: str) -> int | None:
+    def get_exemplar_by_name(self, title: str):
+        """
+        Retrieves the exemplar ID by book title."""
         try:
             books = self._book_repo.get_all()
             for b in books:
-                # Accès en mode dictionnaire si les objets sont des dicts
                 book_title = b.title 
                 isbn = b.isbn 
-                print("Checking book title:", book_title, "ISBN:", isbn)
                 if book_title.lower() == title.lower():
                     exemplars = self._exemplar_repo.get_all(isbn)
-                    print("book found for book title:", title, "ISBN:", isbn)
                     if exemplars:
-                        print("Exemplars found for book title:", title, "ISBN:", isbn)
                         return exemplars[0].id
             raise Exception(f"Book with title '{title}' not found.")
         except Exception as e:
-            print(f"🛑 Error getting exemplar by book title: [{e}]")
-            return None
+            raise Exception(f"🛑 Error getting exemplar by book title: [{e}]")
+            
 
         
-    def add_reservation(self,id_exemplar:int,id_member:int,reservation_date:date|None = None) ->Reservation:
-
+    def add_reservation(self,isbn:str,id_member:int,reservation_date:date|None = None) :
+        """
+        Adds a reservation for a book by its ISBN and member ID.
+        If reservation_date is None, it defaults to today's date.
+        If the exemplar is not available, it raises an exception.
+        """
         try:
             if reservation_date is None:
                 actual_reservation_date = date.today().isoformat()
@@ -54,21 +53,26 @@ class ReservationService:
                     actual_reservation_date = datetime.fromisoformat(reservation_date).date().isoformat()
                 else:
                     actual_reservation_date = reservation_date.isoformat()
+            exemplar=self.exemplar_service.get_disponibility(isbn)
+            if not exemplar:
+                id_exemplars=self.exemplar_service.get_all_by_isbn(isbn)
+                exemplar= next((exemplar for exemplar in id_exemplars if exemplar.status.value == 2))
+                if not exemplar:
+                    raise Exception("🛑 Error no exemplar") 
             new_reservation = Reservation(
                 id=None,
-                id_exemplar=id_exemplar,
+                id_exemplar=exemplar.id,
                 reservation_date=actual_reservation_date
                 )
-            #ici je dois changer le statuut de exemplar 
+            if exemplar.status.value == 1:
+                self.exemplar_service.update_status(exemplar.id,3)
 
             result=self._reservation_repo.add_reservation(new_reservation)
             reservation_member_result = None
-            paramres=self.get_parameter_reservation()
             if result :
-                #je check si l'id existe bien dans result 
 
                 if id_member:
-                    id_new_res = paramres[-1].id_exemplar
+                    id_new_res = new_reservation.id
                     new_reservation_member= ReservationMember(
                         id_reservation=id_new_res,
                         id_member=id_member
@@ -77,10 +81,10 @@ class ReservationService:
             return result,reservation_member_result
         
         except Exception as e:
-            import traceback
-            traceback.print_exc()
             return f"🛑 Error [{e}]"
     def get_all(self):
+        """
+        Retrieves all reservations and returns them as a list of ReservationDTO objects."""
         try:
             reservations = self._reservation_repo.get_reservation_parameters()
             result : list[ReservationDTO] = []
@@ -90,7 +94,6 @@ class ReservationService:
                 res_exemplar = res.id_exemplar
                 res_date = res.reservation_date
                 member = self._reservation_member_repo.get_reservation_member_byId(res_id)
-
                 reservation_dto = ReservationDTO(
                     id_reservation=res_id,
                     id_exemplar=res_exemplar,
@@ -101,31 +104,28 @@ class ReservationService:
             
             return result
         except Exception as e:
-            print(f"🛑 Error getting reservations: [{e}]")
-            return []
+            raise Exception(f"🛑 Error getting reservations: [{e}]")
+            
         
     def get_by_id(self,id:int):
+        """
+        Retrieves a reservation by its ID and returns it as a ReservationDTO object."""
         try:
             reservationsDTO = self.get_all()
             for reservation in reservationsDTO : 
-                if reservation.id == id:
+                if reservation.id_reservation == id:
                     return reservation
             else:
                 raise Exception(f"Reservation with the given ID : {id} was not found.")
         except Exception as e:
-            print(f"🛑 Error getting reservation by ID: [{e}]")
-            return None
+            raise Exception(f"🛑 Error getting reservation by ID: [{e}]")
+            
 
     def delete_reservation(self,id_reservation:int):
+        """
+        Deletes a reservation by its ID."""
         try:
-            """reservation: Reservation = self._reservation_repo.get_by_id(id_reservation)
-            reservation_DTO: ReservationDTO = self.get_by_id(id_reservation)
-            for res in reservation:
-                if res.id == id_reservation:
-                    self._reservation_repo.delete_reservation(res.id, res.id_exemplar, res.reservation_date)
-            for res in reservation_DTO:
-                if res.id_reservation == id_reservation:
-                    self._reservation_member_repo.delete_reservation_member(res.id_reservation, res.id_member)"""
+            
             reservation = self._reservation_repo.get_by_id(id_reservation)
             reservation_dto = self.get_by_id(id_reservation)
 
@@ -139,9 +139,13 @@ class ReservationService:
                 )
             return True
         except Exception as e:
-            print(f"🛑 Error deleting reservation: [{e}]")
-            return False
-    def update_reservation(self,id:int,id_exemplar:int,id_member:int,reservation_date:date|None = None):
+            raise Exception(f"🛑 Error deleting reservation: [{e}]")
+    def update_reservation(self,id:int,id_member:int,reservation_date:date|None = None):
+        """
+        Updates a reservation by its ID.
+        If reservation_date is provided, it updates the reservation date.
+        If id_member is provided, it updates the reservation member.
+        Returns the updated reservation object."""
         try:
             reservation: Reservation = self._reservation_repo.get_by_id(id)
             reservation_DTO: ReservationDTO = self.get_by_id(id)
@@ -150,28 +154,28 @@ class ReservationService:
                 raise Exception(f"Reservation with ID: {id} was not found.")
             if not isinstance(reservation_DTO, ReservationDTO):
                 raise Exception(f"DTO for reservation ID: {id} was not found.")
-            if id_exemplar is not None:
-                reservation.id_exemplar = id_exemplar
             if reservation_date is not None:
                 reservation.reservation_date = reservation_date
-            print(reservation)
             self._reservation_repo.update_reservation(reservation)
-            #ici je dois changer le statuut de exemplar 
             if id_member is not None:
-                print('' * 50)
-                print(f"reservation_DTO.member.id: {reservation_DTO.member.id}, id: {id}")
+                
                 self._reservation_member_repo.delete_reservation_member(id_member=reservation_DTO.member.id, id_reservation=id)
                 new_res_member = ReservationMember(id_reservation=id, id_member=id_member)
                 self._reservation_member_repo.add_reservation_member(new_res_member)
             return reservation
         except Exception as e:
-            print(f"🛑 Error updating reservation: [{e}]")
-            return None
+            raise Exception(f"🛑 Error updating reservation: [{e}]")
             
     def get_parameter_reservation(self):
+        """
+        Retrieves reservation parameters from the repository.
+        Returns a list of reservation parameters."""
         return self._reservation_repo.get_reservation_parameters()
     
     def check_value(self,id_exemplar:int,reservation_date:date|None)-> Exception | bool:
+        """
+        Checks if the provided id_exemplar and reservation_date are valid.
+        If valid, returns True; otherwise, raises an exception with an error message."""
         try:
             if not id_exemplar >= 0 or  not isinstance(id_exemplar, (int)):
                 raise Exception("Invalid id exemplar.")
@@ -179,9 +183,11 @@ class ReservationService:
                 raise Exception("Invalid reservationdate: it must be a date like YYYY-MM-DD")
         except Exception as e:
             return f"🛑 Error [{e}]"
-    #pour le add je dois encore changer le statut et check si ils sont deja reservé ou pas
-    #ca ca va etre utile pour la liste
+   
     def get_isbn_by_id_exemplar(self, id_exemplar: int):
+        """
+        Retrieves the ISBN of a book by its exemplar ID.
+        If the exemplar is found, returns its ISBN; otherwise, raises an exception."""
         try:
             exemplar = self._exemplar_repo.get_by_id(id_exemplar)
             if isinstance(exemplar, Exemplar):
@@ -190,5 +196,5 @@ class ReservationService:
                     return book.isbn
             raise Exception(f"Exemplar with ID {id_exemplar} not found.")
         except Exception as e:
-            print(f"🛑 Error getting ISBN by exemplar ID: [{e}]")
-            return ""
+            raise Exception(f"🛑 Error getting ISBN by exemplar ID: [{e}]")
+           

@@ -16,7 +16,7 @@ class ReservationMemberRepo:
     
     def add_reservation_member(self,reservation_member: ReservationMember):
     
-        self._reservation_member_json.append( reservation_member)
+        self._reservation_member_json.append(reservation_member)
         self._save_all()
         return True
     
