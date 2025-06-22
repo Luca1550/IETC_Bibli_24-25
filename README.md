@@ -156,12 +156,29 @@ Une fois les dépendances installées vous pouvez executer l'application:
 
 
 
+## 🔜 Améliorations envisageables
 
-<style>
-  ul {
-    list-style-type: "| ";
-  }
-  img {
-    vertical-align: middle;
-  }
-</style>
+### 1️⃣ **Gestion des comptes utilisateurs et des droits d’accès**
+Actuellement, seul un compte administrateur est prévu. Une amélioration importante consisterait à permettre la création d’un compte personnel pour chaque employé (Worker), avec une gestion des rôles (ex. : bibliothécaire, assistant). Chaque action (ajout, suppression, modification) pourrait alors être restreinte ou autorisée en fonction du rôle de l’utilisateur.
+
+### 2️⃣ **Système de notifications et rappels automatisés**
+Mettre en place un système de notifications internes (et/ou par email) pour alerter lorsqu’un emprunt ou une réservation arrive à échéance. Cela pourrait prévenir les retards et améliorer le suivi des utilisateurs.
+
+### 3️⃣ **Refactorisation de l’architecture des repositories**
+Introduire un BaseRepository commun pour centraliser les méthodes génériques (CRUD, get_by_id(), get_all(), etc.) et la gestion des fichiers JSON. Cela permettrait de réduire la duplication de code entre les différents dépôts (comme BookRepository, ThemeRepository, etc.) et de renforcer la cohérence globale de l’architecture.
+
+### 4️⃣ **Génération de statistiques et rapports**
+Utiliser des bibliothèques comme pandas ou numpy pour analyser les données (fréquence des emprunts, livres les plus consultés, retards, etc.) et produire des rapports dynamiques. Cela fournirait une vue d’ensemble utile à la gestion de la bibliothèque.
+
+### 5️⃣ **Amélioration de l’interface utilisateur (UI/UX)**
+L’interface pourrait être rendue plus ergonomique et intuitive :
+
+    Ajout de pagination.
+    Affichage plus fluide des composants (éviter leur recréation systématique).
+    Intégration de retours visuels (animations, loaders, confirmations).
+
+### 6️⃣ **Sauvegarde automatique et journalisation**
+Ajouter un système de backup régulier des données JSON, ainsi qu’une journalisation des actions critiques (log des suppressions, modifications, connexions, etc.) afin de renforcer la sécurité et la traçabilité.
+
+### 7️⃣ **Archivage des anciens membres**
+Mettre en place un système pour archiver les anciens membres (inactifs depuis X mois/années) tout en conservant leur historique. Cela permettrait d'alléger l’affichage tout en gardant la cohérence des emprunts passés.
