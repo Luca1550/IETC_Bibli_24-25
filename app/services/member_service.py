@@ -1,8 +1,8 @@
 import re
-from repositories.models import Member, Person
-from repositories import MemberRepo, PersonRepo
-from services import PersonService
-from services.models import MemberDTO
+from repositories.models import Member, Person, BorrowMember, Borrow
+from repositories import MemberRepo, PersonRepo, BorrowMemberRepo , BorrowRepo
+from services import PersonService, BookService, ExemplarService
+from services.models import MemberDTO, BorrowDTO, BookDTO
 from datetime import date
 from typing import Optional
 
@@ -15,6 +15,10 @@ class MemberService:
         self._member_repo = MemberRepo()
         self._person_repo = PersonRepo()
         self._person_service = PersonService()
+        self._borrow_member_repo = BorrowMemberRepo()
+        self._borrow_repo = BorrowRepo()
+        self._book_service = BookService()
+        self._exemplar_service = ExemplarService()
 
 
     def add_member(self, id : int, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str, membership_entrydate : date, subscribed : bool, archived : bool) -> MemberDTO:
@@ -134,3 +138,45 @@ class MemberService:
                     archived=member.archived
                 ))
         return member_dtos
+    
+    def get_borrowed_books(self, member_id: int) -> list[BorrowDTO]:
+        """
+        Retrieves all borrowed books for a specific member.
+        :param member_id: ID of the member.
+        :return: A list of BorrowDTO objects representing borrowed books.
+        """
+        borrows = self._borrow_member_repo.get_borrow_by_member(member_id)
+        borrow_dtos = []
+        for borrow in borrows:
+            borrow_check = self._borrow_repo.get_by_id(borrow.id_borrow)
+            if not borrow_check:
+                continue
+            borrow_dto = BorrowDTO(
+                id_borrow=borrow.id_borrow,
+                id_exemplar=borrow_check.id_exemplar,
+                member=self.get_member_by_id(member_id),
+                borrow_date=borrow_check.borrow_date,
+                return_date=borrow_check.return_date,
+                paiement_due=borrow_check.paiement_due,
+                paiement_type=borrow_check.paiement_type,
+                paiement_status=borrow_check.paiement_status
+            )
+            borrow_dtos.append(borrow_dto)
+        return borrow_dtos
+    
+    def get_book_by_exemplar_id(self, exemplar_id: int) -> BookDTO | None:
+        exemplar = self._exemplar_service.get_by_id(exemplar_id)
+        book = self._book_service.get_by_isbn(exemplar.isbn) if exemplar else None
+        # If the exemplar is found, retrieve the book by its ISBN
+        if book:
+            return BookDTO(
+                isbn=book.isbn,
+                title=book.title,
+                authors=book.authors,
+                date=book.date,
+                price=book.price,
+                editors=book.editors,
+                collection=book.collection,
+                themes=book.themes
+            )
+        return None
