@@ -411,6 +411,9 @@ class MemberPage(ctk.CTkFrame):
             command=lambda: self.perform_update_member(member_id)
         )
         self.update_button.grid(row=10, column=0, padx=10, pady=10, sticky="ew")
+        
+        self.update_member_frame.bind("<Return>", lambda event: self.update_button.invoke())
+        self.update_member_frame.bind("<Escape>", lambda event: self.update_member_frame.destroy())
 
     def perform_update_member(self, member_id):
         """
@@ -621,5 +624,3 @@ class MemberPage(ctk.CTkFrame):
         """
         due = self.payment_service.gen_price(borrow_id,True,id_member,return_date)
         PopUpMessage.pop_up(self, "Book marked as lost with \n - Exemplar ID: " + str(exemplar_id) + "\n - Price due: " + f"{due:.2f} €")
-
-
