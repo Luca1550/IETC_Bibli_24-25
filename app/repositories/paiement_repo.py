@@ -21,7 +21,7 @@ class PaiementRepo:
         
         JsonStorage.save_all(self.PATH_PAIEMENT_JSON, self._paiement_json)
 
-    def add_paiement(self, paiement : Paiement) -> bool:
+    def add_paiement(self, paiement : Paiement) :
 
         if isinstance(paiement, Paiement):
             self._paiement_json.append(paiement)
@@ -40,6 +40,10 @@ class PaiementRepo:
         if id:
             return next((p for p in self._paiement_json if p.id == id), None)
         return False
+    
+    def get_paiement_parameters(self):
+        """Returns all paiement parameters."""
+        return self._paiement_json
 
     def update_paiement(self, paiement : Paiement) -> bool:
         """

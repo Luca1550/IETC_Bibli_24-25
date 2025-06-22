@@ -17,6 +17,6 @@ from .reservation import Reservation
 from .reservation_member import ReservationMember
 from .paiement import Paiement
 from .paiement_member import PaiementMember
-
+from .archive_paiement import ArchivePaiement
 from .borrow import Borrow
 from .borrow_member import BorrowMember
