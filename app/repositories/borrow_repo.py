@@ -1,7 +1,6 @@
 import pathlib
 from repositories.models import Borrow
 from tools import JsonStorage
-from datetime import datetime,date
 class BorrowRepo:
     """""Repository for managing Borrow objects.
     This class handles the storage and retrieval of borrow records in the library system."""
@@ -9,11 +8,7 @@ class BorrowRepo:
     borrow_json : list[Borrow] = JsonStorage.load_all(PATH_BORROW_JSON)
     
     def __init__(self):
-        """Initializes the BorrowRepository instance and loads all borrow data from the JSON file.
-        If the JSON file does not exist, it initializes an empty list for borrow data."""
-        self.borrow_json : list[Borrow] = JsonStorage.load_all(self.PATH_BORROW_JSON)
-        if self.borrow_json is None:
-            self.borrow_json = []
+        pass
 
     def add_borrow(self, borrow: Borrow):
         """Adds a Borrow object to the repository and saves it to the JSON file.
@@ -32,6 +27,7 @@ class BorrowRepo:
         returns:
         - A list of Borrow objects."""
         return self.borrow_json
+    
     def get_by_id(self,id):
         for borrow in self.borrow_json:
             if borrow.id == id:

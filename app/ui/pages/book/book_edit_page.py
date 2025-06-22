@@ -181,8 +181,12 @@ class BookEditPage(ctk.CTkToplevel):
         ctk.CTkButton(exemplars_frame,text="➕",width=30,command=lambda : self.open_add_exemplar_page(self.exemplar_label if self.exemplar_label else "")).pack(side="right", padx=(5, 0))
 
         
-        ctk.CTkButton(self, text="✅ Save", command=self.confirm_action).pack(pady=10)
-        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
+        self.add_button = ctk.CTkButton(self, text="✅ Save", command=self.confirm_action)
+        self.add_button.pack(pady=10)
+        self.cancel_button = ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy)
+        self.cancel_button.pack()
+        self.bind("<Return>", lambda event: self.add_button.invoke())
+        self.bind("<Escape>", lambda event: self.cancel_button.invoke())
 
     def open_delete_frame(self,title,items,display_model_method,delete_method,item_to_delete,entry_to_update,display_entry_to_update):
         delete_frame = DeleteFrame(

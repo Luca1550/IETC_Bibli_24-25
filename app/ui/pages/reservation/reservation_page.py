@@ -174,7 +174,18 @@ class ReservationPage(ctk.CTkFrame):
             PopUpMessage.pop_up(self, f"Input error: {e}")
         self.destroy()
 
-    
+    def delete_reservation(self):
+        try:
+
+            delreservation=self.reservation_service.delete_reservation(self.id_reservation)
+            if isinstance(delreservation, str):
+                PopUpMessage.pop_up(self, delreservation)
+            else:
+                PopUpMessage.pop_up(self, "reservation deleted successfully!")
+                self.destroy()
+        except ValueError as e:
+            PopUpMessage.pop_up(self, f"Input error: {e}")
+        self.destroy()
     def reservation_select(self, event):
         """Handles the selection of a reservation from the listbox.
         This method retrieves the selected reservation, clears the form fields, and populates them with the selected reservation's data."""
@@ -206,9 +217,18 @@ class ReservationPage(ctk.CTkFrame):
             self.date_entry.pack(pady=5, padx=20, fill="x")
             
             self.submit_button.destroy() 
+            self.button_frame = ctk.CTkFrame(self.right_panel)
+            self.button_frame.pack(pady=20, fill="x", padx=20)
 
-            self.submit_button = ctk.CTkButton(self.right_panel, text="Update", command=self.update_reservation)
-            self.submit_button.pack(pady=20)
+            self.button_frame.grid_columnconfigure(0, weight=1)
+            self.button_frame.grid_columnconfigure(1, weight=1)
+
+            self.submit_button = ctk.CTkButton(self.button_frame, text="Update", command=self.update_reservation)
+            self.submit_button.grid(row=0, column=0, padx=10)
+
+            self.delete_button = ctk.CTkButton(self.button_frame, text="Delete", command=self.delete_reservation)
+            self.delete_button.grid(row=0, column=1, padx=10)
+
             if selected_res:
                 self.id_reservation=selected_res.id_reservation
                 self.selected_reservation = selected_res

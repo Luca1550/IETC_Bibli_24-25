@@ -8,11 +8,9 @@ class BorrowMemberRepo:
     This class handles the storage and retrieval of borrow records associated with members.
     """
     PATH_BORROW_MEMBER_JSON = pathlib.Path(__file__).parent.parent.parent / "database" / "borrow_member.json"
+    _borrow_member_json: list[BorrowMember] = JsonStorage.load_all(PATH_BORROW_MEMBER_JSON)
 
     def __init__(self):
-        self._borrow_member_json: list[BorrowMember] = JsonStorage.load_all(self.PATH_BORROW_MEMBER_JSON)
-        if self._borrow_member_json is None:
-            self._borrow_member_json = []
         self.member_repo: MemberRepo = MemberRepo()
 
     def _save_all(self):
@@ -27,6 +25,13 @@ class BorrowMemberRepo:
             self._save_all()
             return True
         return False
+    
+    def get_borrow_by_member(self, id_member:int):
+        result = []
+        for member in self._borrow_member_json:
+            if member.id_member == id_member:
+                result.append(member)
+        return result
 
     def get_borrow_members(self,id_member:int,id_borrow:int):
         Listmemb : list[Member] = []

@@ -22,7 +22,7 @@ class SelectionFrame(ctk.CTkToplevel):
     def __init__(self, parent, title, all_items : list , selected_items : list,  display_model_method, attributes_to_search, entry_to_update=None, attributes_to_entry = None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.geometry("400x535")
+        self.geometry("400x550")
         self.focus_set()
         self.grab_set()
         self.lift()
@@ -64,9 +64,13 @@ class SelectionFrame(ctk.CTkToplevel):
         self.selected_items_frame.pack(fill="both", padx="15", pady="10", expand=True)
 
         self.confirm_button = ctk.CTkButton(self, text="Confirm", command=self._close)
-        self.confirm_button.pack(fill="x", padx="15", pady="5")
+        self.confirm_button.pack(fill="x", padx="15", pady="15")
         self._update_list()
         self._filter_all_items()
+        self.bind("<Return>", lambda event: self.confirm_button.invoke())
+        self.confirm_button.focus_set()
+        
+        self.bind("<Escape>", lambda envent: self.destroy())
 
     def _filter_all_items(self):
         """

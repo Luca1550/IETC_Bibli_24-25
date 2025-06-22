@@ -9,8 +9,8 @@ class MemberRepo:
     - PATH_MEMBER_JSON: Path to the JSON file where Member data is stored.
     """
     PATH_MEMBER_JSON = pathlib.Path(__file__).parent.parent.parent / "database" / "member.json"
-
     _member_json: list[Member] = JsonStorage.load_all(PATH_MEMBER_JSON)
+    
     def __init__(self):
         """
         Initializes the MemberRepo instance and loads all Member data from the JSON file.

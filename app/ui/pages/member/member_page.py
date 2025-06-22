@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import os
-from services import MemberService
+from services import MemberService, ExemplarService
 from ui.components import PopUpMessage
 import datetime
 from datetime import datetime
@@ -17,6 +17,7 @@ class MemberPage(ctk.CTkFrame):
         """
         super().__init__(parent, **kwargs)
         self.member_service = MemberService()
+        self.exemplar_service = ExemplarService()
         self.members = self.member_service.get_all_members()
         self.setup_ui()
         
@@ -184,7 +185,7 @@ class MemberPage(ctk.CTkFrame):
                     hover_color=Color.error_color()
                 )
                 delete_button.grid(row=row_index, column=0, sticky="w", padx=10, pady=(0, 10))
-
+                row_index += 1
                 
         else:
             no_members_label = ctk.CTkLabel(
@@ -491,6 +492,10 @@ class MemberPage(ctk.CTkFrame):
         """
         Displays the borrow history of the selected member.
         """
+
+        borrows = self.member_service.get_borrowed_books(member_id)
+
+
         for widget in self.borrows_by_member_frame.winfo_children():
             widget.destroy()
 
@@ -498,25 +503,104 @@ class MemberPage(ctk.CTkFrame):
         self.borrows_by_member_frame.grid_columnconfigure(0, weight=1)
         self.borrows_by_member_frame.grid_columnconfigure(1, weight=0)
 
-        self.borrows_by_member_label = ctk.CTkLabel(
-            self.borrows_by_member_frame,
-            text="Borrowed book",
-        )
 
-        self.borrows_by_member_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        if borrows:
+            row_index = 0
+            for borrow in borrows:
+                book = self.member_service.get_book_by_exemplar_id(borrow.id_exemplar)
+                id_label = ctk.CTkLabel(
+                    self.borrows_by_member_frame,
+                    text=f"ID Borrow: {borrow.id_borrow}",
+                    font=ctk.CTkFont(size=16, weight="bold")
+                )
+                id_label.grid(row=row_index, column=0, sticky="w", padx=15, pady=(5, 0))
+                row_index += 1
 
-        self.member_id_label = ctk.CTkLabel(
-            self.borrows_by_member_frame,
-            text=f"Member ID : {member_id}",
-        )
-        self.member_id_label.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+                book_title_label = ctk.CTkLabel(
+                    self.borrows_by_member_frame,
+                    text=f"Book   : {book.title}",
+                    font=ctk.CTkFont(size=16)
+                )
+                book_title_label.grid(row=row_index, column=0, sticky="w", padx=15, pady=(5, 0))
+                row_index += 1
 
-        self.return_book_button = ctk.CTkButton(
-            self.borrows_by_member_frame,
-            text="Return Book",
-            command=lambda: PopUpMessage.pop_up(self, "Return Book functionality not implemented yet.*")
-        )
-        self.return_book_button.grid(row=0, column=1, padx=10, pady=10, sticky="e")
+                Borrowed_date_label = ctk.CTkLabel(
+                    self.borrows_by_member_frame,
+                    text=f"Borrowed on : {borrow.borrow_date}",
+                    font=ctk.CTkFont(size=16)
+                )
+                Borrowed_date_label.grid(row=row_index, column=0, sticky="w", padx=15, pady=(5, 0))
+                row_index += 1
 
+                exemplar_id_label = ctk.CTkLabel(
+                    self.borrows_by_member_frame,
+                    text=f"Exemplar ID : {borrow.id_exemplar}",
+                    font=ctk.CTkFont(size=16)
+                )
+                exemplar_id_label.grid(row=row_index, column=0, sticky="w", padx=15, pady=(5, 0))
+                row_index += 1
+
+                book_isbn_label = ctk.CTkLabel(
+                    self.borrows_by_member_frame,
+                    text=f"ISBN   : {book.isbn}",
+                    font=ctk.CTkFont(size=16)
+                )
+                book_isbn_label.grid(row=row_index, column=0, sticky="w", padx=15, pady=(5, 0))
+                row_index += 1
+
+                return_date_label = ctk.CTkLabel(
+                    self.borrows_by_member_frame,
+                    text=f"Return Date : {borrow.return_date}",
+                    font=ctk.CTkFont(size=16)
+                )
+                return_date_label.grid(row=row_index, column=0, sticky="w", padx=15, pady=(5, 0))
+
+                self.return_book_button = ctk.CTkButton(
+                    self.borrows_by_member_frame,
+                    text="Book Lost",
+                    fg_color=Color.status_borrowed_color(),
+                    hover_color=Color.secondary_color(),
+                    command=lambda: self.book_lost(book.isbn, borrow.id_exemplar)
+                )
+                self.return_book_button.grid(row=row_index, column=1, padx=10, pady=10, sticky="e")
+
+                self.return_book_button = ctk.CTkButton(
+                    self.borrows_by_member_frame,
+                    text="Return Book",
+                    fg_color=Color.primary_color(),
+                    hover_color=Color.status_available_color(),
+                    command=lambda: self.return_book(borrow.id_borrow, borrow.id_exemplar),
+                )
+                self.return_book_button.grid(row=row_index, column=2, padx=10, pady=10, sticky="e")
+                row_index += 1
+
+                separator = ctk.CTkLabel(
+                    self.borrows_by_member_frame,
+                    text="" + "-" * 50,
+                    font=ctk.CTkFont(size=12, weight="bold")
+                )
+                separator.grid(row=row_index, column=0, columnspan=3, padx=15, pady=(5, 0))
+                row_index += 1
+                self.borrows_by_member_frame.grid_rowconfigure(row_index, weight=1)
+                self.borrows_by_member_frame.grid_columnconfigure(0, weight=1)
+        else:
+            no_borrows_label = ctk.CTkLabel(
+                self.borrows_by_member_frame,
+                text="No borrows found.",
+                font=ctk.CTkFont(size=16, weight="bold")
+            )
+            no_borrows_label.grid(row=0, column=0, padx=15, pady=(5, 0))
+
+    def return_book(self, borrow_id, exemplar_id):
+        """
+        Handles the return of a book by updating the borrow status and exemplar availability.
+        """
+        PopUpMessage.pop_up(self, "Returning book with : \n - Exemplar ID: " + str(exemplar_id) + "\n - Borrow ID: " + str(borrow_id))
+        
+    def book_lost(self, isbn, exemplar_id):
+        """
+        Handles the case when a book is marked as lost.
+        """
+        PopUpMessage.pop_up(self, "Book marked as lost with \n - Exemplar ID: " + str(exemplar_id) + "\n - ISBN: " + str(isbn))
 
 

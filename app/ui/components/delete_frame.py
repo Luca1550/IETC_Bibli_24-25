@@ -7,6 +7,7 @@ class DeleteFrame(ctk.CTkToplevel):
         self.focus_set()
         self.grab_set()
         self.lift()
+        self.title = ""
         self.protocol("WM_DELETE_WINDOW", self._close)
         self.geometry("500x600")
 
@@ -24,6 +25,8 @@ class DeleteFrame(ctk.CTkToplevel):
         self.scroll_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
         self.load_data()
+        
+        self.bind("<Escape>", lambda event:self.destroy())
 
     def load_data(self):
         for item in self.items:

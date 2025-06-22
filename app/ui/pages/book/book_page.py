@@ -509,7 +509,7 @@ class BookPage(ctk.CTkFrame):
         try:
             self.book_service.delete_book(book.isbn)
             widget = self.all_items_widgets.pop(book.isbn)
-            widget.destroy()
+            widget.destroy() 
             self.show_success("Book successfully deleted !")
         except Exception as e:
             PopUpMessage(self, f"{e}")
@@ -556,7 +556,7 @@ class BookPage(ctk.CTkFrame):
             waits for 3 seconds before clearing the message.
         """
         self.info_label.configure(text=f"❌ {message}", text_color="red")
-        # self.after(3000, lambda: self.update_info())
+        self.after(5000, lambda: self.update_info())
     
     def show_success(self, message):
         """

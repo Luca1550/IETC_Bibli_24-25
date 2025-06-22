@@ -19,3 +19,5 @@ from .paiement_member_repo import PaiementMemberRepo
 from .borrow_repo import BorrowRepo
 from .borrow_member_repo import BorrowMemberRepo
 from .archive_paiement_repo import ArchivePaiementRepo
+from .archive_reservation_repo import ArchiveReservationRepo
+

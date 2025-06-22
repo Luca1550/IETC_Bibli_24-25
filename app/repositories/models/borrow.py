@@ -10,3 +10,4 @@ class Borrow(Base):
         self.id_exemplar = id_exemplar
         self.borrow_date = borrow_date
         self.return_date = return_date
+      
