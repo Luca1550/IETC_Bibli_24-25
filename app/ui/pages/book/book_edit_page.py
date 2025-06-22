@@ -187,6 +187,8 @@ class BookEditPage(ctk.CTkToplevel):
         self.cancel_button.pack()
         self.bind("<Return>", lambda event: self.add_button.invoke())
         self.bind("<Escape>", lambda event: self.cancel_button.invoke())
+        
+        label_title_entry.focus_set()
 
     def open_delete_frame(self,title,items,display_model_method,delete_method,item_to_delete,entry_to_update,display_entry_to_update):
         delete_frame = DeleteFrame(

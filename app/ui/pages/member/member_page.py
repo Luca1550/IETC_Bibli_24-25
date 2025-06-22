@@ -219,6 +219,7 @@ class MemberPage(ctk.CTkFrame):
 
         self.first_name_entry = ctk.CTkEntry(self.add_member_frame, placeholder_text="First Name")
         self.first_name_entry.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+        self.first_name_entry.focus_set()
 
         self.last_name_entry = ctk.CTkEntry(self.add_member_frame, placeholder_text="Last Name")
         self.last_name_entry.grid(row=2, column=0, padx=10, pady=10, sticky="ew")

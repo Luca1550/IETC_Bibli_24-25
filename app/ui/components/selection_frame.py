@@ -71,6 +71,7 @@ class SelectionFrame(ctk.CTkToplevel):
         self.confirm_button.focus_set()
         
         self.bind("<Escape>", lambda envent: self.destroy())
+        self.search_entry.focus_set()
 
     def _filter_all_items(self):
         """

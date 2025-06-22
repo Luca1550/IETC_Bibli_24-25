@@ -126,6 +126,8 @@ class BookAddPage(ctk.CTkToplevel):
         self.cancel_button.pack()
         self.bind("<Return>", lambda event: self.add_button.invoke())
         self.bind("<Escape>", lambda event: self.cancel_button.invoke())
+        
+        self.isbn_entry.focus_set()
 
 
     def open_selection_frame(self, title, all_items, selected_items, display_model_method, attributes_to_search, entry_to_update):

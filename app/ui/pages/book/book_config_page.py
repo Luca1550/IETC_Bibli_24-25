@@ -106,6 +106,8 @@ class AddThemePage(ctk.CTkToplevel):
         self.bind("<Return>", lambda event: self.add_button.invoke())
         self.bind("<Escape>", lambda event: self.cancel_button.invoke())
         
+        self.name_entry.focus_set()
+        
     def confirm_action(self):
         """Confirm the action of adding a new theme."""
         try:
@@ -238,6 +240,8 @@ class AddEditorPage(ctk.CTkToplevel):
         self.bind("<Return>", lambda event: self.add_button.invoke())
         self.bind("<Escape>", lambda event: self.cancel_button.invoke())
         
+        self.name_entry.focus_set()
+        
     def confirm_action(self):
         try:
             self.editor_service.add_editor(
@@ -367,6 +371,8 @@ class AddCollectionPage(ctk.CTkToplevel):
         self.cancel_button = ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy)
         self.cancel_button.pack(pady=(0,10))
         self.bind("<Escape>", lambda event: self.cancel_button.invoke())
+        
+        self.name_entry.focus_set()
         
     def confirm_action(self):
         try:
@@ -500,6 +506,8 @@ class AddAuthorPage(ctk.CTkToplevel):
         self.cancel_button.pack(pady=(0,10))
         self.bind("<Return>", lambda event: self.add_button.invoke())
         self.bind("<Escape>", lambda event: self.cancel_button.invoke())
+        
+        self.first_name_entry.focus_set()
         
     def confirm_action(self):
         try:
