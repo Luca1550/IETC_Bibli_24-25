@@ -7,6 +7,7 @@ from enums import PaiementType
 
 class PaiementService:
     def __init__(self):
+        """ Initialize the PaiementService with necessary repositories and services. """
         self.exemplar_service = ExemplarService()
         self.library_service=LibraryService()
         self.member_service=MemberService()
@@ -15,19 +16,9 @@ class PaiementService:
         self.paiement_repo=PaiementRepo()
         self.paiement_member_repo=PaiementMemberRepo()
         self.archive_paiement_repo = ArchivePaiementRepo()  
-#crud + gestion des truc de library et relier au member
-#pour avoir la date de retunr du livre, voir dans member truc
-    #prendre date + retunr borrow date pour avooir le fine 
-
-
-    #     class PaiementType(Enum):
-    # FINE=1
-    # LOST_BOOK=2
-    # BORROW_WITH_SUB=3
-    # BORROW_WITHOUT_SUB=4
-
 
     def add_paiement(self,paiement_type:int,paiement_due:int,id_member:int):
+        """ Add a new payment record and associate it with a member if provided."""
         try:
             new_paiement = Paiement(
                     id=None,  
@@ -57,7 +48,7 @@ class PaiementService:
             traceback.print_exc()
             raise Exception(f"🛑 Error [{e}]")
     def calculate_fine(self,date_from_member_return:date,id_borrow:int,id_member:int):
-        
+        """ Calculate the fine for a late return based on the return date and library parameters."""
         try:
             paiement_type = PaiementType(value=1)
             libparams=self.library_service.get_library_parameters()
@@ -76,6 +67,7 @@ class PaiementService:
             traceback.print_exc()
             raise Exception(f"🛑 Error [{e}]")
     def price_due_per_borrow(self,id_member:int):
+        """ Calculate the payment due for borrowing a book based on member subscription status."""
         try:
             libparams=self.library_service.get_library_parameters()
             borrow_price_with_sub_lib = libparams[0].borrow_price_with_sub
@@ -97,6 +89,7 @@ class PaiementService:
     
 
     def price_due_lost(self,is_it:bool,id_borrow:int,id_member:int):
+        """ Calculate the payment due for a lost book based on the borrow ID and member ID."""
         try:
             if is_it:
                 paramborrow=self.borrow_service.get_by_id(id_borrow)
@@ -113,7 +106,7 @@ class PaiementService:
             traceback.print_exc()
             raise Exception(f"🛑 Error [{e}]")
     def get_all(self):
-        
+        """ Retrieve all payment records and return them as a list of PaiementDTO objects."""
         try:
             paiement = self.paiement_repo.get_paiement_parameters()
             result : list[PaiementDTO] = []
@@ -137,7 +130,7 @@ class PaiementService:
         except Exception as e:
             raise Exception(f"🛑 Error getting paiements: [{e}]")
     def get_by_id(self,id:int):
-        
+        """ Retrieve a payment record by its ID and return it as a PaiementDTO object."""
         try:
             PaiementDTO = self.get_all()
             for paiement in PaiementDTO :
@@ -149,6 +142,7 @@ class PaiementService:
             raise Exception(f"🛑 Error getting paiement by ID: [{e}]")
         
     def archive_paiement(self,id_paiement:int):
+        """ Archive a payment record by its ID."""
         try:
             paiement = self.paiement_repo.get_by_id(id_paiement)
             paiement_dto = self.get_by_id(id_paiement)

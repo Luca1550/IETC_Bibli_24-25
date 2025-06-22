@@ -30,9 +30,8 @@ class ReservationPage(ctk.CTkFrame):
         self.book_selected =[]
         self.member_selected=[]
     def setup_ui(self):
-        """Sets up the user interface for the ReservationPage.
-        This method creates the main layout, including the title, reservation list, and form for adding or updating reservations.
-        It also configures the grid layout for proper resizing and alignment."""
+        """Sets up the user interface for the reservation page.
+        This method creates the main layout, including the title, listbox for reservations, and form for adding or updating reservations."""
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)  
@@ -47,13 +46,6 @@ class ReservationPage(ctk.CTkFrame):
         self.paramres = self.reservation_service.get_all()
 
         
-        self.main_panel.grid_columnconfigure(1, weight=1) 
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-
-        self.main_panel = ctk.CTkFrame(self)
-        self.main_panel.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
-
         self.main_panel.grid_columnconfigure(0, weight=1)
         self.main_panel.grid_columnconfigure(1, weight=2)
         self.main_panel.grid_rowconfigure(0, weight=1)
@@ -64,7 +56,7 @@ class ReservationPage(ctk.CTkFrame):
         self.left_label = ctk.CTkLabel(self.left_panel, text="Mes Réservations", font=ctk.CTkFont(size=16, weight="bold"))
         self.left_label.pack(pady=(10, 5))
 
-        self.reservation_listbox = tk.Listbox(self.left_panel,  height=40)
+        self.reservation_listbox = tk.Listbox(self.left_panel,  height=40, bg="#2b2b2b",fg="white",highlightthickness=0,bd=0,relief="flat",selectbackground="#444",selectforeground="white" )
         self.reservation_listbox.pack(expand=True, fill="both", padx=10, pady=10)
 
         self.paramres = self.reservation_service.get_all()
@@ -73,7 +65,10 @@ class ReservationPage(ctk.CTkFrame):
 
             member_firstname=self.personne_servce.get_by_id(res.member.id_person).first_name if res.member else "Inconnu"
             member_name=self.personne_servce.get_by_id(res.member.id_person).last_name if res.member else "Inconnu"
-            self.reservation_listbox.insert("end", f"{res.reservation_date} | Ex: {res.id_exemplar} | Membre: {member_firstname} {member_name}")
+            paramexemplar=self.exemplar_service.get_by_id(res.id_exemplar)
+            titleisbn =self.book_service.get_by_isbn(paramexemplar.isbn)
+            title=titleisbn.title
+            self.reservation_listbox.insert("end", f"{res.reservation_date} | title: {title} | Membre: {member_firstname} {member_name}")
             self.indexbook[idx] = res
         self.reservation_listbox.bind("<<ListboxSelect>>", self.reservation_select)
 
@@ -82,8 +77,12 @@ class ReservationPage(ctk.CTkFrame):
 
         self.form_title = ctk.CTkLabel(self.right_panel, text="New Réservation", font=ctk.CTkFont(size=18, weight="bold"))
         self.form_title.pack(pady=(10, 10))
-        self.title_entry = ctk.CTkEntry(self.right_panel, placeholder_text="title")
-        self.title_entry.pack(pady=5, padx=20, fill="x")
+        self.book_frame = ctk.CTkFrame(self.right_panel)
+        self.book_frame.pack(pady=5, padx=20, fill="x")
+        self.member_frame = ctk.CTkFrame(self.right_panel)
+        self.member_frame.pack(pady=5, padx=20, fill="x")
+        self.book_entry = ctk.CTkEntry(self.book_frame, placeholder_text="title")
+        self.book_entry.pack(side="left", expand=True, fill="x", padx=(0, 5))
         self.all_books= []
         for book in self.book_service.get_all():
             exemplars = self.exemplar_service.get_all_by_isbn(book.isbn)
@@ -91,35 +90,39 @@ class ReservationPage(ctk.CTkFrame):
                 if exemplar.status.value != 3 :
                     self.all_books.append(book)
                     break
-        self.edit_book_button = ctk.CTkButton(self.right_panel, text="✏️", width=30, command=lambda:self.open_selection_frame(
+        self.edit_book_button = ctk.CTkButton(self.book_frame, text="✏️", width=30, command=lambda:self.open_selection_frame(
             title="Book",
             all_items=self.all_books,
             selected_items=self.book_selected,
             display_model_method=lambda book: f"{book.title}",
             attributes_to_search=[lambda book: {book.title}],
-            entry_to_update=self.title_entry
+            entry_to_update=self.book_entry
         ))
-        self.member_entry = ctk.CTkEntry(self.right_panel, placeholder_text="Member")
-        self.member_entry.pack(pady=5, padx=20, fill="x")
-        self.edit_member_button = ctk.CTkButton(self.right_panel, text="✏️", width=30, command=lambda:self.open_selection_frame(
+        self.member_entry = ctk.CTkEntry(self.member_frame, placeholder_text="Member")
+        self.member_entry.pack(side="left", expand=True, fill="x", padx=(0, 5))
+        
+        self.edit_member_button = ctk.CTkButton(self.member_frame, text="✏️", width=30, command=lambda:self.open_selection_frame(
             title="Member",
             all_items=self.member_service.get_all_members(),
             selected_items=self.member_selected,
-            display_model_method=lambda member: f"{member.person.first_name}",
-            attributes_to_search=[lambda member: {member.person.first_name}],
+            display_model_method=lambda member: f"{member.person.first_name} {member.person.last_name }",
+                attributes_to_search=[lambda member: member.person.first_name, lambda member:member.person.last_name],
             entry_to_update=self.member_entry
         ))
         self.date_entry = ctk.CTkEntry(self.right_panel, placeholder_text="Date (YYYY-MM-DD)")
         self.date_entry.pack(pady=5, padx=20, fill="x")
 
-        self.edit_book_button.pack(pady=(10, 10))
-        self.edit_member_button.pack(pady=(10, 10))
+        self.edit_book_button.pack(side="left")
+        
+        self.edit_member_button.pack(side="left")
         
         self.submit_button = ctk.CTkButton(self.right_panel, text="Réserver",command=self.add_reservation)
         self.submit_button.pack(pady=20)
     def add_reservation(self):
-        """Handles the submission of a new reservation.
-        This method retrieves the selected book and member, validates the reservation date,"""
+        """Handles the addition of a new reservation.
+        This method retrieves the selected book and member, validates the reservation date,
+        and calls the reservation service to add the reservation.
+        If the reservation is successfully added, it refreshes the listbox and clears the form."""
         try:
             if len(self.member_selected) ==1:
                 id_member= self.member_selected[0].id_member
@@ -142,14 +145,17 @@ class ReservationPage(ctk.CTkFrame):
                 PopUpMessage.pop_up(self, newreservation)
             else:
                 PopUpMessage.pop_up(self, "reservation added successfully!")
-                self.destroy()
+                self.refresh_listbox()
+                self.clear_form_add()
 
         except ValueError as e:
             PopUpMessage.pop_up(self, f"Input error: {e}")
 
     def update_reservation(self):
         """Handles the update of an existing reservation.
-        This method retrieves the selected book and member, validates the reservation date,"""
+        This method retrieves the selected book and member, validates the reservation date,
+        and calls the reservation service to update the reservation.
+        If the reservation is successfully updated, it refreshes the listbox and clears the form."""
         try:
             if len(self.member_selected) ==1:
                 id_member= self.member_selected[0].id_member
@@ -169,12 +175,14 @@ class ReservationPage(ctk.CTkFrame):
                 PopUpMessage.pop_up(self, newreservation)
             else:
                 PopUpMessage.pop_up(self, "reservation updated successfully!")
-                self.destroy()
+                self.refresh_listbox()
+                self.clear_form_up_del()
         except ValueError as e:
             PopUpMessage.pop_up(self, f"Input error: {e}")
-        self.destroy()
 
     def delete_reservation(self):
+        """Handles the deletion of an existing reservation.
+        This method calls the reservation service to delete the reservation by its ID."""
         try:
 
             delreservation=self.reservation_service.delete_reservation(self.id_reservation)
@@ -182,41 +190,35 @@ class ReservationPage(ctk.CTkFrame):
                 PopUpMessage.pop_up(self, delreservation)
             else:
                 PopUpMessage.pop_up(self, "reservation deleted successfully!")
-                self.destroy()
+                self.refresh_listbox()
+                self.clear_form_up_del()
         except ValueError as e:
             PopUpMessage.pop_up(self, f"Input error: {e}")
-        self.destroy()
     def reservation_select(self, event):
         """Handles the selection of a reservation from the listbox.
-        This method retrieves the selected reservation, clears the form fields, and populates them with the selected reservation's data."""
+        This method retrieves the selected reservation, clears the form, and populates it with the selected reservation's details.
+        It allows the user to update or delete the reservation."""
         selection = event.widget.curselection()
         if selection:
             index = selection[0]
             selected_res = self.indexbook.get(index)
-            self.title_entry.delete(0, tk.END)
-            self.member_entry.delete(0, tk.END)
-            self.date_entry.delete(0, tk.END)
-            self.book_selected.clear()
-            self.member_selected.clear()
-            self.title_entry.destroy()
-            self.member_entry.destroy()
-            self.date_entry.destroy()
-            self.edit_book_button.destroy()
-            self.edit_member_button.destroy()
-            self.form_title.destroy()
-
-
+            for widget in [getattr(self, name, None) for name in ["book_frame", "member_frame", "title_entry","book_entry","member_entry","date_entry", "edit_book_button", "edit_member_button", "form_title", "button_frame", "submit_button", "delete_button"]]:
+                if widget:
+                    widget.destroy()
+            
+            
             self.form_title = ctk.CTkLabel(self.right_panel, text="Update Reservation", font=ctk.CTkFont(size=18, weight="bold"))
             self.form_title.pack(pady=(10, 10))
-            
-            self.member_entry = ctk.CTkEntry(self.right_panel, placeholder_text="Member")
-            self.member_entry.pack(pady=5, padx=20, fill="x")
+            self.member_frame = ctk.CTkFrame(self.right_panel)
+            self.member_frame.pack(pady=5, padx=20, fill="x")
+
+            self.member_entry = ctk.CTkEntry(self.member_frame, placeholder_text="Member")
+            self.member_entry.pack(side="left", expand=True, fill="x", padx=(0, 5))
             
             
             self.date_entry = ctk.CTkEntry(self.right_panel, placeholder_text="reservation_date")
             self.date_entry.pack(pady=5, padx=20, fill="x")
             
-            self.submit_button.destroy() 
             self.button_frame = ctk.CTkFrame(self.right_panel)
             self.button_frame.pack(pady=20, fill="x", padx=20)
 
@@ -224,10 +226,10 @@ class ReservationPage(ctk.CTkFrame):
             self.button_frame.grid_columnconfigure(1, weight=1)
 
             self.submit_button = ctk.CTkButton(self.button_frame, text="Update", command=self.update_reservation)
-            self.submit_button.grid(row=0, column=0, padx=10)
+            self.submit_button.pack(side="right", expand=True, padx=10)
 
             self.delete_button = ctk.CTkButton(self.button_frame, text="Delete", command=self.delete_reservation)
-            self.delete_button.grid(row=0, column=1, padx=10)
+            self.delete_button.pack(side="left", expand=True, padx=10)
 
             if selected_res:
                 self.id_reservation=selected_res.id_reservation
@@ -235,24 +237,22 @@ class ReservationPage(ctk.CTkFrame):
                 self.member_selected.append(self.member_service.get_member_by_id(selected_res.member.id))
                 
                     
-
-                self.edit_member_button = ctk.CTkButton(self.right_panel, text="✏️", width=30, command=lambda:self.open_selection_frame(
+                self.edit_member_button = ctk.CTkButton(self.member_frame, text="✏️", width=30, command=lambda:self.open_selection_frame(
                 title="Member",
                 all_items=self.member_service.get_all_members(),
                 selected_items=self.member_selected,
-                display_model_method=lambda member: f"{member.person.first_name}",
-                attributes_to_search=[lambda member: {member.person.first_name}],
+                display_model_method=lambda member: f"{member.person.first_name} {member.person.last_name }",
+                attributes_to_search=[lambda member: member.person.first_name, lambda member:member.person.last_name],
                 entry_to_update=self.member_entry
                 ))
                 
-                self.edit_member_button.pack(pady=(10, 10))
+                self.edit_member_button.pack(side='left')
                 self.member_entry.insert(0, self.member_selected[0].person.first_name)
                 self.date_entry.insert(0, selected_res.reservation_date)
-                self.member_entry.configure(state="disabled")
         
     def open_selection_frame(self,title,all_items,selected_items,display_model_method,attributes_to_search,entry_to_update,attributes_to_entry=None):
-        """
-        Opens a selection frame for choosing items from a list."""
+        """Opens a selection frame for choosing items from a list.
+        This method creates a SelectionFrame instance and waits for it to close before proceeding."""
         selection_frame = SelectionFrame(
             self,
             title,
@@ -264,3 +264,43 @@ class ReservationPage(ctk.CTkFrame):
             attributes_to_entry
         )
         self.wait_window(selection_frame)
+
+
+    def refresh_listbox(self):
+        """Refreshes the listbox of reservations.
+        This method clears the current listbox, retrieves all reservations from the reservation service, and populates the listbox with the updated data."""
+        self.reservation_listbox.delete(0, tk.END)  
+        self.paramres = self.reservation_service.get_all()  
+        self.indexbook = {}
+
+        self.paramres = self.reservation_service.get_all()
+        self.indexbook = {}
+        for idx,res in enumerate(self.paramres):
+
+            member_firstname=self.personne_servce.get_by_id(res.member.id_person).first_name if res.member else "unknown"
+            member_name=self.personne_servce.get_by_id(res.member.id_person).last_name if res.member else "unknown"
+            paramexemplar=self.exemplar_service.get_by_id(res.id_exemplar)
+            titleisbn =self.book_service.get_by_isbn(paramexemplar.isbn)
+            title=titleisbn.title
+            self.reservation_listbox.insert("end", f"{res.reservation_date} | title: {title} | Membre: {member_firstname} {member_name}")
+            self.indexbook[idx] = res
+    def clear_form_add(self):
+        """Clears the form fields for adding a new reservation.
+        This method resets the title, member, and date entries, and clears the selected book and member lists."""
+        self.book_entry.destroy()
+        self.member_entry.destroy()
+        self.member_entry = ctk.CTkEntry(self.member_frame, placeholder_text="Member")
+        self.member_entry.pack(side="right", expand=True, fill="x", padx=(0, 5))
+        self.book_entry = ctk.CTkEntry(self.book_frame, placeholder_text="title")
+        self.book_entry.pack(side="right", expand=True, fill="x", padx=(0, 5))
+        self.date_entry.delete(0, tk.END)
+        self.book_selected.clear()
+        self.member_selected.clear()
+        
+
+    def clear_form_up_del(self):
+        self.member_entry.delete(0, tk.END)
+        self.date_entry.delete(0, tk.END)
+        self.member_selected.clear()
+        
+        
