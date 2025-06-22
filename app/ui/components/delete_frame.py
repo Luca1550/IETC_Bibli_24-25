@@ -25,6 +25,8 @@ class DeleteFrame(ctk.CTkToplevel):
         self.scroll_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
         self.load_data()
+        
+        self.bind("<Escape>", lambda event:self.destroy())
 
     def load_data(self):
         for item in self.items:
