@@ -206,8 +206,8 @@ class MemberPage(ctk.CTkFrame):
         self.add_member_frame.grab_set()
         self.add_member_frame.lift()
 
-        rows = 9
-        rows_weights = [1,1,1,1,1,1,1,1,1]
+        rows = 17
+        rows_weights = [1]*rows
         columns = 1
         columns_weights = [1]
 
@@ -217,40 +217,56 @@ class MemberPage(ctk.CTkFrame):
         for column, w in enumerate(columns_weights):
             self.add_member_frame.grid_columnconfigure(column, weight=w)
 
+        self.first_name_label = ctk.CTkLabel(self.add_member_frame, text="First Name")
+        self.first_name_label.grid(row=0, column=0, padx=10, pady=0, sticky="w")
         self.first_name_entry = ctk.CTkEntry(self.add_member_frame, placeholder_text="First Name")
-        self.first_name_entry.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+        self.first_name_entry.grid(row=1, column=0, padx=10, pady=0, sticky="ew")
         self.first_name_entry.focus_set()
 
+        self.last_name_label = ctk.CTkLabel(self.add_member_frame, text="Last Name")
+        self.last_name_label.grid(row=2, column=0, padx=10, pady=0, sticky="w")
         self.last_name_entry = ctk.CTkEntry(self.add_member_frame, placeholder_text="Last Name")
-        self.last_name_entry.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
+        self.last_name_entry.grid(row=3, column=0, padx=10, pady=0, sticky="ew")
 
+        self.national_number_label = ctk.CTkLabel(self.add_member_frame, text="National Number")
+        self.national_number_label.grid(row=4, column=0, padx=10, pady=0, sticky="w")
         self.national_number_entry = ctk.CTkEntry(self.add_member_frame, placeholder_text="National Number")
-        self.national_number_entry.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
+        self.national_number_entry.grid(row=5, column=0, padx=10, pady=0, sticky="ew")
 
+        self.email_label = ctk.CTkLabel(self.add_member_frame, text="Email")
+        self.email_label.grid(row=6, column=0, padx=10, pady=0, sticky="w")
         self.email_entry = ctk.CTkEntry(self.add_member_frame, placeholder_text="Email")
-        self.email_entry.grid(row=4, column=0, padx=10, pady=10, sticky="ew")
+        self.email_entry.grid(row=7, column=0, padx=10, pady=0, sticky="ew")
 
+        self.street_label = ctk.CTkLabel(self.add_member_frame, text="Street")
+        self.street_label.grid(row=8, column=0, padx=10, pady=0, sticky="w")
         self.street_entry = ctk.CTkEntry(self.add_member_frame, placeholder_text="Street")
-        self.street_entry.grid(row=5, column=0, padx=10, pady=10, sticky="ew")
+        self.street_entry.grid(row=9, column=0, padx=10, pady=0, sticky="ew")
 
+        self.cp_label = ctk.CTkLabel(self.add_member_frame, text="Postal Code")
+        self.cp_label.grid(row=10, column=0, padx=10, pady=0, sticky="w")
         self.cp_entry = ctk.CTkEntry(self.add_member_frame, placeholder_text="Postal Code")
-        self.cp_entry.grid(row=6, column=0, padx=10, pady=10, sticky="ew")
+        self.cp_entry.grid(row=11, column=0, padx=10, pady=0, sticky="ew")
 
+        self.city_label = ctk.CTkLabel(self.add_member_frame, text="City")
+        self.city_label.grid(row=12, column=0, padx=10, pady=0, sticky="w")
         self.city_entry = ctk.CTkEntry(self.add_member_frame, placeholder_text="City")
-        self.city_entry.grid(row=7, column=0, padx=10, pady=10, sticky="ew")
+        self.city_entry.grid(row=13, column=0, padx=10, pady=(0,10), sticky="ew")
 
         self.subscribed_checkbox = ctk.CTkCheckBox(
             self.add_member_frame,
             text="Subscribed",
             onvalue=True,
             offvalue=False,
-            # Default to False
-            variable=ctk.BooleanVar(value=False)  
+            variable=ctk.BooleanVar(value=False)
         )
-        self.subscribed_checkbox.grid(row=8, column=0, padx=10, pady=10, sticky="ew")
+        self.subscribed_checkbox.grid(row=14, column=0, padx=10, pady=(0, 10), sticky="w")
 
         self.add_button = ctk.CTkButton(self.add_member_frame, text="Add Member", command=self.adding_member)
-        self.add_button.grid(row=9, column=0, padx=10, pady=10, sticky="ew")
+        self.add_button.grid(row=15, column=0, padx=10, pady=(20, 10), sticky="ew")
+        
+        self.add_member_frame.bind("<Return>", lambda event: self.add_button.invoke())
+        self.add_member_frame.bind("<Escape>", lambda event: self.add_member_frame.destroy())
 
     def update_member(self, member_id):
         """
