@@ -12,6 +12,6 @@ from .member_service import MemberService
 from .exemplar_service import ExemplarService
 from .reservation_service import ReservationService 
 from .borrow_service import BorrowService
-from .paiement_service import PaiementService
+from .payment_service import PaymentService
 
 

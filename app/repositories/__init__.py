@@ -14,10 +14,10 @@ from .book_author_repo import BookAuthorRepo
 from .exemplar_repo import ExemplarRepo 
 from .reservation_repo import ReservationRepo
 from .reservation_member_repo import ReservationMemberRepo
-from .paiement_repo import PaiementRepo
-from .paiement_member_repo import PaiementMemberRepo
+from .payment_repo import PaymentRepo
+from .payment_member_repo import PaymentMemberRepo
 from .borrow_repo import BorrowRepo
 from .borrow_member_repo import BorrowMemberRepo
-from .archive_paiement_repo import ArchivePaiementRepo
+from .archive_payment_repo import ArchivePaymentRepo
 from .archive_reservation_repo import ArchiveReservationRepo
 

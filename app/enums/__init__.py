@@ -1,2 +1,2 @@
 from .status import Status
-from .paiement_type import PaiementType
+from .payment_type import PaymentType

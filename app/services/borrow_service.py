@@ -3,7 +3,7 @@ from repositories import BorrowRepo, MemberRepo, BookRepo, ExemplarRepo,BorrowMe
 from .models import BorrowDTO
 from datetime import date, datetime,timedelta
 from services import ExemplarService,LibraryService,MemberService
-from enums import PaiementType
+from enums import PaymentType
 
 class BorrowService:
     def __init__(self):
@@ -163,7 +163,6 @@ class BorrowService:
                 self._borrow_repo.delete_borrow(borrow)
 
             self.exemplar_service.update_status(borrow.id_exemplar,1)
-            
             if borrow_dto and isinstance(borrow_dto.member, Member):
                 self._borrow_member_repo.delete_borrow_member(
                     id_member=borrow_dto.member.id,

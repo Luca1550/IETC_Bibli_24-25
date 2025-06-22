@@ -157,9 +157,7 @@ class MemberService:
                 member=self.get_member_by_id(member_id),
                 borrow_date=borrow_check.borrow_date,
                 return_date=borrow_check.return_date,
-                paiement_due=borrow_check.paiement_due,
-                paiement_type=borrow_check.paiement_type,
-                paiement_status=borrow_check.paiement_status
+                
             )
             borrow_dtos.append(borrow_dto)
         return borrow_dtos
