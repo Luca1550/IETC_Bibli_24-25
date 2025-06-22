@@ -57,8 +57,7 @@ class PaiementService:
             traceback.print_exc()
             raise Exception(f"🛑 Error [{e}]")
     def calculate_fine(self,date_from_member_return:date,id_borrow:int,id_member:int):
-        #besoin de la return date, borrow date et la date a laquelle il est venu le rendre 
-        #besoin du prix de l'amende aussi retunr fine per day
+        
         try:
             paiement_type = PaiementType(value=1)
             libparams=self.library_service.get_library_parameters()
@@ -93,7 +92,6 @@ class PaiementService:
         except Exception as e:
             import traceback
             traceback.print_exc()
-            #changer en raise 
             raise Exception(f"🛑 Error [{e}]")
     
     
@@ -151,23 +149,19 @@ class PaiementService:
             raise Exception(f"🛑 Error getting paiement by ID: [{e}]")
         
     def archive_paiement(self,id_paiement:int):
-        paiement = self.paiement_repo.get_by_id(id_paiement)
-        paiement_dto = self.get_by_id(id_paiement)
-        id_archive=None
-        archive=ArchivePaiement(
-                id=id_archive,
-                id_paiement=paiement.id,
-                member=paiement_dto.member,
-                paiement_type=paiement.paiement_type,
-                paiement_due=paiement.paiement_due,
-                paiement_date=paiement.paiement_date
-            )
-        self.archive_paiement_repo.add_archive_paiement(archive)
-
-    #prix fine
-    #si member est abonné ou pas a recup dans borrow en fait 
-    #prix avec et sans abonnement 
-    #prix lost book 
-    #changer le paiement type si paiement avec abo ou non, fine, lost_book a stocker dans paiement ==> foutre dans le calcul des paiement ou refaire fct ? 
-    #le paiement statut lost book, fine 
-    #enregistrer un historique de paiement avec le member,borrow et paiement
+        try:
+            paiement = self.paiement_repo.get_by_id(id_paiement)
+            paiement_dto = self.get_by_id(id_paiement)
+            id_archive=None
+            archive=ArchivePaiement(
+                    id=id_archive,
+                    id_paiement=paiement.id,
+                    member=paiement_dto.member,
+                    paiement_type=paiement.paiement_type,
+                    paiement_due=paiement.paiement_due,
+                    paiement_date=paiement.paiement_date
+                )
+            self.archive_paiement_repo.add_archive_paiement(archive)
+        except Exception as e:
+            raise Exception(f"🛑 Error getting paiement by ID: [{e}]")
+ 
