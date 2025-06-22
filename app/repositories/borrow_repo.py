@@ -1,8 +1,7 @@
 import pathlib
 from repositories.models import Borrow
 from tools import JsonStorage
-from datetime import datetime,date
-from enums import PaiementType
+
 class BorrowRepo:
     """""Repository for managing Borrow objects.
     This class handles the storage and retrieval of borrow records in the library system."""
@@ -29,6 +28,7 @@ class BorrowRepo:
         returns:
         - A list of Borrow objects."""
         return self.borrow_json
+    
     def get_by_id(self,id):
         for borrow in self.borrow_json:
             if borrow.id == id:

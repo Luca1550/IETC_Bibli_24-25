@@ -20,9 +20,6 @@ class BorrowPage(ctk.CTkFrame):
         self.all_items_widgets : dict[str, ctk.CTkFrame] = {} 
         self.setup_ui()
 
-
-        
-
     def setup_ui(self):
         """
             Configure the user interface for the book management page.
@@ -83,6 +80,8 @@ class BorrowPage(ctk.CTkFrame):
         self.load_borrow()
 
     def load_borrow(self):
+        self.borrow_list = self.borrow_service.get_all()
+        self.filtered_borrow = self.borrow_list.copy()
         filtered_ids = {borrow.id_borrow for borrow in self.filtered_borrow}
 
         for id_borrow, widget in self.all_items_widgets.items():

@@ -7,6 +7,7 @@ class DeleteFrame(ctk.CTkToplevel):
         self.focus_set()
         self.grab_set()
         self.lift()
+        self.title = ""
         self.protocol("WM_DELETE_WINDOW", self._close)
         self.geometry("500x600")
 

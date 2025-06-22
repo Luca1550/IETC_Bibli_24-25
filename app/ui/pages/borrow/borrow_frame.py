@@ -25,7 +25,7 @@ class BorrowFrame(ctk.CTkFrame):
         
         self.label_book = ctk.CTkLabel(
             self.main_frame, 
-            text=f"Book : {self._book.isbn} | {self._book.title}",
+            text=f"Book : {self._book.title}",
             corner_radius=25,
             height=25,
             fg_color=Color.background_color(),
@@ -65,7 +65,7 @@ class BorrowFrame(ctk.CTkFrame):
 
         self.btn_delete = ctk.CTkButton(
                 self.main_frame,
-                text="❎ Delete",
+                text="🗑️ Delete",
                 width=100,
                 fg_color="transparent",
                 command=self.delete,
@@ -78,6 +78,7 @@ class BorrowFrame(ctk.CTkFrame):
     def delete(self):
         try:
             self._borrow_service.delete_borrow(self.borrow.id_borrow)
-            self.parent_page.all_items_widgets[self.borrow.id_borrow].destroy()
+            widget = self.parent_page.all_items_widgets.pop(self.borrow.id_borrow, None)
+            widget.destroy()
         except Exception as e:
             PopUpMessage(self, f"{e}")

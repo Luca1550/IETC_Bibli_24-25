@@ -9,7 +9,7 @@ class BorrowDTO:
     This class is used to transfer borrow data between different layers of the application.
     """
     
-    def __init__( self, id_borrow:int, id_exemplar:int, member:Member, borrow_date:date, return_date:date, paiement_due:float, paiement_type:PaiementType, paiement_status:bool):
+    def __init__( self, id_borrow:int, id_exemplar:int, member:Member, borrow_date:date, return_date:date):
         """
         Initializes a BorrowDTO instance with the provided parameters.
         :param id_borrow: Unique identifier for the borrow record.
@@ -26,7 +26,3 @@ class BorrowDTO:
         self.member = member
         self.borrow_date = borrow_date
         self.return_date = return_date
-        self.paiement_due = paiement_due
-        self.paiement_type = paiement_type
-        self.paiement_status = paiement_status
-        

@@ -47,10 +47,10 @@ class BorrowAddPage(ctk.CTkToplevel):
         self.member_entry = ctk.CTkEntry(member_frame, placeholder_text="No Member")
         self.member_entry.pack(side="left", fill="x", expand=True)
         ctk.CTkButton(member_frame, text="✏️", width=30, command=lambda: self.open_selection_frame(
-            "Select book",
+            "Select Member",
             self._member_service.get_all_members(),
             self._member_selected,
-            lambda m: f"{m.person.first_name} | {m.person.last_name}",
+            lambda m: f"{m.person.first_name} {m.person.last_name}",
             [lambda m: m.person.first_name, lambda m: m.person.last_name],
             self.member_entry
         )).pack(side="right", padx=(5, 0))
@@ -75,16 +75,21 @@ class BorrowAddPage(ctk.CTkToplevel):
             if len(self._member_selected) > 1:
                 raise Exception("No more than one member can be selected.")
             
-            
             self._borrow_service.add_borrow(
                 isbn=self._book_selected[0].isbn,
                 id_member=self._member_selected[0].id_member
             )
-            s = PopUpMessage(self, message="OK")
-            self.wait_window(s)
-            self.destroy()
         except Exception as e:
-            PopUpMessage(self, message=f"{e}")
+            l = PopUpMessage(self, message=f"{e}")
+            self.wait_window(l)
+            l.destroy()
+            if "Borrow limit reached for this member" in str(e):
+                self.destroy()
+                return
+            return
+        s = PopUpMessage(self, message="Borrow added successfully!")
+        self.wait_window(s)
+        self.destroy()
 
     def open_selection_frame(self, title, all_items, selected_items, display_model_method, attributes_to_search, entry_to_update):
         """Open a selection frame for choosing items from a list."""
