@@ -4,8 +4,10 @@ from services.models import BorrowDTO
 from services import ExemplarService, BookService, PersonService, BorrowService
 from ui.components import PopUpMessage
 class BorrowFrame(ctk.CTkFrame):
-    
-    
+    """
+    A frame that displays information about a borrow record, including book details, member information, and borrow dates.
+    It also provides a button to delete the borrow record.
+    """
     def __init__(self,parent, borrow : BorrowDTO, parent_page):
         super().__init__(parent)
         self.parent_page = parent_page
@@ -23,6 +25,16 @@ class BorrowFrame(ctk.CTkFrame):
         self.main_frame.pack(fill="x", padx=10,pady=5)
 
         
+        self.label_borrow = ctk.CTkLabel(
+            self.main_frame, 
+            text=f"ID : {self.borrow.id_borrow}",
+            corner_radius=25,
+            height=25,
+            fg_color=Color.secondary_color(),
+            font = self.tag_font
+        )
+        self.label_borrow.pack(side="left", anchor="w", padx=(10,5), pady=10)
+
         self.label_book = ctk.CTkLabel(
             self.main_frame, 
             text=f"Book : {self._book.title}",
@@ -76,6 +88,9 @@ class BorrowFrame(ctk.CTkFrame):
         self.btn_delete.pack(side="right", padx=(5, 10), pady=10)
 
     def delete(self):
+        """
+        Deletes the borrow record and removes the widget from the parent page.
+        """
         try:
             self._borrow_service.delete_borrow(self.borrow.id_borrow)
             widget = self.parent_page.all_items_widgets.pop(self.borrow.id_borrow, None)

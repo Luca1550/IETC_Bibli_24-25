@@ -1,13 +1,13 @@
 import customtkinter as ctk
-from tkinter import messagebox, ttk
-import tkinter as tk
 from services import BorrowService,BookService,ExemplarService,MemberService
-from ui.components import PopUpMessage,SelectionFrame
 from tools import Color
 from .borrow_add_page import BorrowAddPage
 from .borrow_frame import BorrowFrame
 
 class BorrowPage(ctk.CTkFrame):
+    """
+    A page for managing borrow records in the library system.
+    """
     def __init__(self, parent):
         super().__init__(parent)
         self.borrow_service = BorrowService()
@@ -22,14 +22,13 @@ class BorrowPage(ctk.CTkFrame):
 
     def setup_ui(self):
         """
-            Configure the user interface for the book management page.
-            It sets up the search bar, scrollable book list, and information display.
+        Sets up the user interface for the borrow page.
+        It includes a search entry, an add button, and a scrollable frame to display borrow records.
         """
         
         self.grid_rowconfigure(2, weight=1) 
         self.grid_columnconfigure(0, weight=1)
-        
-        # === Search zone ===
+
         search_frame = ctk.CTkFrame(self)
         search_frame.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 5))
         search_frame.grid_columnconfigure(0, weight=1)
@@ -52,38 +51,46 @@ class BorrowPage(ctk.CTkFrame):
         )
         add_btn.grid(row=0, column=2, padx=(5, 10), pady=10)
         
-        # === Scrollable frame ===
         self.scroll_frame = ctk.CTkScrollableFrame(self, width=600, scrollbar_button_color=Color.primary_color())
         self.scroll_frame.grid(row=2, column=0, sticky="nsew", padx=10, pady=(5, 10))
-
         self.load_borrow()
 
     def open_borrow_add_page(self):
+        """
+        Opens the borrow add page to allow the user to add a new borrow record.
+        """
         borrow_add_page = BorrowAddPage()
         self.wait_window(borrow_add_page)
+        self.borrow_list = self.borrow_service.get_all()
+        self.filtered_borrow = self.borrow_list.copy()
         self.load_borrow()
 
     def on_search(self, event=None):
         """
-            Handles the search functionality by filtering books based on the search query.
+        Handles the search functionality.
+        It filters the borrow records based on the search query entered by the user.
         """
         query = self.search_entry.get().lower().strip()
-        self.borrow_list = self.borrow_service.get_all()
         if not query:
             self.filtered_borrow = self.borrow_list.copy()
         else:
             self.filtered_borrow = [
                 borrow for borrow in self.borrow_list
-                if query in str(borrow.id_borrow)
+                if query in str(borrow.id_borrow) or
+                query in self.member_service.get_member_by_id(borrow.member.id).person.first_name.lower() or
+                query in self.member_service.get_member_by_id(borrow.member.id).person.last_name.lower() 
             ]
         
         self.load_borrow()
 
     def load_borrow(self):
-        self.borrow_list = self.borrow_service.get_all()
-        self.filtered_borrow = self.borrow_list.copy()
-        filtered_ids = {borrow.id_borrow for borrow in self.filtered_borrow}
+        """
+        Loads the borrow records into the scrollable frame.
+        It creates or updates the BorrowFrame widgets for each borrow record.
+        It also filters the records based on the search query.
+        """
 
+        filtered_ids = {borrow.id_borrow for borrow in self.filtered_borrow}
         for id_borrow, widget in self.all_items_widgets.items():
             if id_borrow in filtered_ids:
                 widget.pack(fill="x", padx=(0, 10), pady=5)

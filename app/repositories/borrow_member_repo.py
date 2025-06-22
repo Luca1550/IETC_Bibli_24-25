@@ -65,8 +65,7 @@ class BorrowMemberRepo:
         return False
 
     def get_borrow_member_by_id(self, id_borrow: int) :
-    
         for borrow_member in self._borrow_member_json:
-            if borrow_member.id_borrow == id_borrow:           
+            if borrow_member.id_borrow == id_borrow:       
                 return self.member_repo.get_member_by_id(borrow_member.id_member)
         return None

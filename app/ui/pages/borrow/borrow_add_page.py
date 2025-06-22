@@ -3,6 +3,10 @@ from services import BookService, MemberService, BorrowService, ExemplarService
 from ui.components import SelectionFrame, PopUpMessage
 
 class BorrowAddPage(ctk.CTkToplevel):
+    """
+    A dialog for adding a new borrow record.
+    It allows the user to select a book and a member, and then confirm the addition of the borrow record.
+    """
     def __init__(self):
         super().__init__()
         self.focus_set()
@@ -62,6 +66,10 @@ class BorrowAddPage(ctk.CTkToplevel):
         ctk.CTkButton(button_frame, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(side="right", pady=5, padx=5)
 
     def confirm(self):
+        """
+            Confirm the addition of a borrow record.
+            It checks if the selected book and member are valid, and then adds the borrow record.
+        """
         try:
             if not self._book_selected:
                 raise Exception("At least one book must be selected.")
@@ -92,7 +100,9 @@ class BorrowAddPage(ctk.CTkToplevel):
         self.destroy()
 
     def open_selection_frame(self, title, all_items, selected_items, display_model_method, attributes_to_search, entry_to_update):
-        """Open a selection frame for choosing items from a list."""
+        """
+        Opens a selection frame for choosing items from a list.
+        """
         selection_frame = SelectionFrame(
             self,
             title,

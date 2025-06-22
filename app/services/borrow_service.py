@@ -3,7 +3,6 @@ from repositories import BorrowRepo, MemberRepo, BookRepo, ExemplarRepo,BorrowMe
 from .models import BorrowDTO
 from datetime import date, datetime,timedelta
 from services import ExemplarService,LibraryService,MemberService
-from enums import PaiementType
 
 class BorrowService:
     def __init__(self):
@@ -107,49 +106,7 @@ class BorrowService:
             else:
                 raise Exception(f"Borrow with the given ID : {id} was not found.")
         except Exception as e:
-            print(f"🛑 Error getting borrow by ID: [{e}]")
-            return None
-        
-    # def update_borrow(self, id: int, id_member: int, borrow_date: date | None, paiement_type: int, paiement_status: int):
-    #     try:
-    #         borrow: Borrow = self._borrow_repo.get_by_id(id)
-    #         borrow_dto: BorrowDTO = self.get_by_id(id)
-
-    #         if not borrow:
-    #             raise Exception(f"Borrow with ID: {id} was not found.")
-    #         if not borrow_dto:
-    #             raise Exception(f"DTO for borrow ID: {id} was not found.")
-
-    #         if borrow_date is not None:
-    #             if isinstance(borrow_date, str):
-    #                 borrow.borrow_date = datetime.fromisoformat(borrow_date).date()
-    #             elif isinstance(borrow_date, date):
-    #                 borrow.borrow_date = borrow_date
-
-    #         if not borrow.return_date:
-    #             borrow.return_date = self.return_borrow_date(borrow.borrow_date)
-
-    #         if paiement_type is not None:
-    #             borrow.paiement_type = paiement_type
-    #         if paiement_status is not None:
-    #             borrow.paiement_status = paiement_status
-
-    #         updated = self._borrow_repo.update_borrow(borrow)
-
-    #         if id_member is not None:
-    #             old_member = borrow_dto.member
-    #             if old_member:
-    #                 self._borrow_member_repo.delete_borrow_member(old_member.id_member, id)
-    #             new_link = BorrowMember(id_borrow=id, id_member=id_member)
-    #             self._borrow_member_repo.add_borrow_member(new_link)
-
-    #         return updated
-
-    #     except Exception as e:
-    #         print(f"🛑 Error updating borrow: [{e}]")
-    #         import traceback
-    #         traceback.print_exc()
-    #         return None
+            raise Exception(f"🛑 Error [{e}]")
 
     def delete_borrow(self,id:int):
         """
@@ -173,4 +130,3 @@ class BorrowService:
         except Exception as e:
             raise Exception(f"🛑 Error deleting borrow: [{e}]")
         
-    #recup truc de return book pour gerer fine 
