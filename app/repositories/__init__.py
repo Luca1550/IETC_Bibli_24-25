@@ -12,3 +12,12 @@ from .book_theme_repo import BookThemeRepo
 from .book_editor_repo import BookEditorRepo
 from .book_author_repo import BookAuthorRepo
 from .exemplar_repo import ExemplarRepo 
+from .reservation_repo import ReservationRepo
+from .reservation_member_repo import ReservationMemberRepo
+from .payment_repo import PaymentRepo
+from .payment_member_repo import PaymentMemberRepo
+from .borrow_repo import BorrowRepo
+from .borrow_member_repo import BorrowMemberRepo
+from .archive_payment_repo import ArchivePaymentRepo
+from .archive_reservation_repo import ArchiveReservationRepo
+

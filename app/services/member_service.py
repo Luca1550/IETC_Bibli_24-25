@@ -1,11 +1,10 @@
 import re
-from repositories.models import Member
-from repositories.models import Person
-from repositories import MemberRepo
-from repositories import PersonRepo
-from services import PersonService
-from services.models import MemberDTO
+from repositories.models import Member, Person, BorrowMember, Borrow
+from repositories import MemberRepo, PersonRepo, BorrowMemberRepo , BorrowRepo
+from services import PersonService, BookService, ExemplarService
+from services.models import MemberDTO, BorrowDTO, BookDTO
 from datetime import date
+from typing import Optional
 
 class MemberService:
     """
@@ -15,7 +14,11 @@ class MemberService:
     def __init__(self):
         self._member_repo = MemberRepo()
         self._person_repo = PersonRepo()
-        self.person_service = PersonService()
+        self._person_service = PersonService()
+        self._borrow_member_repo = BorrowMemberRepo()
+        self._borrow_repo = BorrowRepo()
+        self._book_service = BookService()
+        self._exemplar_service = ExemplarService()
 
 
     def add_member(self, id : int, first_name : str, last_name : str, national_number: str, email : str, street : str, cp : str, city : str, membership_entrydate : date, subscribed : bool, archived : bool) -> MemberDTO:
@@ -24,7 +27,7 @@ class MemberService:
         :param member: Member object to be added.
         :return: True if the member was added successfully, False otherwise.
         """
-        person = self.person_service.add_person(
+        person = self._person_service.add_person(
             first_name,
             last_name,
             national_number,
@@ -53,12 +56,7 @@ class MemberService:
             raise Exception("Failed to add person.")
 
     def update_member(self, id: int, first_name: str, last_name: str, national_number: str, email: str, street: str, cp: str, city: str, membership_entrydate: date, subscribed: bool, archived: bool) -> bool:
-        """
-        Updates an existing Member object in the repository.
-        :param member: Member object to be updated.
-        :return: True if the member was updated successfully, False otherwise.
-        """
-        person = self.person_service.update_person(
+        success = self._person_service.update_person(
             id,
             first_name,
             last_name,
@@ -68,17 +66,22 @@ class MemberService:
             cp,
             city
         )
-        if isinstance(person, Person):
-            member = Member(
-                id=id,
-                id_person=person.id,
-                membership_entrydate=membership_entrydate,
-                subscribed=subscribed,
-                archived=archived
-            )
+        if success:
+            # Récupérer le membre existant, pas créer un nouveau
+            member = self._member_repo.get_member_by_id(id)
+            if not member:
+                raise Exception("Member not found for update.")
+            
+            # Mettre à jour les champs du membre existant
+            member.membership_entrydate = membership_entrydate
+            member.subscribed = subscribed
+            member.archived = archived
+            
+            # Sauvegarder le membre mis à jour dans le repo
             self._member_repo.update_member(member)
             return True
-        return False
+
+        raise Exception("Person update failed.")
 
     def get_member_by_id(self, id: int) -> MemberDTO | None:
         """
@@ -99,14 +102,24 @@ class MemberService:
                 )
         return None
 
-    def delete_member(self, member: Member) -> bool:
+    def delete_member(self, id: int) -> bool:
         """
         Deletes a Member object from the repository.
         :param member: Member object to be deleted.
         :return: True if the member was deleted successfully, False otherwise.
         """
-        return self._member_repo.delete_member(member)
-
+        try:
+            member = self._member_repo.get_member_by_id(id)
+            if member:
+                self._member_repo.delete_member(member)
+                self._person_service.delete_person(member.id_person)
+                return True
+            else:
+                raise Exception(f"Member with the given ID : {id} was not found.")
+        except Exception as e:
+            raise(f"🛑 Error [{e}]")
+            return False
+        
     def get_all_members(self) -> list[MemberDTO]:
         """
         Retrieves all Member objects from the repository.
@@ -125,3 +138,43 @@ class MemberService:
                     archived=member.archived
                 ))
         return member_dtos
+    
+    def get_borrowed_books(self, member_id: int) -> list[BorrowDTO]:
+        """
+        Retrieves all borrowed books for a specific member.
+        :param member_id: ID of the member.
+        :return: A list of BorrowDTO objects representing borrowed books.
+        """
+        borrows = self._borrow_member_repo.get_borrow_by_member(member_id)
+        borrow_dtos = []
+        for borrow in borrows:
+            borrow_check = self._borrow_repo.get_by_id(borrow.id_borrow)
+            if not borrow_check:
+                continue
+            borrow_dto = BorrowDTO(
+                id_borrow=borrow.id_borrow,
+                id_exemplar=borrow_check.id_exemplar,
+                member=self.get_member_by_id(member_id),
+                borrow_date=borrow_check.borrow_date,
+                return_date=borrow_check.return_date,
+                
+            )
+            borrow_dtos.append(borrow_dto)
+        return borrow_dtos
+    
+    def get_book_by_exemplar_id(self, exemplar_id: int) -> BookDTO | None:
+        exemplar = self._exemplar_service.get_by_id(exemplar_id)
+        book = self._book_service.get_by_isbn(exemplar.isbn) if exemplar else None
+        # If the exemplar is found, retrieve the book by its ISBN
+        if book:
+            return BookDTO(
+                isbn=book.isbn,
+                title=book.title,
+                authors=book.authors,
+                date=book.date,
+                price=book.price,
+                editors=book.editors,
+                collection=book.collection,
+                themes=book.themes
+            )
+        return None

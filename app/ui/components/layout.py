@@ -33,12 +33,19 @@ class MenuNavigation(ctk.CTkFrame):
         Creates the navigation buttons for the menu.
         """
         self.btn_home_page = ctk.CTkButton(self, text="Home", command=lambda: self.select_page("Home"))
+        self.master.bind_all("<F1>", lambda event: self.btn_home_page.invoke())
         self.btn_book_page = ctk.CTkButton(self, text="Books", command=lambda: self.select_page("Books"))
+        self.master.bind_all("<F2>", lambda event: self.btn_book_page.invoke())
         self.btn_reservation_page = ctk.CTkButton(self, text="Reservation", command=lambda: self.select_page("Reservation"))
+        self.master.bind_all("<F3>", lambda event: self.btn_reservation_page.invoke())
         self.btn_borrow_page = ctk.CTkButton(self, text="Borrow", command=lambda: self.select_page("Borrow"))
+        self.master.bind_all("<F4>", lambda event: self.btn_borrow_page.invoke())
         self.btn_members_page = ctk.CTkButton(self, text="Members", command=lambda: self.select_page("Members"))
+        self.master.bind_all("<F5>", lambda event: self.btn_members_page.invoke())
         self.btn_workers_page = ctk.CTkButton(self, text="Workers", command=lambda: self.select_page("Workers"))
+        self.master.bind_all("<F6>", lambda event: self.btn_workers_page.invoke())
         self.btn_config_page = ctk.CTkButton(self, text="Config", command=lambda: self.select_page("Config"))
+        self.master.bind_all("<F7>", lambda event: self.btn_config_page.invoke())
         
 
         self.buttons = {
@@ -92,7 +99,7 @@ class MenuNavigation(ctk.CTkFrame):
         """
         self.set_active_button(page_name)
         self.on_menu_select(page_name)
-
+    
     def set_active_button(self, active_key):
         """
         Sets the active button based on the provided key.
@@ -128,12 +135,16 @@ class LoginPage(ctk.CTkFrame):
 
         self.username_entry = ctk.CTkEntry(self, placeholder_text="Username")
         self.username_entry.grid(row=1, column=0, padx=40, pady=10)
+        self.username_entry.focus_set()
+        self.username_entry.bind("<Return>", lambda event: self.login_button.invoke())
 
         self.password_entry = ctk.CTkEntry(self, placeholder_text="Password", show="*")
         self.password_entry.grid(row=2, column=0, padx=40, pady=10)
+        self.password_entry.bind("<Return>", lambda event: self.login_button.invoke())
 
         self.login_button = ctk.CTkButton(self, text="Login", command=self.check_connexion)
         self.login_button.grid(row=3, column=0, padx=40, pady=20)
+        self.bind("<Return>", lambda event: self.login_button.invoke())
 
         self.error_label = ctk.CTkLabel(self, text="", text_color="red")
         self.error_label.grid(row=4, column=0)
@@ -144,13 +155,13 @@ class LoginPage(ctk.CTkFrame):
         If the credentials match, it calls the `on_login` callback; otherwise, it displays an error message.
         """
         # Predefined credentials for testing
-        userTest = ""
-        passwordTest = ""
+        userStandart = ""
+        passwordStandart = ""
 
         username = self.username_entry.get()
         password = self.password_entry.get()
 
-        if username == userTest and password == passwordTest :
+        if username == userStandart and password == passwordStandart:
             self.error_label.configure(text="")
             self.on_login()  
         else:

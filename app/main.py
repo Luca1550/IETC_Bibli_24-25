@@ -1,7 +1,14 @@
 import customtkinter as ctk
+from services import LibraryService
 from ui.components import MenuNavigation, LoginPage
-from ui.pages import BookPage,LibraryPage, HomePage
+from ui.pages import BookPage,LibraryPage
+from ui.pages.library import LibraryPage
+from ui.pages.book import BookPage
+from ui.pages.reservation import ReservationPage
+from ui.pages.library import LibraryPage
 from ui.pages.worker import WorkerPage
+from ui.pages.borrow import BorrowPage
+from ui.pages.member import MemberPage
 
 class MainApp(ctk.CTk):
     """
@@ -13,7 +20,7 @@ class MainApp(ctk.CTk):
         Initializes the MainApp class, sets up the main window, and creates the login frame.
         """
         super().__init__()
-        self.title("Library")
+        self.title("")
         self.geometry("1280x720")
 
         self.grid_rowconfigure(1, weight=1)  
@@ -31,7 +38,9 @@ class MainApp(ctk.CTk):
         self.menu = None
         self.page_container = None
         self.current_page = None
-        
+        self.library_service = LibraryService()
+        self.paramlib = self.library_service.get_library_parameters()
+
     def login_success(self):
         """
         Callback function that is called when the user successfully logs in.
@@ -48,7 +57,12 @@ class MainApp(ctk.CTk):
         self.page_container.grid_rowconfigure(0, weight=1)
         self.page_container.grid_columnconfigure(0, weight=1)
 
-        self.change_page("Home")
+        
+        if len(self.paramlib) ==0:
+            self.change_page("Config")
+
+        else:    
+            self.change_page("Home")
 
 
     def change_page(self, page_name):
@@ -66,13 +80,13 @@ class MainApp(ctk.CTk):
             return BookPage(self.page_container)
 
         def reservation_page():
-            return ctk.CTkLabel(self.page_container, text="Reservation")
+            return ReservationPage(self.page_container)
 
         def borrow_page():
-            return ctk.CTkLabel(self.page_container, text="Borrow")
+            return BorrowPage(self.page_container)
 
         def members_page():
-            return ctk.CTkLabel(self.page_container, text="Members")
+            return MemberPage(self.page_container)
 
         def config_page():
             return LibraryPage(self.page_container)

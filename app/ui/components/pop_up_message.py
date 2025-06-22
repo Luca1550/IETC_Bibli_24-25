@@ -29,6 +29,7 @@ class PopUpMessage(customtkinter.CTkToplevel):
 
         close_button = customtkinter.CTkButton(self, text="OK", command=self.destroy)
         close_button.pack(pady=10)
+        self.bind("<Return>", lambda event: close_button.invoke())
 
     @staticmethod
     def pop_up(parent, message: str):

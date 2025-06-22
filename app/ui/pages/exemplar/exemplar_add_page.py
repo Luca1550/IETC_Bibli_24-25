@@ -21,8 +21,12 @@ class AddExemplarPage(ctk.CTkToplevel):
         button_frame = ctk.CTkFrame(self)
         button_frame.pack(fill="x", pady=5, padx=20)
         ctk.CTkButton(button_frame, text="✅ Add exemplar", command=self.confirm_action).pack(side="right", pady=5, padx=5)
-        ctk.CTkButton(button_frame, text="➕ Add exemplar and continue", command=self.confirm_and_continue).pack(side="right",pady=5, padx=5)
-        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(pady=(0,10))
+        self.add_and_continue_button = ctk.CTkButton(button_frame, text="➕ Add exemplar and continue", command=self.confirm_and_continue)
+        self.add_and_continue_button.pack(side="right",pady=5, padx=5)
+        self.cancel_button = ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy)
+        self.cancel_button.pack(pady=(0,10))
+        self.bind("<Return>", lambda event: self.add_and_continue_button.invoke())
+        self.bind("<Escape>", lambda event: self.cancel_button.invoke())
 
 
     def confirm_and_continue(self):

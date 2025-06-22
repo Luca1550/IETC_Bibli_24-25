@@ -9,5 +9,9 @@ from .exemplar_service import ExemplarService
 from .book_service import BookService
 from .editor_service import EditorService
 from .member_service import MemberService
+from .exemplar_service import ExemplarService
+from .reservation_service import ReservationService 
+from .borrow_service import BorrowService
+from .payment_service import PaymentService
 
 

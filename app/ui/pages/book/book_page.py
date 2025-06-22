@@ -209,6 +209,7 @@ class BookFrame(ctk.CTkFrame):
         confirm_window.title("Confirm deletion")
         confirm_window.geometry("300x150")
         confirm_window.resizable(False, False)
+        confirm_window.focus_set()
         confirm_window.grab_set() 
         
         confirm_window.transient(self.winfo_toplevel())
@@ -241,6 +242,9 @@ class BookFrame(ctk.CTkFrame):
             command=confirm_window.destroy
         )
         no_btn.pack(side="right", padx=10)
+        
+        confirm_window.bind("<Escape>", lambda event: no_btn.invoke())
+        confirm_window.bind("<Return>", lambda event: yes_btn.invoke())
 
     def update_themes(self, new_themes):
         for label in self.theme_labels:
@@ -509,7 +513,7 @@ class BookPage(ctk.CTkFrame):
         try:
             self.book_service.delete_book(book.isbn)
             widget = self.all_items_widgets.pop(book.isbn)
-            widget.destroy()
+            widget.destroy() 
             self.show_success("Book successfully deleted !")
         except Exception as e:
             PopUpMessage(self, f"{e}")
@@ -556,7 +560,7 @@ class BookPage(ctk.CTkFrame):
             waits for 3 seconds before clearing the message.
         """
         self.info_label.configure(text=f"❌ {message}", text_color="red")
-        # self.after(3000, lambda: self.update_info())
+        self.after(5000, lambda: self.update_info())
     
     def show_success(self, message):
         """

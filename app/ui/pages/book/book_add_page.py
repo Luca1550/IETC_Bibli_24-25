@@ -120,9 +120,14 @@ class BookAddPage(ctk.CTkToplevel):
         self.theme_entry.configure(state="disabled")
         ctk.CTkButton(theme_frame,text="➕",width=30,command=self.open_add_theme_page).pack(side="right", padx=(5, 0))
 
-        ctk.CTkButton(self, text="✅ Add Book", command=self.confirm_action).pack(pady=10)
-        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack()
-
+        self.add_button = ctk.CTkButton(self, text="✅ Add Book", command=self.confirm_action)
+        self.add_button.pack(pady=10)
+        self.cancel_button = ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy)
+        self.cancel_button.pack()
+        self.bind("<Return>", lambda event: self.add_button.invoke())
+        self.bind("<Escape>", lambda event: self.cancel_button.invoke())
+        
+        self.isbn_entry.focus_set()
 
 
     def open_selection_frame(self, title, all_items, selected_items, display_model_method, attributes_to_search, entry_to_update):
@@ -191,6 +196,7 @@ class BookAddPage(ctk.CTkToplevel):
             text="No",
             command=lambda: [
                 confirm_window.destroy(),
+                self.destroy()
             ]
         ).pack(side="right", padx=10)
         

@@ -13,3 +13,11 @@ from .book_theme import BookTheme
 from .book_editor import BookEditor
 from .book_author import BookAuthor
 from .exemplar import Exemplar
+from .reservation import Reservation
+from .reservation_member import ReservationMember
+from .payment import Payment
+from .payment_member import PaymentMember
+from .archive_payment import ArchivePayment
+from .archive_reservation import ArchiveReservation
+from .borrow import Borrow
+from .borrow_member import BorrowMember

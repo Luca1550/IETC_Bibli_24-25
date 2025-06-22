@@ -54,9 +54,10 @@ class LibraryRepo:
             bool: True if the library was updated successfully, False otherwise.
         """
         for i, lib in enumerate(self.library_json):
-            if isinstance(lib, dict):
-                    if lib.get('id') == library.id:
-                        self.library_json[i] = library.__dict__  
-                        self._save_all()
-                        return True
+            
+            if isinstance(lib, Library):
+                if lib.id == library.id:
+                    self.library_json[i] = library
+                    self._save_all()
+                    return True
         return False

@@ -37,6 +37,7 @@ class BookConfigPage(ctk.CTkToplevel):
         ctk.CTkButton(self, width=150, text="🗑️ Delete Authors", command=self.open_delete_author_page).grid(row=2, column=3, pady=(5,20), padx=10)
         
         
+        self.bind("<Escape>", lambda event: self.destroy())
     
     def open_add_theme_page(self):
         """Open the page to add a new theme."""
@@ -98,8 +99,14 @@ class AddThemePage(ctk.CTkToplevel):
         self.name_entry = ctk.CTkEntry(self)
         self.name_entry.pack(fill="x", padx=20)
         
-        ctk.CTkButton(self, text="✅ Add Theme", command=self.confirm_action).pack(pady=10)
-        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(pady=(0,10))
+        self.add_button = ctk.CTkButton(self, text="✅ Add Theme", command=self.confirm_action)
+        self.add_button.pack(pady=10)
+        self.cancel_button = ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy)
+        self.cancel_button.pack(pady=(0,10))
+        self.bind("<Return>", lambda event: self.add_button.invoke())
+        self.bind("<Escape>", lambda event: self.cancel_button.invoke())
+        
+        self.name_entry.focus_set()
         
     def confirm_action(self):
         """Confirm the action of adding a new theme."""
@@ -226,8 +233,14 @@ class AddEditorPage(ctk.CTkToplevel):
         self.name_entry = ctk.CTkEntry(self)
         self.name_entry.pack(fill="x", padx=20)
         
-        ctk.CTkButton(self, text="✅ Add Editor", command=self.confirm_action).pack(pady=10)
-        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(pady=(0,10))
+        self.add_button = ctk.CTkButton(self, text="✅ Add Editor", command=self.confirm_action)
+        self.add_button.pack(pady=10)
+        self.cancel_button = ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy)
+        self.cancel_button.pack(pady=(0,10))
+        self.bind("<Return>", lambda event: self.add_button.invoke())
+        self.bind("<Escape>", lambda event: self.cancel_button.invoke())
+        
+        self.name_entry.focus_set()
         
     def confirm_action(self):
         try:
@@ -352,8 +365,14 @@ class AddCollectionPage(ctk.CTkToplevel):
         self.name_entry = ctk.CTkEntry(self)
         self.name_entry.pack(fill="x", padx=20)
         
-        ctk.CTkButton(self, text="✅ Add Collection", command=self.confirm_action).pack(pady=10)
-        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(pady=(0,10))
+        self.add_button = ctk.CTkButton(self, text="✅ Add Collection", command=self.confirm_action)
+        self.add_button.pack(pady=10)
+        self.bind("<Return>", lambda event: self.add_button.invoke())
+        self.cancel_button = ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy)
+        self.cancel_button.pack(pady=(0,10))
+        self.bind("<Escape>", lambda event: self.cancel_button.invoke())
+        
+        self.name_entry.focus_set()
         
     def confirm_action(self):
         try:
@@ -481,8 +500,14 @@ class AddAuthorPage(ctk.CTkToplevel):
         self.last_name_entry = ctk.CTkEntry(self)
         self.last_name_entry.pack(fill="x", padx=20)
         
-        ctk.CTkButton(self, text="✅ Add Author", command=self.confirm_action).pack(pady=10)
-        ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(pady=(0,10))
+        self.add_button = ctk.CTkButton(self, text="✅ Add Author", command=self.confirm_action)
+        self.add_button.pack(pady=10)
+        self.cancel_button = ctk.CTkButton(self, text="❌ Cancel", fg_color="transparent", command=self.destroy)
+        self.cancel_button.pack(pady=(0,10))
+        self.bind("<Return>", lambda event: self.add_button.invoke())
+        self.bind("<Escape>", lambda event: self.cancel_button.invoke())
+        
+        self.first_name_entry.focus_set()
         
     def confirm_action(self):
         try:
