@@ -79,9 +79,9 @@ class ReservationPage(ctk.CTkFrame):
 
         self.form_title = ctk.CTkLabel(self.right_panel, text="Add reservation", font=ctk.CTkFont(size=18, weight="bold"))
         self.form_title.pack(pady=(10, 10))
-        self.book_frame = ctk.CTkFrame(self.right_panel)
+        self.book_frame = ctk.CTkFrame(self.right_panel, fg_color="transparent")
         self.book_frame.pack(pady=5, padx=20, fill="x")
-        self.member_frame = ctk.CTkFrame(self.right_panel)
+        self.member_frame = ctk.CTkFrame(self.right_panel, fg_color="transparent")
         self.member_frame.pack(pady=5, padx=20, fill="x")
         self.book_entry = ctk.CTkEntry(self.book_frame, placeholder_text="title")
         self.book_entry.pack(side="left", expand=True, fill="x", padx=(0, 5))
@@ -165,8 +165,6 @@ class ReservationPage(ctk.CTkFrame):
                 PopUpMessage.pop_up(self, "More than one exemplar")
                 return 
 
-            
-            
             if datetime.fromisoformat(self.date_entry.get()) > datetime.fromisoformat(date.today().isoformat()):
                 reservation_date = str(self.date_entry.get())
             else:
@@ -214,7 +212,7 @@ class ReservationPage(ctk.CTkFrame):
             
             self.form_title = ctk.CTkLabel(self.right_panel, text="Update Reservation", font=ctk.CTkFont(size=18, weight="bold"))
             self.form_title.pack(pady=(10, 10))
-            self.member_frame = ctk.CTkFrame(self.right_panel)
+            self.member_frame = ctk.CTkFrame(self.right_panel, fg_color="transparent")
             self.member_frame.pack(pady=5, padx=20, fill="x")
 
             self.member_entry = ctk.CTkEntry(self.member_frame, placeholder_text="Member")

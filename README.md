@@ -152,7 +152,7 @@ Une fois l’environnement activé, installez les bibliothèques nécessaires en
 ### 5️⃣ **Lancer l’application**
 Une fois les dépendances installées vous pouvez executer l'application:
 
-    py .\app\main.py
+    python .\app\main.py
 
 
 

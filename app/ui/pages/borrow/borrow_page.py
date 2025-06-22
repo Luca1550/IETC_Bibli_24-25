@@ -17,7 +17,7 @@ class BorrowPage(ctk.CTkFrame):
         self.selected_borrow= None
         self.borrow_list = self.borrow_service.get_all()
         self.filtered_borrow = self.borrow_list.copy()
-        self.all_items_widgets : dict[str, ctk.CTkFrame] = {} 
+        self.all_items_widgets : dict[str, ctk.CTkFrame] = {}
         self.setup_ui()
 
     def setup_ui(self):
@@ -102,7 +102,7 @@ class BorrowPage(ctk.CTkFrame):
                 borrow_frame = BorrowFrame(
                     self.scroll_frame,
                     borrow,
-                    self
+                    self,
                 )
-                borrow_frame.pack(fill="x", padx=(0, 10), pady=5)
+                borrow_frame.pack(fill="x", padx=5, pady=5)
                 self.all_items_widgets[borrow.id_borrow] = borrow_frame
