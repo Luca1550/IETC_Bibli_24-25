@@ -1,7 +1,9 @@
 import customtkinter as ctk
-import tkinter as tk
 from tools import Color
-from services import MemberService, BookService, ThemeService, EditorService, AuthorService, CollectionService, LibraryService
+from services import MemberService, BorrowService, ReservationService, BookService, ThemeService, EditorService, AuthorService, CollectionService, LibraryService
+from ui.pages.borrow import BorrowFrame
+from ui.pages.reservation import ReservationFrame
+from datetime import datetime, date
 
 class HomePage(ctk.CTkFrame):
     def __init__(self, parent):
@@ -20,27 +22,31 @@ class HomePage(ctk.CTkFrame):
         self._collection_service : CollectionService = CollectionService()
         self._collection_data = self._collection_service.get_all()
         self._library_service : LibraryService = LibraryService()
+        self._borrow_service : BorrowService = BorrowService()
+        self._borrow_data = [borrow for borrow in self._borrow_service.get_all() if datetime.fromisoformat(borrow.return_date).date() == date.today()]
+        self._reservation_service : ReservationService = ReservationService()
+        self._reservation_data = [reservation for reservation in self._reservation_service.get_all() if datetime.fromisoformat(reservation.reservation_date).date() == date.today()]
         self._library_data = self._library_service.get_library_parameters()[0] if self._library_service.get_library_parameters()[0] is not None else []
 
 # region frame
-        self.grid_rowconfigure(0, weight=0) 
+        self.grid_rowconfigure(0, weight=1) 
         self.grid_rowconfigure(1, weight=1)
-        self.grid_rowconfigure(2, weight=1)
         self.grid_columnconfigure((0, 1, 2, 3), weight=1)
 
-        self.stat_members_frame = ctk.CTkFrame(self, border_color=Color.primary_color(), border_width=5, corner_radius=5)
-        self.stat_members_frame.grid(row=1, column=0, padx=(10, 5), pady=(10, 5), sticky="nsew")
-        self.stat_books_frame = ctk.CTkFrame(self, border_color=Color.primary_color(), border_width=5, corner_radius=5)
-        self.stat_books_frame.grid(row=1, column=1, padx=5, pady=(10, 5), sticky="nsew")
-        self.stat_payment_frame = ctk.CTkFrame(self, border_color=Color.primary_color(), border_width=5, corner_radius=5)
-        self.stat_payment_frame.grid(row=1, column=2, padx=5, pady=(10, 5), sticky="nsew")
-        self.prices_frame = ctk.CTkFrame(self, border_color=Color.primary_color(), border_width=5, corner_radius=5)
-        self.prices_frame.grid(row=1, column=3, padx=(5, 10), pady=(10, 5), sticky="nsew")
-
         self.reservation_today_frame = ctk.CTkFrame(self, border_color=Color.primary_color(), border_width=5, corner_radius=5)
-        self.reservation_today_frame.grid(row=2, column=0, columnspan=2, padx=(10, 5), pady=(5, 10), sticky="nsew")
+        self.reservation_today_frame.grid(row=0, column=0, columnspan=2, padx=(10, 5), pady=(10, 5), sticky="nsew")
         self.borrowed_today_frame = ctk.CTkFrame(self, border_color=Color.primary_color(), border_width=5, corner_radius=5)
-        self.borrowed_today_frame.grid(row=2, column=2, columnspan=2, padx=(5, 10), pady=(5, 10), sticky="nsew")
+        self.borrowed_today_frame.grid(row=0, column=2, columnspan=2, padx=(5, 10), pady=(10, 5), sticky="nsew")
+        
+        self.stat_members_frame = ctk.CTkFrame(self, border_color=Color.primary_color(), border_width=5, corner_radius=5)
+        self.stat_members_frame.grid(row=1, column=0, padx=(10, 5), pady=(5, 10), sticky="nsew")
+
+        self.stat_books_frame = ctk.CTkFrame(self, border_color=Color.primary_color(), border_width=5, corner_radius=5)
+        self.stat_books_frame.grid(row=1, column=1, columnspan=2, padx=5, pady=(5, 10), sticky="nsew")  # occupe 2 colonnes ici
+
+        self.prices_frame = ctk.CTkFrame(self, border_color=Color.primary_color(), border_width=5, corner_radius=5)
+        self.prices_frame.grid(row=1, column=3, padx=(5, 10), pady=(5, 10), sticky="nsew")
+
 # endregion
 
 # region stat_members
@@ -72,11 +78,6 @@ class HomePage(ctk.CTkFrame):
         self.stat_books_nb_editors.pack(fill="x", padx=10)
 # endregion
 
-# region stat_payment
-        self.stat_payment_title = ctk.CTkLabel(self.stat_payment_frame,corner_radius=5, bg_color=Color.primary_color(), text="Payement Statitics", font=ctk.CTkFont(weight='bold', size=14))
-        self.stat_payment_title.pack(fill="x",padx=5, pady=(5, 10))
-# endregion
-
 # region prices
         self.prices_title = ctk.CTkLabel(self.prices_frame, text="Prices",bg_color=Color.primary_color(), corner_radius=5,font=ctk.CTkFont(weight='bold', size=14))
         self.prices_title.pack(fill="x", padx=5, pady=(5, 10))
@@ -93,11 +94,36 @@ class HomePage(ctk.CTkFrame):
 # region reservation_today
         self.reservation_today_title = ctk.CTkLabel(self.reservation_today_frame, bg_color=Color.primary_color(),corner_radius=5,text="Reservation Today", font=ctk.CTkFont(weight='bold', size=14))
         self.reservation_today_title.pack(fill="x",padx=5, pady=(5, 10))
+        self.reservation_today_scroll_frame = ctk.CTkScrollableFrame(self.reservation_today_frame, scrollbar_button_color=Color.primary_color())
+        self.reservation_today_scroll_frame.pack(fill="both", expand=True, padx=12.5, pady=(0,12.5))
+        if self._reservation_data:
+            for reservation in self._reservation_data:
+                self.reservation_frame = ReservationFrame(
+                self.reservation_today_scroll_frame,
+                reservation
+                )
+                self.reservation_frame.pack(fill="x", pady=5)
+        else:
+            self.no_reservation_label = ctk.CTkLabel(self.reservation_today_scroll_frame, text="No reservation today")
+            self.no_reservation_label.pack(fill="x", pady=5)
 # endregion
 
 # region borrowed_today
         self.borrowed_today_title = ctk.CTkLabel(self.borrowed_today_frame,bg_color=Color.primary_color(),corner_radius=5, text="Borrowed Today", font=ctk.CTkFont(weight='bold', size=14))
         self.borrowed_today_title.pack(fill="x",padx=5, pady=(5, 10))
+        self.borrowed_today_scroll_frame = ctk.CTkScrollableFrame(self.borrowed_today_frame, scrollbar_button_color=Color.primary_color())
+        self.borrowed_today_scroll_frame.pack(fill="both", expand=True, padx=12.5, pady=(0,12.5))
+        if self._borrow_data:
+            for borrow in self._borrow_data:
+                print(borrow.return_date)
+                self.borrow_frame = BorrowFrame(
+                self.borrowed_today_scroll_frame,
+                borrow
+                )
+                self.borrow_frame.pack(fill="x", pady=5)
+        else:
+            self.no_borrow_label = ctk.CTkLabel(self.borrowed_today_scroll_frame, text="No borrowed today")
+            self.no_borrow_label.pack(fill="x", pady=5)
 # endregion
 
 def divider(frame):

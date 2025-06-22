@@ -84,25 +84,19 @@ class BorrowService:
             result : list[BorrowDTO] = []
 
             for bor in borrows:
-                bor_id = bor.id
-                bor_exemplar = bor.id_exemplar
-                bor_date = bor.borrow_date
-                bor_ret_date=bor.borrow_date
-                member = self._borrow_member_repo.get_borrow_member_by_id(bor_id)
+                member = self._borrow_member_repo.get_borrow_member_by_id(bor.id)
                 
                 borrow_dto = BorrowDTO(
-                    id_borrow = bor_id,
-                    id_exemplar = bor_exemplar,
+                    id_borrow = bor.id,
+                    id_exemplar = bor.id_exemplar,
                     member = member,
-                    borrow_date = bor_date,
-                    return_date = bor_ret_date,
+                    borrow_date = bor.borrow_date,
+                    return_date = bor.return_date,
                 )
                 result.append(borrow_dto)
-            
             return result
         except Exception as e:
-            print(f"🛑 Error getting borrow: [{e}]")
-            return []
+            raise Exception(f"🛑 Error getting borrow: [{e}]")
         
     def get_by_id(self,id:int):
         try:
