@@ -40,6 +40,7 @@ class BorrowService:
             import traceback
             traceback.print_exc()
             return f"🛑 Error [{e}]"
+        
     def calculate_fine(self, return_date:date, borrow_date:date):
         """Calculates the fine for overdue borrows.
         arguments:
@@ -55,6 +56,7 @@ class BorrowService:
             if days_overdue > 0:
                 fine =days_overdue * return_fine_per_day
                 return fine
+            
     def check_subscribe(self,id_member:int):
         try:
             memberparms=self.member_service.get_member_by_id(id_member)
