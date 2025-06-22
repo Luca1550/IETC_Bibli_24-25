@@ -118,7 +118,7 @@ class ReservationPage(ctk.CTkFrame):
         
         self.edit_member_button.pack(side="left")
         
-        self.submit_button = ctk.CTkButton(self.right_panel, text="Réserver",command=self.add_reservation)
+        self.submit_button = ctk.CTkButton(self.right_panel, text="Add",command=self.add_reservation)
         self.submit_button.pack(pady=20)
     def add_reservation(self):
         """Handles the addition of a new reservation.
@@ -129,7 +129,7 @@ class ReservationPage(ctk.CTkFrame):
             if len(self.member_selected) ==1:
                 id_member= self.member_selected[0].id_member
             else:
-                PopUpMessage.pop_up(self, "More than one exemplar")
+                PopUpMessage.pop_up(self, "More than one member")
                 return 
 
             if not len(self.book_selected) ==1:
