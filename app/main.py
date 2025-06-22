@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from services import LibraryService
 from ui.components import MenuNavigation, LoginPage
 from ui.pages import BookPage,LibraryPage
 from ui.pages.library import LibraryPage
@@ -37,7 +38,9 @@ class MainApp(ctk.CTk):
         self.menu = None
         self.page_container = None
         self.current_page = None
-        
+        self.library_service = LibraryService()
+        self.paramlib = self.library_service.get_library_parameters()
+
     def login_success(self):
         """
         Callback function that is called when the user successfully logs in.
@@ -54,7 +57,12 @@ class MainApp(ctk.CTk):
         self.page_container.grid_rowconfigure(0, weight=1)
         self.page_container.grid_columnconfigure(0, weight=1)
 
-        self.change_page("Home")
+        
+        if len(self.paramlib) ==0:
+            self.change_page("Config")
+
+        else:    
+            self.change_page("Home")
 
 
     def change_page(self, page_name):

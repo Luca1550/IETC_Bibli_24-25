@@ -59,46 +59,85 @@ class LibraryPage(ctk.CTkFrame):
         :param self: The instance of the class.
         :return: None
         """
+        library =self.paramlib[0]
+        self.label_name= ctk.CTkLabel(self.main_panel,text='Name')
+        self.label_name.grid(row=1, column=0, sticky="w", padx=1, pady=1)
+        self.entry_name = ctk.CTkEntry(self.main_panel,placeholder_text="Name of the library")
+        self.entry_name.grid(row=1, column=1, sticky="ew", pady=1)
         
-        if self.paramlib:
+        self.label_fpd= ctk.CTkLabel(self.main_panel,text='Daily overdue fee')
+        self.label_fpd.grid(row=2, column=0, sticky="w", padx=1, pady=1)
+        self.entry_fpd = ctk.CTkEntry(self.main_panel,placeholder_text="Amout (in €) a user will be fined per day if a book is late to be returned")
+        self.entry_fpd.grid(row=2, column=1, sticky="ew", pady=1)
+        
+        self.label_sa= ctk.CTkLabel(self.main_panel,text='Subscription price')
+        self.label_sa.grid(row=3, column=0, sticky="w", padx=1, pady=1)
+        self.entry_sa = ctk.CTkEntry(self.main_panel,placeholder_text="€")
+        self.entry_sa.grid(row=3, column=1, sticky="ew", pady=1)
+        
+        self.label_lb= ctk.CTkLabel(self.main_panel,text='Borrowing limit')
+        self.label_lb.grid(row=4, column=0, sticky="w", padx=1, pady=1)
+        self.entry_lb = ctk.CTkEntry(self.main_panel,placeholder_text="Amout of books a user can simultaneously borrow ")
+        self.entry_lb.grid(row=4, column=1, sticky="ew", pady=1)
+        
+        self.label_bpws= ctk.CTkLabel(self.main_panel,text='Borrow price with subscription')
+        self.label_bpws.grid(row=5, column=0, sticky="w", padx=1, pady=1)
+        self.entry_bpws = ctk.CTkEntry(self.main_panel,placeholder_text="€")
+        self.entry_bpws.grid(row=5, column=1, sticky="ew", pady=1)
+        
+        self.label_bpwts= ctk.CTkLabel(self.main_panel,text='Borrow price without subscription')
+        self.label_bpwts.grid(row=6, column=0, sticky="w", padx=1, pady=1)
+        self.entry_bpwts = ctk.CTkEntry(self.main_panel,placeholder_text="€")
+        self.entry_bpwts.grid(row=6, column=1, sticky="ew", pady=1)
+        
+        self.label_bd= ctk.CTkLabel(self.main_panel,text='Maximum borrow time')
+        self.label_bd.grid(row=7, column=0, sticky="w", padx=1, pady=1)
+        self.entry_bd = ctk.CTkEntry(self.main_panel,placeholder_text="Maximum amout of time a user can borrow a book (In days)")
+        self.entry_bd.grid(row=7, column=1, sticky="ew", pady=1)
+        
+        self.label_lr= ctk.CTkLabel(self.main_panel,text='Max book reservation')
+        self.label_lr.grid(row=9, column=0, sticky="w", padx=1, pady=1)
+        self.entry_lr = ctk.CTkEntry(self.main_panel,placeholder_text="Maximum amout of books a user can add to a reservation")
+        self.entry_lr.grid(row=9, column=1, sticky="ew", pady=1)
 
-            lib_params=self.paramlib[0]
-            
-            self.entries={}
-            for i,(key, value) in enumerate(lib_params.__dict__.items(),start=1):
-                if key != "id":
-                    label_txt= key.replace("_"," ").capitalize()
-                
-                    self.label= ctk.CTkLabel(self.main_panel,text=label_txt)
-                    self.label.grid(row=i, column=0, sticky="w", padx=1, pady=1)
-
-                    self.label_entry = ctk.CTkEntry(self.main_panel)
-                    self.label_entry.grid(row=i, column=1, sticky="ew", pady=1)
-                    self.label_entry.insert(0, str(value))
-                    self.entries[key] = self.label_entry
-                    row_index = i
+        self.entry_name.insert(0, library.name)
+        self.entry_fpd.insert(0, str(library.fine_per_day))
+        self.entry_sa.insert(0, str(library.subscribe_amout))
+        self.entry_lb.insert(0, str(library.limit_borrow))
+        self.entry_bpws.insert(0, str(library.borrow_price_with_sub))
+        self.entry_bpwts.insert(0, str(library.borrow_price_without_sub))
+        self.entry_bd.insert(0, str(library.borrow_delay))
+        self.entry_lr.insert(0, str(library.limit_reservation))
 
         self.save_button = ctk.CTkButton(self.main_panel, text="Save", command=self.update_libraries)
-        self.save_button.grid(row=row_index+1, column=0, columnspan=2, pady=10)
+        self.save_button.grid(row=10, column=0, columnspan=2, pady=10)
     def update_libraries(self):
         """
         Updates the library parameters from the form values and calls the update_library method on the library service
         with the updated parameters.
         
         """
-        updated_param={}
-        updated_param["id"] =self.paramlib[0].id
-        
-        for key, value in self.entries.items():
-            val = value.get()
-            if key in ["fine_per_day", "subscribe_amout", "borrow_price_with_sub", "borrow_price_without_sub"]:
-                updated_param[key] = float(val)
-            elif key in ["limit_borrow", "borrow_delay","limit_reservation"]:
-                updated_param[key] = int(val)
+
+        try:
+            id=self.paramlib[0].id
+            name = self.entry_name.get()
+            fine_per_day = float(self.entry_fpd.get())
+            subscribe_amount = float(self.entry_sa.get())
+            limit_borrow = int(self.entry_lb.get())
+            borrow_with_sub = float(self.entry_bpws.get())
+            borrow_without_sub = float(self.entry_bpwts.get())
+            borrow_delay = int(self.entry_bd.get())
+            limit_reservation = int(self.entry_lr.get())
+
+            updatelib=self.library_service.update_library(id,name,fine_per_day,subscribe_amount,limit_borrow,borrow_with_sub,borrow_without_sub,borrow_delay,limit_reservation)
+            if isinstance(updatelib, str):
+                PopUpMessage.pop_up(self, updatelib)
             else:
-                updated_param[key] = val
-        
-        self.library_service.update_library(**updated_param)
+                PopUpMessage.pop_up(self, "Library added successfully!")
+                self.destroy()
+                
+        except ValueError as e:
+            PopUpMessage.pop_up(self, f"Input error: {e}")
         
     def add_form(self):
         
