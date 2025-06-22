@@ -209,6 +209,7 @@ class BookFrame(ctk.CTkFrame):
         confirm_window.title("Confirm deletion")
         confirm_window.geometry("300x150")
         confirm_window.resizable(False, False)
+        confirm_window.focus_set()
         confirm_window.grab_set() 
         
         confirm_window.transient(self.winfo_toplevel())
@@ -241,6 +242,9 @@ class BookFrame(ctk.CTkFrame):
             command=confirm_window.destroy
         )
         no_btn.pack(side="right", padx=10)
+        
+        confirm_window.bind("<Escape>", lambda event: no_btn.invoke())
+        confirm_window.bind("<Return>", lambda event: yes_btn.invoke())
 
     def update_themes(self, new_themes):
         for label in self.theme_labels:

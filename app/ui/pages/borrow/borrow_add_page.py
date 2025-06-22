@@ -62,8 +62,12 @@ class BorrowAddPage(ctk.CTkToplevel):
 
         button_frame = ctk.CTkFrame(self)
         button_frame.pack(fill="x", pady=15, padx=20)
-        ctk.CTkButton(button_frame, text="✅ Add", command=self.confirm).pack(side="right", pady=5, padx=5)
-        ctk.CTkButton(button_frame, text="❌ Cancel", fg_color="transparent", command=self.destroy).pack(side="right", pady=5, padx=5)
+        add_button = ctk.CTkButton(button_frame, text="✅ Add", command=self.confirm)
+        add_button.pack(side="right", pady=5, padx=5)
+        cancel_button = ctk.CTkButton(button_frame, text="❌ Cancel", fg_color="transparent", command=self.destroy)
+        cancel_button.pack(side="right", pady=5, padx=5)
+        self.bind("<Return>", lambda event: add_button.invoke())
+        self.bind("<Escape>", lambda event: cancel_button.invoke())
 
     def confirm(self):
         """
