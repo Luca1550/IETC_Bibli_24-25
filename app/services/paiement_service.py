@@ -164,4 +164,3 @@ class PaiementService:
             self.archive_paiement_repo.add_archive_paiement(archive)
         except Exception as e:
             raise Exception(f"🛑 Error getting paiement by ID: [{e}]")
- 
