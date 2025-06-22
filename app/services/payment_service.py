@@ -45,21 +45,16 @@ class PaymentService:
             import traceback
             traceback.print_exc()
             raise Exception(f"🛑 Error [{e}]")
-    def calculate_fine(self,date_from_member_return:date,id_borrow:int,id_member:int):
+    def calculate_fine(self,date_from_member_return:date,id_borrow:int, return_date_planned:date):
         """ Calculate the fine for a late return based on the return date and library parameters."""
         try:
-            payment_type = PaymentType(value=1)
             libparams=self.library_service.get_library_parameters()
             return_fine_per_day=libparams[0].fine_per_day
-            borrowparams=self.borrow_service.get_by_id(id_borrow)
-            return_date_planned=borrowparams.return_date
             
             if datetime.fromisoformat(date_from_member_return).date() > datetime.fromisoformat(return_date_planned).date():
                 return_delay=(datetime.fromisoformat(date_from_member_return).date()-datetime.fromisoformat(return_date_planned).date()).days
-                print('jouR',return_delay)
                 payment_due:float = return_delay*return_fine_per_day
-                self.add_payment(payment_type,payment_due,id_member)
-            return payment_due,payment_type
+            return payment_due
         except Exception as e:
             import traceback
             traceback.print_exc()
@@ -73,7 +68,6 @@ class PaymentService:
             if self.borrow_service.check_subscribe(id_member):
                 payment.payment_due =borrow_price_with_sub_lib
                 payment.payment_type= PaymentType(value=3)
-
             else:
                 payment.payment_due =borrow_price_without_sub_lib
                 payment.payment_type= PaymentType(value=4)
@@ -86,14 +80,14 @@ class PaymentService:
     
     
 
-    def price_due_lost(self,is_it:bool,id_borrow:int,id_member:int):
+    def price_due_lost(self,is_it:bool,id_borrow:int,return_date_planned:date):
         """ Calculate the payment due for a lost book based on the borrow ID and member ID."""
         try:
             if is_it:
                 paramborrow=self.borrow_service.get_by_id(id_borrow)
                 paramexemp=self.exemplar_service.get_by_id(paramborrow.id_exemplar)
                 parambook=self.book_service.get_by_isbn(paramexemp.isbn)
-                payment_due=parambook
+                payment_due=parambook.price
                 
                 self.borrow_service.delete_borrow(id_borrow)
                 self.exemplar_service.delete_exemplar(paramborrow.id_exemplar)
@@ -164,18 +158,18 @@ class PaymentService:
             payment_date=None        
 
         )
+        payment=self.price_due_per_borrow(id_member,payment)
         if is_it:
-            payment.payment_due=self.price_due_lost(is_it,id_borrow,id_member)
+            payment.payment_due += float(self.price_due_lost(is_it,id_borrow,id_member))
             payment.payment_type = PaymentType(value=2)
         else:
-            payment=self.price_due_per_borrow(id_member,payment)
             if datetime.fromisoformat(date_from_member_return).date() > datetime.fromisoformat(return_date_planned).date():
-                payment.payment_due += self.calculate_fine(date_from_member_return,id_borrow,id_member)
+                payment.payment_due += float(self.calculate_fine(date_from_member_return,id_borrow,return_date_planned))
                 payment.payment_type = PaymentType(value=1)
+            self.borrow_service.delete_borrow(id_borrow)
 
         payment.payment_date=date.today().isoformat()
         
         self.add_payment(payment.payment_type,payment.payment_due,id_member)
-        self.borrow_service.delete_borrow(id_borrow)
         return payment.payment_due
     

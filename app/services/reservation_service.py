@@ -147,7 +147,7 @@ class ReservationService:
                     id_member=reservation_dto.member.id,
                     id_reservation=id_reservation
                 )
-
+            self.exemplar_service.update_status(reservation.id_exemplar, 1)
             self.archive_reservation_repo.add_archive_reservation(archive)
             return True
         except Exception as e:
@@ -195,7 +195,7 @@ class ReservationService:
                 raise Exception("Invalid reservationdate: it must be a date like YYYY-MM-DD")
         except Exception as e:
             return f"🛑 Error [{e}]"
-   
+
     def get_isbn_by_id_exemplar(self, id_exemplar: int):
         """
         Retrieves the ISBN of a book by its exemplar ID.
@@ -209,4 +209,3 @@ class ReservationService:
             raise Exception(f"Exemplar with ID {id_exemplar} not found.")
         except Exception as e:
             raise Exception(f"🛑 Error getting ISBN by exemplar ID: [{e}]")
-           

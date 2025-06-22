@@ -2,7 +2,7 @@ from repositories.models import Borrow, Member,BorrowMember
 from repositories import BorrowRepo, MemberRepo, BookRepo, ExemplarRepo,BorrowMemberRepo
 from .models import BorrowDTO
 from datetime import date, datetime,timedelta
-from services import ExemplarService,LibraryService,MemberService
+from services import ExemplarService,LibraryService,MemberService,ReservationService
 from enums import PaymentType
 
 class BorrowService:
@@ -12,6 +12,7 @@ class BorrowService:
         self._member_repo = MemberRepo()
         self._book_repo = BookRepo()
         self._borrow_member_repo = BorrowMemberRepo()
+        self._reservation_service = ReservationService()
         self.exemplar_service = ExemplarService()
         self.library_service = LibraryService()
         self.member_service= MemberService()
@@ -46,10 +47,13 @@ class BorrowService:
             raise Exception(e)
         
 
-    def add_borrow(self, isbn:str,id_member:int):
+    def add_borrow(self, isbn : str | None, id_member : int, id_exemplar : int | None = None, id_reservation : int | None = None):
         try:
             actual_borrow_date = date.today().isoformat()
-            exemplar=self.exemplar_service.get_disponibility(isbn)
+            if not id_exemplar:
+                exemplar=self.exemplar_service.get_disponibility(isbn)
+            else:
+                exemplar=self.exemplar_service.get_by_id(id_exemplar)
             return_date=self.return_borrow_date(actual_borrow_date)
             if self.check_borrow_limit(id_member):
                 new_borrow = Borrow(
@@ -58,7 +62,6 @@ class BorrowService:
                     borrow_date=actual_borrow_date,
                     return_date = return_date,
                     )
-                self.exemplar_service.update_status(exemplar.id,2)
 
                 if self._borrow_repo.add_borrow(new_borrow) :
                     if id_member:
@@ -67,6 +70,9 @@ class BorrowService:
                             id_member=id_member
                         )
                         self._borrow_member_repo.add_borrow_member(new_borrow_member) 
+            if id_reservation is not None:
+                self._reservation_service.delete_reservation(id_reservation)
+            self.exemplar_service.update_status(exemplar.id,2)
             return True
         except Exception as e:
             raise Exception(f"🛑 Error when add borrow [{e}]")
@@ -113,13 +119,11 @@ class BorrowService:
         """
         Deletes a borrow by its ID."""
         try:
-            
             borrow = self._borrow_repo.get_by_id(id)
             borrow_dto = self.get_by_id(id)
 
             if isinstance(borrow, Borrow):
                 self._borrow_repo.delete_borrow(borrow)
-
             self.exemplar_service.update_status(borrow.id_exemplar,1)
             if borrow_dto and isinstance(borrow_dto.member, Member):
                 self._borrow_member_repo.delete_borrow_member(

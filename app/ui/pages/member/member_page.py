@@ -577,7 +577,7 @@ class MemberPage(ctk.CTkFrame):
                     text="Book Lost",
                     fg_color=Color.status_borrowed_color(),
                     hover_color=Color.secondary_color(),
-                    command=lambda: self.book_lost(borrow.id_borrow, borrow.id_exemplar,borrow.member,borrow.return_date)
+                    command=lambda: self.book_lost(borrow.id_borrow, borrow.id_exemplar,borrow.member.id_member,borrow.return_date)
                 )
                 self.return_book_button.grid(row=row_index, column=1, padx=10, pady=10, sticky="e")
 
@@ -612,16 +612,14 @@ class MemberPage(ctk.CTkFrame):
         """
         Handles the return of a book by updating the borrow status and exemplar availability.
         """
-
-        self.payment_service.gen_price(borrow_id,False,id_member,return_date)
-        PopUpMessage.pop_up(self, "Returning book with : \n - Exemplar ID: " + str(exemplar_id) + "\n - Borrow ID: " + str(borrow_id))
+        due = self.payment_service.gen_price(borrow_id,False,id_member,return_date)
+        PopUpMessage.pop_up(self, "Returning book with : \n - Exemplar ID: " + str(exemplar_id) + "\n - Borrow ID: " + str(borrow_id) + "\n - Price due: " + f"{due:.2f} €")
             
     def book_lost(self,borrow_id, exemplar_id,id_member,return_date):
         """
         Handles the case when a book is marked as lost.
         """
-        self.payment_service.gen_price(borrow_id,True,id_member,return_date)
-
-        PopUpMessage.pop_up(self, "Book marked as lost with \n - Exemplar ID: " + str(exemplar_id) )
+        due = self.payment_service.gen_price(borrow_id,True,id_member,return_date)
+        PopUpMessage.pop_up(self, "Book marked as lost with \n - Exemplar ID: " + str(exemplar_id) + "\n - Price due: " + f"{due:.2f} €")
 
 

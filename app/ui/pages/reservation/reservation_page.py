@@ -1,8 +1,7 @@
 
 import customtkinter as ctk
-from tkinter import messagebox, ttk
 import tkinter as tk
-from services import ReservationService,BookService,ExemplarService,MemberService,PersonService
+from services import ReservationService,BookService,ExemplarService,MemberService,PersonService,BorrowService
 from ui.components import PopUpMessage,SelectionFrame
 from datetime import date 
 from datetime import datetime
@@ -25,6 +24,7 @@ class ReservationPage(ctk.CTkFrame):
         self.exemplar_service = ExemplarService()
         self.member_service = MemberService()
         self.personne_servce= PersonService()
+        self.borrow_service = BorrowService()
         self.selected_reservation= None
         self.setup_ui()
         self.book_selected =[]
@@ -53,7 +53,7 @@ class ReservationPage(ctk.CTkFrame):
         self.left_panel = ctk.CTkFrame(self.main_panel)
         self.left_panel.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
 
-        self.left_label = ctk.CTkLabel(self.left_panel, text="Mes Réservations", font=ctk.CTkFont(size=16, weight="bold"))
+        self.left_label = ctk.CTkLabel(self.left_panel, text="Reservation", font=ctk.CTkFont(size=16, weight="bold"))
         self.left_label.pack(pady=(10, 5))
 
         self.reservation_listbox = tk.Listbox(self.left_panel,  height=40, bg="#2b2b2b",fg="white",highlightthickness=0,bd=0,relief="flat",selectbackground="#444",selectforeground="white" )
@@ -71,11 +71,13 @@ class ReservationPage(ctk.CTkFrame):
             self.reservation_listbox.insert("end", f"{res.reservation_date} | title: {title} | Membre: {member_firstname} {member_name}")
             self.indexbook[idx] = res
         self.reservation_listbox.bind("<<ListboxSelect>>", self.reservation_select)
+        self.add_page()
 
+    def add_page(self):
         self.right_panel = ctk.CTkFrame(self.main_panel)
         self.right_panel.grid(row=0, column=1, sticky="nsew")
 
-        self.form_title = ctk.CTkLabel(self.right_panel, text="New Réservation", font=ctk.CTkFont(size=18, weight="bold"))
+        self.form_title = ctk.CTkLabel(self.right_panel, text="Add reservation", font=ctk.CTkFont(size=18, weight="bold"))
         self.form_title.pack(pady=(10, 10))
         self.book_frame = ctk.CTkFrame(self.right_panel)
         self.book_frame.pack(pady=5, padx=20, fill="x")
@@ -177,6 +179,8 @@ class ReservationPage(ctk.CTkFrame):
                 PopUpMessage.pop_up(self, "reservation updated successfully!")
                 self.refresh_listbox()
                 self.clear_form_up_del()
+                self.add_page()
+
         except ValueError as e:
             PopUpMessage.pop_up(self, f"Input error: {e}")
 
@@ -192,6 +196,7 @@ class ReservationPage(ctk.CTkFrame):
                 PopUpMessage.pop_up(self, "reservation deleted successfully!")
                 self.refresh_listbox()
                 self.clear_form_up_del()
+                self.add_page()
         except ValueError as e:
             PopUpMessage.pop_up(self, f"Input error: {e}")
     def reservation_select(self, event):
@@ -219,7 +224,7 @@ class ReservationPage(ctk.CTkFrame):
             self.date_entry = ctk.CTkEntry(self.right_panel, placeholder_text="reservation_date")
             self.date_entry.pack(pady=5, padx=20, fill="x")
             
-            self.button_frame = ctk.CTkFrame(self.right_panel)
+            self.button_frame = ctk.CTkFrame(self.right_panel, fg_color="transparent")
             self.button_frame.pack(pady=20, fill="x", padx=20)
 
             self.button_frame.grid_columnconfigure(0, weight=1)
@@ -227,6 +232,9 @@ class ReservationPage(ctk.CTkFrame):
 
             self.submit_button = ctk.CTkButton(self.button_frame, text="Update", command=self.update_reservation)
             self.submit_button.pack(side="right", expand=True, padx=10)
+
+            self.borrow_button = ctk.CTkButton(self.button_frame, text="Borrow this reservation")
+            self.borrow_button.pack(side="right", expand=True, padx=10)
 
             self.delete_button = ctk.CTkButton(self.button_frame, text="Delete", command=self.delete_reservation)
             self.delete_button.pack(side="left", expand=True, padx=10)
@@ -245,7 +253,7 @@ class ReservationPage(ctk.CTkFrame):
                 attributes_to_search=[lambda member: member.person.first_name, lambda member:member.person.last_name],
                 entry_to_update=self.member_entry
                 ))
-                
+                self.borrow_button.configure(command= lambda: self.borrow(selected_res.member, selected_res.id_exemplar, selected_res.id_reservation))
                 self.edit_member_button.pack(side='left')
                 self.member_entry.insert(0, self.member_selected[0].person.first_name)
                 self.date_entry.insert(0, selected_res.reservation_date)
@@ -287,12 +295,16 @@ class ReservationPage(ctk.CTkFrame):
     def clear_form_add(self):
         """Clears the form fields for adding a new reservation.
         This method resets the title, member, and date entries, and clears the selected book and member lists."""
-        self.book_entry.destroy()
-        self.member_entry.destroy()
-        self.member_entry = ctk.CTkEntry(self.member_frame, placeholder_text="Member")
-        self.member_entry.pack(side="right", expand=True, fill="x", padx=(0, 5))
-        self.book_entry = ctk.CTkEntry(self.book_frame, placeholder_text="title")
-        self.book_entry.pack(side="right", expand=True, fill="x", padx=(0, 5))
+        self.book_entry.configure(state="normal")
+        self.member_entry.configure(state="normal")
+        self.book_entry.delete(0, tk.END)
+        self.member_entry.delete(0, tk.END)
+        self.member_entry.configure(state="disabled")
+        self.book_entry.configure(state="disabled")
+        # self.member_entry = ctk.CTkEntry(self.member_frame, placeholder_text="Member")
+        # self.member_entry.pack(side="right", expand=True, fill="x", padx=(0, 5))
+        # self.book_entry = ctk.CTkEntry(self.book_frame, placeholder_text="title")
+        # self.book_entry.pack(side="right", expand=True, fill="x", padx=(0, 5))
         self.date_entry.delete(0, tk.END)
         self.book_selected.clear()
         self.member_selected.clear()
@@ -302,5 +314,14 @@ class ReservationPage(ctk.CTkFrame):
         self.member_entry.delete(0, tk.END)
         self.date_entry.delete(0, tk.END)
         self.member_selected.clear()
+
+    def borrow(self, member, id_exemplar : int, id_reservation : int):
+        try:
+            self.borrow_service.add_borrow(None, member.id, id_exemplar, id_reservation)
+            PopUpMessage.pop_up(self, "Borrow added successfully!")
+            self.refresh_listbox()
+            self.add_page()
+        except Exception as e:
+            PopUpMessage.pop_up(self, f"{e}")
         
         

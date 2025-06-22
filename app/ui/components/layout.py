@@ -99,7 +99,7 @@ class MenuNavigation(ctk.CTkFrame):
         """
         self.set_active_button(page_name)
         self.on_menu_select(page_name)
-
+    
     def set_active_button(self, active_key):
         """
         Sets the active button based on the provided key.
