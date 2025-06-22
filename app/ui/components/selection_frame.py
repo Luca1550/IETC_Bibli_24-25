@@ -67,6 +67,10 @@ class SelectionFrame(ctk.CTkToplevel):
         self.confirm_button.pack(fill="x", padx="15", pady="5")
         self._update_list()
         self._filter_all_items()
+        self.bind("<Return>", lambda event: self.confirm_button.invoke())
+        self.confirm_button.focus_set()
+        
+        self.bind("<Escape>", lambda envent: self.destroy())
 
     def _filter_all_items(self):
         """

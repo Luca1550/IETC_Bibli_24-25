@@ -556,7 +556,7 @@ class BookPage(ctk.CTkFrame):
             waits for 3 seconds before clearing the message.
         """
         self.info_label.configure(text=f"❌ {message}", text_color="red")
-        # self.after(3000, lambda: self.update_info())
+        self.after(5000, lambda: self.update_info())
     
     def show_success(self, message):
         """
