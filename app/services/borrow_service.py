@@ -82,7 +82,7 @@ class BorrowService:
             import traceback
             traceback.print_exc()
             return f"🛑 Error [{e}]"
-    def add_borrow(self, isbn:str,id_member:int,paiement_statut:int = True):
+    def add_borrow(self, isbn:str,id_member:int):
         
         try:
 
@@ -102,10 +102,10 @@ class BorrowService:
                     id_exemplar=exemplar.id,
                     borrow_date=actual_borrow_date,
                     return_date = return_date,
-                    paiement_due = paiement_due,
-                    paiement_type = PaiementType(value=3) if self.check_subscribe(id_member) else PaiementType(value=4),
-                    #paiement_status faudra voir dans l'ui cette folle
-                    paiement_status = paiement_statut
+                    # paiement_due = paiement_due,
+                    # paiement_type = PaiementType(value=3) if self.check_subscribe(id_member) else PaiementType(value=4),
+                    # #paiement_status faudra voir dans l'ui cette folle
+                    # paiement_status = paiement_statut
                     )
                 self.exemplar_service.update_status(exemplar.id,2)
 

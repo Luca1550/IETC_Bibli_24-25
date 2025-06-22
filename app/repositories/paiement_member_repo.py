@@ -16,9 +16,9 @@ class PaiementMemberRepo:
         
         JsonStorage.save_all(self.PATH_PAIEMENT_MEMBER_JSON, self.paiement_member_json)
 
-    def add_paiement_member(self,id_member:int,id_paiement:int):
+    def add_paiement_member(self,paiementmember:PaiementMember):
         
-        self.paiement_member_json.append(PaiementMember(id_member, id_paiement))
+        self.paiement_member_json.append(paiementmember)
         self._save_all()
 
     def get_all(self):

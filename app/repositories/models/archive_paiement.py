@@ -4,7 +4,7 @@ from datetime import date
 
 class ArchivePaiement(Base):
 
-    def __init__(self, id : int | None, id_paiement:int, member:Member,paiement_type:int,paiement_due:int,paiement_date:date):
+    def __init__(self, id : int | None, id_paiement:int, member:Member,paiement_type:int,paiement_due:float,paiement_date:date):
 
     
         super().__init__(id)

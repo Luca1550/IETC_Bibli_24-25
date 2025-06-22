@@ -28,46 +28,54 @@ class PaiementService:
 
 
     def add_paiement(self,paiement_type:int,paiement_due:int,id_member:int):
-        today_date= date.today().isoformat()
-        new_paiement = Paiement(
-                id=None,  
-                paiement_type=paiement_type,
-                paiement_due=paiement_due,
-                paiement_date=today_date, 
-            )
-        result = self.paiement_repo.add_paiement(new_paiement)
-
-
-        paiement_member_result = None
-        if result :
-            if id_member:
-                id_new_paiement = new_paiement.id
-                new_reservation_member= PaiementMember(
-                    id_paiement=id_new_paiement,
-                    id_member=id_member
+        try:
+            new_paiement = Paiement(
+                    id=None,  
+                    paiement_type=paiement_type,
+                    paiement_due=paiement_due,
+                    paiement_date=date.today().isoformat(), 
                 )
-                paiement_member_result=self.paiement_member_repo.add_paiement_member(new_reservation_member)
-        
-        self.archive_paiement(new_reservation_member.id_paiement)
-        return result,paiement_member_result
+            result = self.paiement_repo.add_paiement(new_paiement)
+
+
+            paiement_member_result = None
+            if result :
+                if id_member:
+                    new_paiement_member= PaiementMember(
+                        id_paiement=new_paiement.id,
+                        id_member=id_member
+
+                    )
+                    
+
+                    paiement_member_result=self.paiement_member_repo.add_paiement_member(new_paiement_member)
+            
+            self.archive_paiement(new_paiement.id)
+            return result,paiement_member_result
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            raise Exception(f"🛑 Error [{e}]")
     def calculate_fine(self,date_from_member_return:date,id_borrow:int,id_member:int):
         #besoin de la return date, borrow date et la date a laquelle il est venu le rendre 
         #besoin du prix de l'amende aussi retunr fine per day
         try:
-            paiement_type = 1
+            paiement_type = PaiementType(value=1)
             libparams=self.library_service.get_library_parameters()
             return_fine_per_day=libparams[0].fine_per_day
             borrowparams=self.borrow_service.get_by_id(id_borrow)
             return_date_planned=borrowparams.return_date
+            
             if datetime.fromisoformat(date_from_member_return).date() > datetime.fromisoformat(return_date_planned).date():
-                return_delay=datetime.fromisoformat(date_from_member_return).date()-datetime.fromisoformat(return_date_planned).date()
-                paiement_due = return_delay*return_fine_per_day
+                return_delay=(datetime.fromisoformat(date_from_member_return).date()-datetime.fromisoformat(return_date_planned).date()).days
+                print('jouR',return_delay)
+                paiement_due:float = return_delay*return_fine_per_day
                 self.add_paiement(paiement_type,paiement_due,id_member)
             return paiement_due
         except Exception as e:
             import traceback
             traceback.print_exc()
-            return f"🛑 Error [{e}]"
+            raise Exception(f"🛑 Error [{e}]")
     def price_due_per_borrow(self,id_member:int):
         try:
             libparams=self.library_service.get_library_parameters()
@@ -75,17 +83,18 @@ class PaiementService:
             borrow_price_without_sub_lib = libparams[0].borrow_price_without_sub
             if self.borrow_service.check_subscribe(id_member):
                 paiement_due = borrow_price_with_sub_lib
-                paiement_type = 3
+                paiement_type = PaiementType(value=3)
                 self.add_paiement(paiement_type,paiement_due,id_member)
             else:
                 paiement_due = borrow_price_without_sub_lib
-                paiement_type = 4
+                paiement_type = PaiementType(value=4)
                 self.add_paiement(paiement_type,paiement_due,id_member)
             return paiement_due
         except Exception as e:
             import traceback
             traceback.print_exc()
-            return f"🛑 Error [{e}]"
+            #changer en raise 
+            raise Exception(f"🛑 Error [{e}]")
     
     
 
@@ -98,13 +107,13 @@ class PaiementService:
                 paiement_due=parambook.price
                 self.exemplar_service.delete_exemplar(paramborrow.id_exemplar)
                 print("exemplar del")
-                paiement_type = 2
+                paiement_type = PaiementType(value=2)
                 self.add_paiement(paiement_type,paiement_due,id_member)
             return paiement_due
         except Exception as e:
             import traceback
             traceback.print_exc()
-            return f"🛑 Error [{e}]"
+            raise Exception(f"🛑 Error [{e}]")
     def get_all(self):
         
         try:
