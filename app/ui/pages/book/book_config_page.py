@@ -140,8 +140,10 @@ class DeleteThemePage(ctk.CTkToplevel):
 
         self.scroll_frame = ctk.CTkScrollableFrame(self, width=480, height=500)
         self.scroll_frame.pack(fill="both", expand=True, padx=10, pady=10)
-
+        
         self.load_themes()
+
+        self.bind("<Escape>", lambda event: self.destroy())
 
     def load_themes(self):
         for widget in self.scroll_frame.winfo_children():
@@ -190,7 +192,7 @@ class DeleteThemePage(ctk.CTkToplevel):
         btn_frame = ctk.CTkFrame(confirm_window, fg_color="transparent")
         btn_frame.pack(pady=10)
 
-        ctk.CTkButton(
+        btn_yes = ctk.CTkButton(
             btn_frame,
             text="Yes",
             fg_color="red",
@@ -199,13 +201,17 @@ class DeleteThemePage(ctk.CTkToplevel):
                 self.delete_theme(theme),
                 confirm_window.destroy()
             ]
-        ).pack(side="left", padx=10)
+        )
+        btn_yes.pack(side="left", padx=10)
 
-        ctk.CTkButton(
+        btn_no = ctk.CTkButton(
             btn_frame,
             text="No",
             command=confirm_window.destroy
-        ).pack(side="right", padx=10)
+        )
+        btn_no.pack(side="right", padx=10)
+        confirm_window.bind("<Return>", lambda event: btn_yes.invoke())
+        confirm_window.bind("<Escape>", lambda event: btn_no.invoke())
 
     def delete_theme(self, theme):
         try:
@@ -275,6 +281,8 @@ class DeleteEditorPage(ctk.CTkToplevel):
         self.scroll_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
         self.load_editors()
+        
+        self.bind("<Escape>", lambda event: self.destroy())
 
     def load_editors(self):
         for widget in self.scroll_frame.winfo_children():
@@ -323,7 +331,7 @@ class DeleteEditorPage(ctk.CTkToplevel):
         btn_frame = ctk.CTkFrame(confirm_window, fg_color="transparent")
         btn_frame.pack(pady=10)
 
-        ctk.CTkButton(
+        btn_yes = ctk.CTkButton(
             btn_frame,
             text="Yes",
             fg_color="red",
@@ -332,13 +340,18 @@ class DeleteEditorPage(ctk.CTkToplevel):
                 self.delete_editor(editor),
                 confirm_window.destroy()
             ]
-        ).pack(side="left", padx=10)
+        )
+        btn_yes.pack(side="left", padx=10)
 
-        ctk.CTkButton(
+        btn_no = ctk.CTkButton(
             btn_frame,
             text="No",
             command=confirm_window.destroy
-        ).pack(side="right", padx=10)
+        )
+        btn_no.pack(side="right", padx=10)
+        
+        confirm_window.bind("<Return>", lambda event: btn_yes.invoke())
+        confirm_window.bind("<Escape>", lambda event: btn_no.invoke())
 
     def delete_editor(self, editor):
         try:
@@ -347,7 +360,6 @@ class DeleteEditorPage(ctk.CTkToplevel):
             self.load_editors()
         except Exception as e:
             PopUpMessage.pop_up(self, f"Error : {str(e)}")
-
 
 
 class AddCollectionPage(ctk.CTkToplevel):
@@ -406,6 +418,8 @@ class DeleteCollectionPage(ctk.CTkToplevel):
         self.scroll_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
         self.load_collections()
+        
+        self.bind("<Escape>", lambda event: self.destroy())
 
     def load_collections(self):
         for widget in self.scroll_frame.winfo_children():
@@ -454,7 +468,7 @@ class DeleteCollectionPage(ctk.CTkToplevel):
         btn_frame = ctk.CTkFrame(confirm_window, fg_color="transparent")
         btn_frame.pack(pady=10)
 
-        ctk.CTkButton(
+        btn_yes = ctk.CTkButton(
             btn_frame,
             text="Yes",
             fg_color="red",
@@ -463,13 +477,18 @@ class DeleteCollectionPage(ctk.CTkToplevel):
                 self.delete_collection(collection),
                 confirm_window.destroy()
             ]
-        ).pack(side="left", padx=10)
+        )
+        btn_yes.pack(side="left", padx=10)
 
-        ctk.CTkButton(
+        btn_no = ctk.CTkButton(
             btn_frame,
             text="No",
             command=confirm_window.destroy
-        ).pack(side="right", padx=10)
+        )
+        btn_no.pack(side="right", padx=10)
+        
+        confirm_window.bind("<Return>", lambda event: btn_yes.invoke())
+        confirm_window.bind("<Escape>", lambda event: btn_no.invoke())
 
     def delete_collection(self, collection):
         try:
@@ -542,6 +561,8 @@ class DeleteAuthorPage(ctk.CTkToplevel):
         self.scroll_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
         self.load_authors()
+        
+        self.bind("<Escape>", lambda event: self.destroy())
 
     def load_authors(self):
         for widget in self.scroll_frame.winfo_children():
@@ -591,7 +612,7 @@ class DeleteAuthorPage(ctk.CTkToplevel):
         btn_frame = ctk.CTkFrame(confirm_window, fg_color="transparent")
         btn_frame.pack(pady=10)
 
-        ctk.CTkButton(
+        btn_yes = ctk.CTkButton(
             btn_frame,
             text="Yes",
             fg_color="red",
@@ -600,13 +621,18 @@ class DeleteAuthorPage(ctk.CTkToplevel):
                 self.delete_author(author),
                 confirm_window.destroy()
             ]
-        ).pack(side="left", padx=10)
+        )
+        btn_yes.pack(side="left", padx=10)
 
-        ctk.CTkButton(
+        btn_no = ctk.CTkButton(
             btn_frame,
             text="No",
             command=confirm_window.destroy
-        ).pack(side="right", padx=10)
+        )
+        btn_no.pack(side="right", padx=10)
+        
+        confirm_window.bind("<Return>", lambda event: btn_yes.invoke())
+        confirm_window.bind("<Escape>", lambda event: btn_no.invoke())
 
     def delete_author(self, author):
         try:
