@@ -1,6 +1,5 @@
-from app.repositories.member_repo import MemberRepo
 from repositories.models import PaiementMember,Member
-from repositories import PaiementRepo
+from repositories import PaiementRepo,MemberRepo
 from tools import JsonStorage
 import pathlib
 

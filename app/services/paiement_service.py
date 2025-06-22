@@ -47,6 +47,8 @@ class PaiementService:
                     id_member=id_member
                 )
                 paiement_member_result=self.paiement_member_repo.add_paiement_member(new_reservation_member)
+        
+        self.archive_paiement(new_reservation_member.id_paiement)
         return result,paiement_member_result
     def calculate_fine(self,date_from_member_return:date,id_borrow:int,id_member:int):
         #besoin de la return date, borrow date et la date a laquelle il est venu le rendre 

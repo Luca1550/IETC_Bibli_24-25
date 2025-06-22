@@ -11,7 +11,7 @@ from .editor_service import EditorService
 from .member_service import MemberService
 from .exemplar_service import ExemplarService
 from .reservation_service import ReservationService 
-from .paiment_service import PaiementService
+from .paiement_service import PaiementService
 from .borrow_service import BorrowService
 
 
