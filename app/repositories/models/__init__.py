@@ -15,9 +15,9 @@ from .book_author import BookAuthor
 from .exemplar import Exemplar
 from .reservation import Reservation
 from .reservation_member import ReservationMember
-from .paiement import Paiement
-from .paiement_member import PaiementMember
-from .archive_paiement import ArchivePaiement
+from .payment import Payment
+from .payment_member import PaymentMember
+from .archive_payment import ArchivePayment
 from .archive_reservation import ArchiveReservation
 from .borrow import Borrow
 from .borrow_member import BorrowMember

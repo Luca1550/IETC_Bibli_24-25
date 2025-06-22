@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import os
-from services import MemberService, ExemplarService
+from services import MemberService, ExemplarService,PaymentService
 from ui.components import PopUpMessage
 import datetime
 from datetime import datetime
@@ -19,6 +19,7 @@ class MemberPage(ctk.CTkFrame):
         self.member_service = MemberService()
         self.exemplar_service = ExemplarService()
         self.members = self.member_service.get_all_members()
+        self.payment_service= PaymentService()
         self.setup_ui()
         
 
@@ -512,7 +513,6 @@ class MemberPage(ctk.CTkFrame):
 
         borrows = self.member_service.get_borrowed_books(member_id)
 
-
         for widget in self.borrows_by_member_frame.winfo_children():
             widget.destroy()
 
@@ -577,7 +577,7 @@ class MemberPage(ctk.CTkFrame):
                     text="Book Lost",
                     fg_color=Color.status_borrowed_color(),
                     hover_color=Color.secondary_color(),
-                    command=lambda: self.book_lost(book.isbn, borrow.id_exemplar)
+                    command=lambda: self.book_lost(borrow.id_borrow, borrow.id_exemplar,borrow.member,borrow.return_date)
                 )
                 self.return_book_button.grid(row=row_index, column=1, padx=10, pady=10, sticky="e")
 
@@ -586,7 +586,7 @@ class MemberPage(ctk.CTkFrame):
                     text="Return Book",
                     fg_color=Color.primary_color(),
                     hover_color=Color.status_available_color(),
-                    command=lambda: self.return_book(borrow.id_borrow, borrow.id_exemplar),
+                    command=lambda: self.return_book(borrow.id_borrow, borrow.id_exemplar,member_id,borrow.return_date),
                 )
                 self.return_book_button.grid(row=row_index, column=2, padx=10, pady=10, sticky="e")
                 row_index += 1
@@ -608,16 +608,20 @@ class MemberPage(ctk.CTkFrame):
             )
             no_borrows_label.grid(row=0, column=0, padx=15, pady=(5, 0))
 
-    def return_book(self, borrow_id, exemplar_id):
+    def return_book(self, borrow_id, exemplar_id,id_member,return_date):
         """
         Handles the return of a book by updating the borrow status and exemplar availability.
         """
+
+        self.payment_service.gen_price(borrow_id,False,id_member,return_date)
         PopUpMessage.pop_up(self, "Returning book with : \n - Exemplar ID: " + str(exemplar_id) + "\n - Borrow ID: " + str(borrow_id))
-        
-    def book_lost(self, isbn, exemplar_id):
+            
+    def book_lost(self,borrow_id, exemplar_id,id_member,return_date):
         """
         Handles the case when a book is marked as lost.
         """
-        PopUpMessage.pop_up(self, "Book marked as lost with \n - Exemplar ID: " + str(exemplar_id) + "\n - ISBN: " + str(isbn))
+        self.payment_service.gen_price(borrow_id,True,id_member,return_date)
+
+        PopUpMessage.pop_up(self, "Book marked as lost with \n - Exemplar ID: " + str(exemplar_id) )
 
 

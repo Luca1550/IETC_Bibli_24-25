@@ -1,6 +1,6 @@
 from repositories.models import Member
 from datetime import date,datetime
-from enums import PaiementType
+from enums import PaymentType
 
 
 class BorrowDTO:

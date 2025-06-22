@@ -1,6 +1,6 @@
 from enum import Enum
 
-class PaiementType(Enum):
+class PaymentType(Enum):
     """Enum representing different types of payments in the library system."""
     FINE=1
     LOST_BOOK=2
