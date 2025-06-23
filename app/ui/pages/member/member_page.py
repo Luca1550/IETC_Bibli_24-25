@@ -617,6 +617,7 @@ class MemberPage(ctk.CTkFrame):
         """
         due = self.payment_service.gen_price(borrow_id,False,id_member,return_date)
         PopUpMessage.pop_up(self, "Returning book with : \n - Exemplar ID: " + str(exemplar_id) + "\n - Borrow ID: " + str(borrow_id) + "\n - Price due: " + f"{due:.2f} €")
+        self.display_borrows_by_member(id_member)
             
     def book_lost(self,borrow_id, exemplar_id,id_member,return_date):
         """
@@ -624,3 +625,4 @@ class MemberPage(ctk.CTkFrame):
         """
         due = self.payment_service.gen_price(borrow_id,True,id_member,return_date)
         PopUpMessage.pop_up(self, "Book marked as lost with \n - Exemplar ID: " + str(exemplar_id) + "\n - Price due: " + f"{due:.2f} €")
+        self.display_borrows_by_member(id_member)
