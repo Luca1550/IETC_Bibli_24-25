@@ -56,8 +56,12 @@ class MemberService:
             raise Exception("Failed to add person.")
 
     def update_member(self, id: int, first_name: str, last_name: str, national_number: str, email: str, street: str, cp: str, city: str, membership_entrydate: date, subscribed: bool, archived: bool) -> bool:
+       
+        member = self._member_repo.get_member_by_id(id)
+        if not member:
+            raise Exception("Member not found for update.")
         success = self._person_service.update_person(
-            id,
+            member.id_person,
             first_name,
             last_name,
             national_number,
@@ -67,11 +71,6 @@ class MemberService:
             city
         )
         if success:
-            # Récupérer le membre existant, pas créer un nouveau
-            member = self._member_repo.get_member_by_id(id)
-            if not member:
-                raise Exception("Member not found for update.")
-            
             # Mettre à jour les champs du membre existant
             member.membership_entrydate = membership_entrydate
             member.subscribed = subscribed
