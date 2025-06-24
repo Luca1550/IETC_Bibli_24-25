@@ -115,7 +115,6 @@ class HomePage(ctk.CTkFrame):
         self.borrowed_today_scroll_frame.pack(fill="both", expand=True, padx=12.5, pady=(0,12.5))
         if self._borrow_data:
             for borrow in self._borrow_data:
-                print(borrow.return_date)
                 self.borrow_frame = BorrowFrame(
                 self.borrowed_today_scroll_frame,
                 borrow
