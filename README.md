@@ -141,7 +141,7 @@ En fonction de l'OS :
     .\.venv\Scripts\activate
 #### MacOs/Linux  :
 
-    WYP
+    source .venv/bin/activate
 
 
 ### 4️⃣ **Installer les dépendances**
@@ -154,6 +154,9 @@ Une fois les dépendances installées vous pouvez executer l'application:
 
     python .\app\main.py
 
+### 6️⃣ **Se connecter**
+    Login : admin
+    Mot de passe : admin
 
 
 ## 🔜 Améliorations envisageables
@@ -173,9 +176,9 @@ Utiliser des bibliothèques comme pandas ou numpy pour analyser les données (fr
 ### 5️⃣ **Amélioration de l’interface utilisateur (UI/UX)**
 L’interface pourrait être rendue plus ergonomique et intuitive :
 
-    Ajout de pagination.
-    Affichage plus fluide des composants (éviter leur recréation systématique).
-    Intégration de retours visuels (animations, loaders, confirmations).
+- Ajout de pagination.
+- Affichage plus fluide des composants (éviter leur recréation systématique).
+- Intégration de retours visuels (animations, loaders, confirmations).
 
 ### 6️⃣ **Sauvegarde automatique et journalisation**
 Ajouter un système de backup régulier des données JSON, ainsi qu’une journalisation des actions critiques (log des suppressions, modifications, connexions, etc.) afin de renforcer la sécurité et la traçabilité.
