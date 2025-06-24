@@ -1,0 +1,17 @@
+[
+    {
+        "__type__": "BookAuthor",
+        "isbn": "9780261103580",
+        "id_author": 1
+    },
+    {
+        "__type__": "BookAuthor",
+        "isbn": "9780261103597",
+        "id_author": 1
+    },
+    {
+        "__type__": "BookAuthor",
+        "isbn": "9781593080464",
+        "id_author": 2
+    }
+]

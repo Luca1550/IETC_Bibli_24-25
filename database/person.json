@@ -1,0 +1,68 @@
+[
+    {
+        "__type__": "Person",
+        "id": 1,
+        "first_name": "Luca",
+        "last_name": "Charles",
+        "national_number": "96110312345",
+        "email": "luca.charles@hotmail.com",
+        "street": "63 Rue du port",
+        "cp": "6000",
+        "city": "Charleroi"
+    },
+    {
+        "__type__": "Person",
+        "id": 2,
+        "first_name": "Alin",
+        "last_name": "Croitoru",
+        "national_number": "02050623456",
+        "email": "Alin.croitoru@gmail.com",
+        "street": "27 rue du paddock",
+        "cp": "6043",
+        "city": "Jumet"
+    },
+    {
+        "__type__": "Person",
+        "id": 4,
+        "first_name": "Corentin",
+        "last_name": "Germeau",
+        "national_number": "98030212345",
+        "email": "corentin.germeau@freemail.com",
+        "street": "983 Rue du m\u00e9ga loin",
+        "cp": "8362",
+        "city": "Arlon"
+    },
+    {
+        "__type__": "Person",
+        "id": 5,
+        "first_name": "Julien",
+        "last_name": "Paquet",
+        "national_number": "97040212345",
+        "email": "Juju.lacourtepaille@yahoo.fr",
+        "street": "1 Rue des riches",
+        "cp": "1202",
+        "city": "Waterloo"
+    },
+    {
+        "__type__": "Person",
+        "id": 6,
+        "first_name": "J.R.R",
+        "last_name": "Tolkien",
+        "national_number": null,
+        "email": null,
+        "street": null,
+        "cp": null,
+        "city": null
+    },
+    {
+        "__type__": "Person",
+        "id": 7,
+        "first_name": "Miguel",
+        "last_name": "Servantes",
+        "national_number": null,
+        "email": null,
+        "street": null,
+        "cp": null,
+        "city": null
+    }
+]

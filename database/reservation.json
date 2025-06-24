@@ -1,0 +1,8 @@
+[
+    {
+        "__type__": "Reservation",
+        "id": 1,
+        "id_exemplar": 4,
+        "reservation_date": "2025-07-01"
+    }
+]

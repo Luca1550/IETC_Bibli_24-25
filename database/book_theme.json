@@ -1,0 +1,27 @@
+[
+    {
+        "__type__": "BookTheme",
+        "isbn": "9780261103580",
+        "id_theme": 1
+    },
+    {
+        "__type__": "BookTheme",
+        "isbn": "9780261103580",
+        "id_theme": 3
+    },
+    {
+        "__type__": "BookTheme",
+        "isbn": "9780261103597",
+        "id_theme": 1
+    },
+    {
+        "__type__": "BookTheme",
+        "isbn": "9780261103597",
+        "id_theme": 3
+    },
+    {
+        "__type__": "BookTheme",
+        "isbn": "9781593080464",
+        "id_theme": 4
+    }
+]

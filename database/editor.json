@@ -1,0 +1,17 @@
+[
+    {
+        "__type__": "Editor",
+        "id": 1,
+        "name": "New Ed"
+    },
+    {
+        "__type__": "Editor",
+        "id": 2,
+        "name": "Reprint"
+    },
+    {
+        "__type__": "Editor",
+        "id": 3,
+        "name": "Bidings"
+    }
+]

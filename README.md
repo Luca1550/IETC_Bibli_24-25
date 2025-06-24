@@ -165,6 +165,9 @@ Une fois les dépendances installées vous pouvez executer l'application:
     Login : admin
     Mot de passe : admin
 
+## Base de données
+Une base de données fictive a été créée pour le test et le fichier Library.json a été volontairement ignoré car il sera utilisé pour démontrer la fonctionnalité de départ.
+
 
 ## 🔜 Améliorations envisageables
 

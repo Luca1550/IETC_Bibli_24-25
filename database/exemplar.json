@@ -1,0 +1,92 @@
+[
+    {
+        "__type__": "Exemplar",
+        "id": 1,
+        "isbn": "9780261103580",
+        "status": {
+            "__enum__": "Status",
+            "value": 2
+        },
+        "location": "1A"
+    },
+    {
+        "__type__": "Exemplar",
+        "id": 2,
+        "isbn": "9780261103580",
+        "status": {
+            "__enum__": "Status",
+            "value": 1
+        },
+        "location": "2A"
+    },
+    {
+        "__type__": "Exemplar",
+        "id": 3,
+        "isbn": "9780261103580",
+        "status": {
+            "__enum__": "Status",
+            "value": 1
+        },
+        "location": "3B"
+    },
+    {
+        "__type__": "Exemplar",
+        "id": 4,
+        "isbn": "9780261103597",
+        "status": {
+            "__enum__": "Status",
+            "value": 3
+        },
+        "location": "1A"
+    },
+    {
+        "__type__": "Exemplar",
+        "id": 5,
+        "isbn": "9780261103597",
+        "status": {
+            "__enum__": "Status",
+            "value": 1
+        },
+        "location": "2E"
+    },
+    {
+        "__type__": "Exemplar",
+        "id": 6,
+        "isbn": "9780261103597",
+        "status": {
+            "__enum__": "Status",
+            "value": 1
+        },
+        "location": "3S"
+    },
+    {
+        "__type__": "Exemplar",
+        "id": 7,
+        "isbn": "9781593080464",
+        "status": {
+            "__enum__": "Status",
+            "value": 2
+        },
+        "location": "1A"
+    },
+    {
+        "__type__": "Exemplar",
+        "id": 8,
+        "isbn": "9781593080464",
+        "status": {
+            "__enum__": "Status",
+            "value": 1
+        },
+        "location": "2A"
+    },
+    {
+        "__type__": "Exemplar",
+        "id": 9,
+        "isbn": "9781593080464",
+        "status": {
+            "__enum__": "Status",
+            "value": 1
+        },
+        "location": "5T"
+    }
+]
