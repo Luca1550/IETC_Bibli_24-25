@@ -6,6 +6,11 @@ from services import ExemplarService,LibraryService,MemberService,ReservationSer
 from enums import PaymentType
 
 class BorrowService:
+    """
+    Service class for managing borrows in the library system.
+    This class provides methods to add, retrieve, and delete borrows, as well as to
+    check borrow limits and return dates.
+    """
     def __init__(self):
         self._borrow_repo = BorrowRepo()
         self._exemplar_repo = ExemplarRepo()
@@ -18,6 +23,13 @@ class BorrowService:
         self.member_service= MemberService()
 
     def check_borrow_limit(self,id_member:int):
+        """
+        Checks if a member has reached their borrow limit.
+        arguments:
+        - id_member: ID of the member to check.
+        returns:
+        - True if the member has not reached their borrow limit, False otherwise.
+        """
         try:
             libparms=self.library_service.get_library_parameters()
             limit_borrow = libparms[0].limit_borrow
@@ -30,6 +42,13 @@ class BorrowService:
             raise Exception(e)
     
     def return_borrow_date(self,date_borrow:date):
+        """
+        Calculates the return date for a borrow based on the borrow date and library parameters.
+        arguments:
+        - date_borrow: Date when the book was borrowed.
+        returns:
+        - The calculated return date as a string in ISO format.
+        """
         try:
             if date_borrow:
                 libparms=self.library_service.get_library_parameters()
@@ -40,6 +59,12 @@ class BorrowService:
             raise Exception(e)
             
     def check_subscribe(self,id_member:int):
+        """
+        Checks if a member is subscribed to the library.
+        arguments:
+        - id_member: ID of the member to check.
+        returns:
+        - True if the member is subscribed, False otherwise."""
         try:
             memberparms=self.member_service.get_member_by_id(id_member)
             return memberparms.subscribed
@@ -48,6 +73,16 @@ class BorrowService:
         
 
     def add_borrow(self, isbn : str | None, id_member : int, id_exemplar : int | None = None, id_reservation : int | None = None):
+        """
+        Adds a new borrow to the system.
+        arguments:
+        - isbn: ISBN of the book to be borrowed.
+        - id_member: ID of the member borrowing the book.
+        - id_exemplar: ID of the exemplar being borrowed (optional).
+        - id_reservation: ID of the reservation associated with the borrow (optional).
+        returns:
+        - True if the borrow was added successfully, False otherwise.
+        """
         try:
             actual_borrow_date = date.today().isoformat()
             if not id_exemplar:
@@ -79,6 +114,11 @@ class BorrowService:
         
     
     def get_all(self):
+        """
+        Retrieves all borrows from the repository.
+        returns:
+        - A list of BorrowDTO objects containing borrow details.
+        """
         try:
             borrows = self._borrow_repo.get_borrows()
             result : list[BorrowDTO] = []
@@ -99,6 +139,13 @@ class BorrowService:
             raise Exception(f"🛑 Error getting borrow: [{e}]")
         
     def get_by_id(self,id:int):
+        """
+        Retrieves a borrow by its ID.
+        arguments:
+        - id: Unique identifier of the borrow to retrieve.
+        returns:
+        - A BorrowDTO object containing borrow details if found, otherwise raises an exception.
+        """
         try:
             BorrowDTO = self.get_all()
             for borrow in BorrowDTO : 
@@ -111,7 +158,8 @@ class BorrowService:
 
     def delete_borrow(self,id:int):
         """
-        Deletes a borrow by its ID."""
+        Deletes a borrow by its ID.
+        """
         try:
             borrow = self._borrow_repo.get_by_id(id)
             borrow_dto = self.get_by_id(id)
@@ -132,6 +180,13 @@ class BorrowService:
             raise Exception(f"🛑 Error deleting borrow: [{e}]")
         
     def get_return_date(self, id_exemplar:int):
+        """
+        Retrieves the return date for a specific exemplar.
+        arguments:
+        - id_exemplar: ID of the exemplar to check.
+        returns:
+        - The return date as a string in ISO format if found, otherwise returns False.
+        """
         borrows = self.get_all()  
         for b in borrows:
             if b.id_exemplar == id_exemplar:

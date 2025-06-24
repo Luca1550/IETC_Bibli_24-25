@@ -1,4 +1,5 @@
 class Color:
+    """A class to manage color constants and utilities for the application."""
     @staticmethod
     def primary_color():
         return "#1F6AA5" 
@@ -23,6 +24,14 @@ class Color:
     
     @staticmethod
     def hover_color(hex_color : str, percent : int):
+        """        
+        Adjusts the brightness of a given hex color by a specified percentage.
+        arguments:
+        - hex_color: The hex color code to adjust (e.g., "#ff0000").
+        - percent: The percentage to adjust the brightness (positive for lighter, negative for darker).
+        returns:
+        - A new hex color code with the adjusted brightness.
+        """
         hex_color = hex_color.lstrip("#") 
         rgb = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4)) 
 
@@ -33,6 +42,7 @@ class Color:
     
     @staticmethod
     def status_color(status : int):
+        """Returns the color associated with a given status."""
         match status:
             case 1:
                 return Color.status_available_color()

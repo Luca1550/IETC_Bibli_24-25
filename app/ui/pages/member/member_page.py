@@ -27,7 +27,6 @@ class MemberPage(ctk.CTkFrame):
         """
         Sets up the UI components for the MemberPage.
         """
-        ## Grid configuration for the layout
         rows = 1
         rows_weights = [1]
         columns = 2
@@ -38,8 +37,6 @@ class MemberPage(ctk.CTkFrame):
 
         for column, w in enumerate(columns_weights):
             self.grid_columnconfigure(column, weight=w)
-
-        ## UI Components
 
         self.member_frame = ctk.CTkFrame(self)
         self.member_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
@@ -53,7 +50,6 @@ class MemberPage(ctk.CTkFrame):
         self.search_bar_frame.grid_columnconfigure(0, weight=1)
         self.search_bar_frame.grid_columnconfigure(1, weight=0)
 
-        ## Search bar that changes the displayed member, the bar is the same height as the button
         self.search_bar = ctk.CTkEntry(
             self.search_bar_frame,
             placeholder_text="Search Member",
@@ -62,7 +58,6 @@ class MemberPage(ctk.CTkFrame):
         self.search_bar.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
         self.search_bar.bind("<KeyRelease>", self.filter_members)
 
-        ## button that opens a dialog to add a new member
         self.add_member_button = ctk.CTkButton(
             self.search_bar_frame,
             text="➕",
@@ -72,7 +67,6 @@ class MemberPage(ctk.CTkFrame):
         )
         self.add_member_button.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
-        ## Frame that contains the list of members
         self.member_list_frame = ctk.CTkScrollableFrame(
             self.member_frame
         )
@@ -390,7 +384,6 @@ class MemberPage(ctk.CTkFrame):
             text="Subscribed",
             onvalue=True,
             offvalue=False,
-            # Set to current subscription status
             variable=ctk.BooleanVar(value=member.subscribed)  
         )
         self.subscribed_checkbox.grid(row=9, column=0, padx=10, sticky="ew")
@@ -400,7 +393,6 @@ class MemberPage(ctk.CTkFrame):
             text="Archived",
             onvalue=True,
             offvalue=False,
-            # Set to current archived status
             variable=ctk.BooleanVar(value=member.archived) 
         )
         self.archived_checkbox.grid(row=9, column=1, padx=10, pady=10, sticky="ew")

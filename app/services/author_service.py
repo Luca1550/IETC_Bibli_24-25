@@ -111,7 +111,8 @@ class AuthorService:
     
     def _check_author_value(self,first_name:str,last_name:str):
         """
-        Checks if the author values are valid."""
+        Checks if the author values are valid.
+        """
         if not first_name or len(first_name.strip())<1:
             raise Exception ("First name cannot be empty.")
         if not last_name or len(last_name.strip())<1:

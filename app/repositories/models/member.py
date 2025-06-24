@@ -1,6 +1,9 @@
 from repositories.models import Base
 
 class Member(Base):
+    """
+    Represents a member in the system.
+    """
     def __init__(self, id: int | None, id_person: int, membership_entrydate: str, subscribed : bool = False, archived: bool = False):
         """
         Member model representing a member in the system.

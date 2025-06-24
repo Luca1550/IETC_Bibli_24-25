@@ -41,7 +41,9 @@ class Encoder(json.JSONEncoder):
         return super().default(obj)
     
 class Decoder:
-
+    """
+    Custom JSON decoder to handle deserialization of custom objects.
+    """
     _models_dict = {
     name: obj
     for name, obj in repositories.models.__dict__.items()
@@ -77,7 +79,9 @@ class Decoder:
         return dct
 
 class JsonStorage:
-    
+    """
+    Class for handling JSON storage operations.
+    """
     @staticmethod
     def _encode(jsonFile, data):
         """

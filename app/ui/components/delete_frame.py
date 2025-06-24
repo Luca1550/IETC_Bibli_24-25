@@ -2,6 +2,10 @@ import customtkinter as ctk
 from .pop_up_message import PopUpMessage
 
 class DeleteFrame(ctk.CTkToplevel):
+    """ 
+    DeleteFrame is a custom dialog for deleting items from a list.
+    It displays a list of items and allows the user to delete them with confirmation.
+    """
     def __init__(self, parent, title, items : list, display_model_method, delete_method, item_to_delete, entry_to_update, display_entry_to_update,**kwargs):
         super().__init__(parent, **kwargs)
         self.focus_set()
@@ -29,6 +33,8 @@ class DeleteFrame(ctk.CTkToplevel):
         self.bind("<Escape>", lambda event:self.destroy())
 
     def load_data(self):
+        """ Loads the items into the scrollable frame.
+        It creates a row for each item with a label and a delete button."""
         for item in self.items:
             if item in self.all_items_widgets:
                 self.all_items_widgets[item].pack(fill="x", pady=2)
@@ -47,6 +53,7 @@ class DeleteFrame(ctk.CTkToplevel):
 
 
     def _delete_item(self, item):
+        """ Deletes the item from the list and calls the delete method."""
         try:
             self.delete_method(self.item_to_delete(item))
             PopUpMessage.pop_up(self, f"✅ {self.display_model_method(item)} deleted")
@@ -57,6 +64,8 @@ class DeleteFrame(ctk.CTkToplevel):
             PopUpMessage.pop_up(self, f"Error : {str(e)}")
 
     def confirm_delete(self, item):
+        """ Opens a confirmation window to delete the item.
+        If the user confirms, it calls the _delete"""
         confirm_window = ctk.CTkToplevel(self)
         confirm_window.title("Confirm deletion")
         confirm_window.geometry("300x150")

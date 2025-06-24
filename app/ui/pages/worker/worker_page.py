@@ -22,7 +22,6 @@ class WorkerPage(ctk.CTkFrame):
         Sets up the user interface components for the WorkerPage.
         """
 
-        ## Grid configuration for the layout
         rows = 9
         rows_weights = [1,1,1,1,1,1,1,1,1]
         columns = 2
@@ -34,15 +33,11 @@ class WorkerPage(ctk.CTkFrame):
         for column, w in enumerate(columns_weights):
             self.grid_columnconfigure(column, weight=w)
 
-        ## UI Components
-
         self.add_worker_frame = ctk.CTkFrame(self)
         self.add_worker_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-        # Make column 0 expandable (to center content)
         self.add_worker_frame.grid_columnconfigure(0, weight=1)
 
-        # Widgets
         self.title_label = ctk.CTkLabel(self.add_worker_frame, text="Add worker", font=("Arial", 24))
         self.title_label.grid(row=0, column=0, padx=10, pady=10, sticky="n")
 
@@ -81,7 +76,6 @@ class WorkerPage(ctk.CTkFrame):
         Confirms the addition of a new worker and performs the addition.
         """
         id = None  
-        # ID will be assigned by the repository
         first_name = self.first_name_entry.get()
         last_name = self.last_name_entry.get()
         national_number = self.national_number_entry.get()
@@ -96,7 +90,6 @@ class WorkerPage(ctk.CTkFrame):
                     PopUpMessage.pop_up(self, "Worker added successfully.")
                     self.display_workers()
 
-                    # Clear the input fields after adding
                     self.first_name_entry.delete(0, 'end')
                     self.last_name_entry.delete(0, 'end')
                     self.national_number_entry.delete(0, 'end')
@@ -114,12 +107,10 @@ class WorkerPage(ctk.CTkFrame):
         """
         Displays the list of workers in the right-side frame.
         """
-        # Clear the previous content in the worker list frame
         for widget in self.worker_list_frame.winfo_children():
             widget.destroy()
 
         self.worker_service = WorkerService()
-        # Fetch all workers from the service
 
         workers = self.worker_service.get_all_workers()
         if workers:

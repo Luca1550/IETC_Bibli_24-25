@@ -3,8 +3,10 @@ from repositories.models import ArchivePayment
 from tools import JsonStorage
 
 class ArchivePaymentRepo():
-    """Repository for managing ArchivePayment objects.
-    This class handles the storage and retrieval of archive payment records in the library system."""
+    """
+    Repository for managing ArchivePayment objects.
+    This class handles the storage and retrieval of archive payment records in the library system.
+    """
     PATH_ARCHIVE_PAYMENT_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "archive_payment.json"
     archive_payment_json : list[ArchivePayment] = JsonStorage.load_all(PATH_ARCHIVE_PAYMENT_JSON)
 

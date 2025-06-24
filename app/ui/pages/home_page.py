@@ -6,6 +6,10 @@ from ui.pages.reservation import ReservationFrame
 from datetime import datetime, date
 
 class HomePage(ctk.CTkFrame):
+    """
+    HomePage is the main page of the application, displaying statistics and information about members, books, reservations, and borrows.
+    It includes sections for today's reservations, expected returns, member statistics, book statistics, and pricing information.
+"""
     def __init__(self, parent):
         super().__init__(parent)
 
@@ -42,7 +46,7 @@ class HomePage(ctk.CTkFrame):
         self.stat_members_frame.grid(row=1, column=0, padx=(10, 5), pady=(5, 10), sticky="nsew")
 
         self.stat_books_frame = ctk.CTkFrame(self, border_color=Color.primary_color(), border_width=5, corner_radius=5)
-        self.stat_books_frame.grid(row=1, column=1, columnspan=2, padx=5, pady=(5, 10), sticky="nsew")  # occupe 2 colonnes ici
+        self.stat_books_frame.grid(row=1, column=1, columnspan=2, padx=5, pady=(5, 10), sticky="nsew") 
 
         self.prices_frame = ctk.CTkFrame(self, border_color=Color.primary_color(), border_width=5, corner_radius=5)
         self.prices_frame.grid(row=1, column=3, padx=(5, 10), pady=(5, 10), sticky="nsew")
@@ -126,5 +130,10 @@ class HomePage(ctk.CTkFrame):
 # endregion
 
 def divider(frame):
+    """
+    Creates a divider frame with a specified height and color.
+    Args:
+        frame (ctk.CTkFrame): The parent frame where the divider will be placed.
+    """
     divider = ctk.CTkFrame(frame, height=2, fg_color="gray", bg_color="transparent")
     divider.pack(fill="x", padx=10, pady=2)

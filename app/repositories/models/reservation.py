@@ -3,7 +3,8 @@ from datetime import date
 
 class Reservation(Base):
     """
-    Represents a reservation for an exemplar in the library system."""
+    Represents a reservation for an exemplar in the library system.
+    """
     def __init__(self, id : int | None, id_exemplar : int, reservation_date : date):
         """
         Initializes a Reservation instance with the provided parameters.

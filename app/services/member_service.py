@@ -58,7 +58,24 @@ class MemberService:
             raise Exception(f"🛑 Error adding member: {e}")
 
     def update_member(self, id: int, first_name: str, last_name: str, national_number: str, email: str, street: str, cp: str, city: str, membership_entrydate: date, subscribed: bool, archived: bool) -> bool:
-       
+        """
+        Updates an existing Member object in the repository.
+        arguments:
+        - id: ID of the member to update.
+        - first_name: New first name of the member.
+        - last_name: New last name of the member.
+        - national_number: New national number of the member.
+        - email: New email of the member.
+        - street: New street address of the member.
+        - cp: New postal code of the member.
+        - city: New city of the member.
+        - membership_entrydate: New membership entry date of the member.
+        - subscribed: New subscription status of the member.
+        - archived: New archived status of the member.
+        returns:
+        - True if the member was updated successfully, False otherwise.
+        """
+
         member = self._member_repo.get_member_by_id(id)
         if not member:
             raise Exception("Member not found for update.")
@@ -73,12 +90,9 @@ class MemberService:
             city
         )
         if success:
-            # Mettre à jour les champs du membre existant
             member.membership_entrydate = membership_entrydate
             member.subscribed = subscribed
             member.archived = archived
-            
-            # Sauvegarder le membre mis à jour dans le repo
             self._member_repo.update_member(member)
             return True
 
@@ -165,9 +179,14 @@ class MemberService:
         return borrow_dtos
     
     def get_book_by_exemplar_id(self, exemplar_id: int) -> BookDTO | None:
+        """
+        Retrieves a BookDTO by the ID of an exemplar.
+        arguments:
+        - exemplar_id: ID of the exemplar.
+        returns:
+        - A BookDTO object containing book details if found, otherwise None."""
         exemplar = self._exemplar_service.get_by_id(exemplar_id)
         book = self._book_service.get_by_isbn(exemplar.isbn) if exemplar else None
-        # If the exemplar is found, retrieve the book by its ISBN
         if book:
             return BookDTO(
                 isbn=book.isbn,

@@ -133,6 +133,13 @@ class ExemplarService:
             raise Exception(f"🛑 error {e}")
         
     def check_all_status_by_isbn(self, isbn : str):
+        """
+        Checks if all exemplars for a given book ISBN are available.
+        arguments:
+        - isbn: ISBN of the book.
+        returns:
+        - True if all exemplars are available, False otherwise.
+        """
         exemplars = self.get_all_by_isbn(isbn)
         if not exemplars:
             return True

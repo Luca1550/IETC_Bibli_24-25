@@ -1,6 +1,9 @@
 from .base import Base
 
 class Library(Base):
+    """
+    Represents a library in the system.
+    """
     
     def __init__(self, id:int | None, name:str, fine_per_day: float, subscribe_amout:float, limit_borrow:int,borrow_price_with_sub:float, borrow_price_without_sub:float, borrow_delay:int,limit_reservation:int):
         """
