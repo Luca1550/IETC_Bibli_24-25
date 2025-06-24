@@ -175,6 +175,7 @@ class BookAddPage(ctk.CTkToplevel):
         confirm_window.title("Choice Box")
         confirm_window.geometry("300x150")
         confirm_window.grab_set()
+        confirm_window.focus_set()
 
         ctk.CTkLabel(
             confirm_window,
@@ -185,21 +186,25 @@ class BookAddPage(ctk.CTkToplevel):
         btn_frame = ctk.CTkFrame(confirm_window, fg_color="transparent")
         btn_frame.pack(pady=10)
 
-        ctk.CTkButton(
+        btn_yes = ctk.CTkButton(
             btn_frame,
             text="Yes",
             command=lambda :   self.open_add_exemplar_page(book)
-        ).pack(side="left", padx=10)
+        )
+        btn_yes.pack(side="left", padx=10)
 
-        ctk.CTkButton(
+        btn_no = ctk.CTkButton(
             btn_frame,
             text="No",
             command=lambda: [
                 confirm_window.destroy(),
                 self.destroy()
             ]
-        ).pack(side="right", padx=10)
+        )
+        btn_no.pack(side="right", padx=10)
         
+        confirm_window.bind("<Return>", lambda event: btn_yes.invoke())
+        confirm_window.bind("<Escape>", lambda event: btn_no.invoke())
 
 
     def confirm_action(self):

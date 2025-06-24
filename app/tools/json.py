@@ -90,7 +90,7 @@ class JsonStorage:
             with open(jsonFile, 'w', encoding='utf-8') as file:
                 json.dump(data, file, indent=4, cls=Encoder)
         except Exception as e:
-            print(f'Erreur lors de la sauvegarde JSON : {e}')
+            raise Exception(f"🛑 Error {e}")
 
     @staticmethod
     def _decode(jsonFile):
@@ -106,7 +106,7 @@ class JsonStorage:
                 data = json.load(file, object_hook=Decoder.decoder_hook)
                 return data
         except Exception as e:
-            print(f"Erreur lors de la récupération du JSON : {e}")
+            raise Exception(f"🛑 Error {e}")
 
     @staticmethod
     def save_all(path, data):

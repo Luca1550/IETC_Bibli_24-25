@@ -98,6 +98,12 @@ class BookService:
         return result
     
     def get_by_isbn(self,isbn):
+        """
+        Retrieves a book by its ISBN.
+        :param isbn: ISBN of the book to be retrieved.
+        :return: BookDTO object containing book details, or an error message if the book is not found.
+        This method searches for a book in the repository by its ISBN. If found, it returns a BookDTO object containing the book's details, including its title, date, price, associated authors, themes, editors, and collection.
+        If the book is not found, it raises an exception"""
         try:
             books_dto = self.get_all()
             for book in books_dto : 
@@ -109,6 +115,19 @@ class BookService:
             return f"🛑 Error [{e}]"
         
     def update_by_parameter(self,isbn:str,title:str,date:datetime,price:float,collection:Collection,authors:list[AuthorDTO],themes:list[Theme],editors:list[Editor]):
+        """ Updates a book's details by its ISBN.
+        :param isbn: ISBN of the book to be updated.
+        :param title: New title of the book.
+        :param date: New publication date of the book.
+        :param price: New price of the book.
+        :param collection: New collection to which the book belongs.
+        :param authors: List of AuthorDTO objects representing the new authors of the book.
+        :param themes: List of Theme objects representing the new themes of the book.
+        :param editors: List of Editor objects representing the new editors of the book.
+        :return: None or an error message if the book was not found or if the update failed.
+        This method retrieves the book by its ISBN, checks if the new values are valid, and updates the book's details accordingly.
+        If the book is not found, it raises an exception. If the new values are invalid, it raises an exception with a specific error message.
+        """
         try:
             book:Book = self._book_repo.get_by_isbn(isbn)
             book_dto: BookDTO = self.get_by_isbn(isbn)
@@ -181,6 +200,26 @@ class BookService:
             raise Exception(f"🛑 Error [{e}]")
         
     def _check_book_value(self,isbn:str,title:str,date:datetime,price:float,authors:list[AuthorDTO],themes:list[Theme],editors:list[Editor]):
+        """
+        Validates the values of a book before adding or updating it.
+        :param isbn: ISBN of the book.
+        :param title: Title of the book.
+        :param date: Publication date of the book.
+        :param price: Price of the book.
+        :param authors: List of AuthorDTO objects representing the authors of the book.
+        :param themes: List of Theme objects representing the themes of the book.
+        :param editors: List of Editor objects representing the editors of the book.
+        :return: True if all values are valid, or raises an exception with a specific error message if any value is invalid.
+        This method checks the following conditions:
+        - ISBN must be exactly 13 characters long and numeric.
+        - Title cannot be empty.
+        - Date must be provided.
+        - At least one author is required.
+        - At least one editor is required.
+        - At least one theme is required.
+        - Price must be numeric and greater than 0.00.
+        If any of these conditions are not met, it raises an exception with a specific error message.
+        """
         if not isbn or len(isbn)!=13 or not isbn.isnumeric():
             raise Exception("Invalid ISBN. Must be exactly 13 characters long.")
         if not title.strip():
