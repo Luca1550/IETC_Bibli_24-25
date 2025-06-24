@@ -123,6 +123,7 @@ class AddThemePage(ctk.CTkToplevel):
 
 class DeleteThemePage(ctk.CTkToplevel):
     def __init__(self):
+        """Page for deleting themes."""
         super().__init__()
         self.theme_service = ThemeService()
         self.themes = []
@@ -146,6 +147,7 @@ class DeleteThemePage(ctk.CTkToplevel):
         self.bind("<Escape>", lambda event: self.destroy())
 
     def load_themes(self):
+        """Load all themes and display them in the scrollable frame."""
         for widget in self.scroll_frame.winfo_children():
             widget.destroy()
 
@@ -178,6 +180,7 @@ class DeleteThemePage(ctk.CTkToplevel):
             PopUpMessage.pop_up(self, f"Error while loading : {str(e)}")
 
     def confirm_delete(self, theme):
+        """Confirm the deletion of a theme."""
         confirm_window = ctk.CTkToplevel(self)
         confirm_window.title("Confirm deletion")
         confirm_window.geometry("300x150")
@@ -214,6 +217,7 @@ class DeleteThemePage(ctk.CTkToplevel):
         confirm_window.bind("<Escape>", lambda event: btn_no.invoke())
 
     def delete_theme(self, theme):
+        """Delete the selected theme."""
         try:
             self.theme_service.delete_theme(theme.name)
             PopUpMessage.pop_up(self, f"✅ Theme deleted")
@@ -224,6 +228,9 @@ class DeleteThemePage(ctk.CTkToplevel):
 
 class AddEditorPage(ctk.CTkToplevel):
     def __init__(self, editor_service : EditorService):
+        """Page for adding a new editor.
+        Initialize the add editor page.
+        """
         super().__init__()
 
         self.focus_set()
@@ -249,6 +256,7 @@ class AddEditorPage(ctk.CTkToplevel):
         self.name_entry.focus_set()
         
     def confirm_action(self):
+        """Confirm the action of adding a new editor."""
         try:
             self.editor_service.add_editor(
                 name=self.name_entry.get(),
@@ -262,6 +270,8 @@ class AddEditorPage(ctk.CTkToplevel):
 
 class DeleteEditorPage(ctk.CTkToplevel):
     def __init__(self):
+        """Page for deleting editors."""
+        """Initialize the delete editor page."""
         super().__init__()
 
         self.focus_set()
@@ -285,6 +295,8 @@ class DeleteEditorPage(ctk.CTkToplevel):
         self.bind("<Escape>", lambda event: self.destroy())
 
     def load_editors(self):
+        """Load all editors and display them in the scrollable frame."""
+        """Load all editors from the editor service and display them."""
         for widget in self.scroll_frame.winfo_children():
             widget.destroy()
 
@@ -317,6 +329,8 @@ class DeleteEditorPage(ctk.CTkToplevel):
             PopUpMessage.pop_up(self, f"Error while loading : {str(e)}")
 
     def confirm_delete(self, editor):
+        """Confirm the deletion of an editor."""
+        """Open a confirmation dialog to delete the selected editor."""
         confirm_window = ctk.CTkToplevel(self)
         confirm_window.title("Confirm deletion")
         confirm_window.geometry("300x150")
@@ -354,6 +368,7 @@ class DeleteEditorPage(ctk.CTkToplevel):
         confirm_window.bind("<Escape>", lambda event: btn_no.invoke())
 
     def delete_editor(self, editor):
+        """Delete the selected editor."""
         try:
             self.editor_service.delete_editor(editor.id)
             PopUpMessage.pop_up(self, f"✅ Editor deleted")
@@ -364,6 +379,7 @@ class DeleteEditorPage(ctk.CTkToplevel):
 
 class AddCollectionPage(ctk.CTkToplevel):
     def __init__(self, collection_service : CollectionService):
+        """Page for adding a new collection."""
         super().__init__()
         self.focus_set()
         self.grab_set()
@@ -387,6 +403,7 @@ class AddCollectionPage(ctk.CTkToplevel):
         self.name_entry.focus_set()
         
     def confirm_action(self):
+        """Confirm the action of adding a new collection."""
         try:
             self.collection_service.add_collection(
                 name=self.name_entry.get(),
@@ -400,6 +417,14 @@ class AddCollectionPage(ctk.CTkToplevel):
 
 class DeleteCollectionPage(ctk.CTkToplevel):
     def __init__(self):
+        """Page for deleting collections."""
+        """Initialize the delete collection page."""
+        """This page allows users to delete existing collections."""
+        """It displays a list of collections and provides an option to delete each one."""
+        """Users can confirm the deletion of a collection through a confirmation dialog."""
+        """After deletion, the list of collections is refreshed."""
+        """The page also includes a title and a scrollable frame to display the collections."""
+        """The page is designed to be modal, meaning it will block interaction with other windows until closed."""
         super().__init__()
         self.focus_set()
         self.grab_set()
@@ -422,6 +447,7 @@ class DeleteCollectionPage(ctk.CTkToplevel):
         self.bind("<Escape>", lambda event: self.destroy())
 
     def load_collections(self):
+        """Load all collections and display them in the scrollable frame."""
         for widget in self.scroll_frame.winfo_children():
             widget.destroy()
 
@@ -454,6 +480,7 @@ class DeleteCollectionPage(ctk.CTkToplevel):
             PopUpMessage.pop_up(self, f"Error while loading : {str(e)}")
 
     def confirm_delete(self, collection):
+        """Open a confirmation dialog to delete the selected collection."""
         confirm_window = ctk.CTkToplevel(self)
         confirm_window.title("Confirm deletion")
         confirm_window.geometry("300x150")
@@ -491,6 +518,7 @@ class DeleteCollectionPage(ctk.CTkToplevel):
         confirm_window.bind("<Escape>", lambda event: btn_no.invoke())
 
     def delete_collection(self, collection):
+        """Delete the selected collection."""
         try:
             self.collection_service.delete_collection_by_id(collection.id)
             PopUpMessage.pop_up(self, f"✅ Collection deleted")
@@ -501,7 +529,11 @@ class DeleteCollectionPage(ctk.CTkToplevel):
 
 class AddAuthorPage(ctk.CTkToplevel):
     def __init__(self, author_service : AuthorService):
-        super().__init__()
+        """Page for adding a new author."""
+        """Initialize the add author page."""
+        """This page allows users to input the first and last name of a new author."""
+        """It includes input fields for the first name and last name, along with buttons to confirm the action or cancel."""
+        """When the confirm button is clicked, it attempts to add the author using the provided service."""
         self.focus_set()
         self.grab_set()
         self.lift()
@@ -529,6 +561,7 @@ class AddAuthorPage(ctk.CTkToplevel):
         self.first_name_entry.focus_set()
         
     def confirm_action(self):
+        """Confirm the action of adding a new author."""
         try:
             self.author_service.add_author(
                 first_name=self.first_name_entry.get(),
@@ -543,6 +576,8 @@ class AddAuthorPage(ctk.CTkToplevel):
 
 class DeleteAuthorPage(ctk.CTkToplevel):
     def __init__(self):
+        """Page for deleting authors."""
+        """Initialize the delete author page."""
         super().__init__()
         self.focus_set()
         self.grab_set()
@@ -565,6 +600,7 @@ class DeleteAuthorPage(ctk.CTkToplevel):
         self.bind("<Escape>", lambda event: self.destroy())
 
     def load_authors(self):
+        """Load all authors and display them in the scrollable frame."""
         for widget in self.scroll_frame.winfo_children():
             widget.destroy()
 
@@ -598,6 +634,7 @@ class DeleteAuthorPage(ctk.CTkToplevel):
             PopUpMessage.pop_up(self, f"Error while loading : {str(e)}")
 
     def confirm_delete(self, author):
+        """Open a confirmation dialog to delete the selected author."""
         confirm_window = ctk.CTkToplevel(self)
         confirm_window.title("Confirm deletion")
         confirm_window.geometry("300x150")
@@ -635,6 +672,7 @@ class DeleteAuthorPage(ctk.CTkToplevel):
         confirm_window.bind("<Escape>", lambda event: btn_no.invoke())
 
     def delete_author(self, author):
+        """Delete the selected author."""
         try:
             self.author_service.delete_author(author.id_author)
             PopUpMessage.pop_up(self, f"✅ Author deleted")

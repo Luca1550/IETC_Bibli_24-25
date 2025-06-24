@@ -171,6 +171,10 @@ class BookAddPage(ctk.CTkToplevel):
         
 
     def pop_up_add_exemplar(self, book):
+        """
+        Pop up a confirmation window to ask if the user wants to add an exemplar for the book.
+        If the user confirms, it opens the add exemplar page.
+        If the user cancels, it closes the current window."""
         confirm_window = ctk.CTkToplevel(self)
         confirm_window.title("Choice Box")
         confirm_window.geometry("300x150")

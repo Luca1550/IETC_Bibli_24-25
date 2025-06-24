@@ -247,6 +247,7 @@ class BookFrame(ctk.CTkFrame):
         confirm_window.bind("<Return>", lambda event: yes_btn.invoke())
 
     def update_themes(self, new_themes):
+        """        Updates the displayed themes in the book frame."""
         for label in self.theme_labels:
             if label not in new_themes:
                 label.destroy()
@@ -265,6 +266,7 @@ class BookFrame(ctk.CTkFrame):
                 self.theme_labels.append(label)
 
     def update_editors(self, new_editors):
+        """        Updates the displayed editors in the book frame."""
         for label in self.editor_labels:
             if label not in new_editors:
                 label.destroy()
@@ -283,6 +285,7 @@ class BookFrame(ctk.CTkFrame):
                 self.editor_labels.append(label)
 
     def update_authors(self, new_authors):
+        """        Updates the displayed authors in the book frame."""
         for label in self.author_labels:
             if label not in new_authors:
                 label.destroy()
@@ -301,6 +304,7 @@ class BookFrame(ctk.CTkFrame):
                 self.author_labels.append(label)
 
     def update_exemplars(self, new_exemplars):
+        """        Updates the displayed exemplars in the book frame."""
         new_ids = set(e.id for e in new_exemplars)
         current_ids = set(self.exemplar_widgets.keys())
 
@@ -312,7 +316,8 @@ class BookFrame(ctk.CTkFrame):
             if exemplar.id not in self.exemplar_widgets:
                 self.display_exemplars([exemplar])
 
-    def display_exemplars(self, exemplar_list):        
+    def display_exemplars(self, exemplar_list):  
+        """Displays the exemplars in the right frame of the book frame."""      
         for exemplar in exemplar_list:
             if exemplar.id not in self.exemplar_widgets:
                 frame = ctk.CTkFrame(
@@ -342,6 +347,9 @@ class BookFrame(ctk.CTkFrame):
                 self.exemplar_widgets[exemplar.id] = frame
 
     def update_authors(self, new_authors):
+        """
+        Updates the displayed authors in the book frame.
+        """
         for label in self.author_labels:
             if label not in new_authors:
                 label.destroy()
@@ -367,6 +375,11 @@ class BookPage(ctk.CTkFrame):
         It also displays a list of books in a scrollable frame.
     """
     def __init__(self, parent):
+        """
+            Initializes the BookPage with the parent widget and sets up the UI components.
+            
+            :param parent: The parent widget for this page.
+        """
         super().__init__(parent)
         
         self.editor_service = EditorService()
