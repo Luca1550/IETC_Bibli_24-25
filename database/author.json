@@ -1,0 +1,12 @@
+[
+    {
+        "__type__": "Author",
+        "id": 1,
+        "id_person": 6
+    },
+    {
+        "__type__": "Author",
+        "id": 2,
+        "id_person": 7
+    }
+]

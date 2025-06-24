@@ -1,0 +1,17 @@
+[
+    {
+        "__type__": "BookEditor",
+        "isbn": "9780261103580",
+        "id_editor": 1
+    },
+    {
+        "__type__": "BookEditor",
+        "isbn": "9780261103597",
+        "id_editor": 2
+    },
+    {
+        "__type__": "BookEditor",
+        "isbn": "9781593080464",
+        "id_editor": 3
+    }
+]

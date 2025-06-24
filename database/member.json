@@ -1,0 +1,26 @@
+[
+    {
+        "__type__": "Member",
+        "id": 1,
+        "id_person": 1,
+        "membership_entrydate": "2025-06-24",
+        "subscribed": true,
+        "archived": false
+    },
+    {
+        "__type__": "Member",
+        "id": 2,
+        "id_person": 2,
+        "membership_entrydate": "2025-06-24",
+        "subscribed": true,
+        "archived": false
+    },
+    {
+        "__type__": "Member",
+        "id": 4,
+        "id_person": 4,
+        "membership_entrydate": "2025-06-24",
+        "subscribed": false,
+        "archived": false
+    }
+]

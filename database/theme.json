@@ -1,0 +1,22 @@
+[
+    {
+        "__type__": "Theme",
+        "id": 1,
+        "name": "Fantasy"
+    },
+    {
+        "__type__": "Theme",
+        "id": 2,
+        "name": "Sci-Fi"
+    },
+    {
+        "__type__": "Theme",
+        "id": 3,
+        "name": "Adventure"
+    },
+    {
+        "__type__": "Theme",
+        "id": 4,
+        "name": "Spain"
+    }
+]

@@ -1,0 +1,7 @@
+[
+    {
+        "__type__": "ReservationMember",
+        "id_reservation": 1,
+        "id_member": 2
+    }
+]

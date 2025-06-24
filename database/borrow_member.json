@@ -1,0 +1,12 @@
+[
+    {
+        "__type__": "BorrowMember",
+        "id_member": 4,
+        "id_borrow": 1
+    },
+    {
+        "__type__": "BorrowMember",
+        "id_member": 1,
+        "id_borrow": 3
+    }
+]

@@ -1,0 +1,16 @@
+[
+    {
+        "__type__": "Borrow",
+        "id": 1,
+        "id_exemplar": 1,
+        "borrow_date": "2025-06-24",
+        "return_date": "2025-07-08"
+    },
+    {
+        "__type__": "Borrow",
+        "id": 3,
+        "id_exemplar": 7,
+        "borrow_date": "2025-06-24",
+        "return_date": "2025-07-08"
+    }
+]

@@ -1,0 +1,26 @@
+[
+    {
+        "__type__": "Book",
+        "isbn": "9780261103580",
+        "title": "LOTR The Two Towers",
+        "date": "1954-03-21",
+        "price": "18.39",
+        "id_collection": 1
+    },
+    {
+        "__type__": "Book",
+        "isbn": "9780261103597",
+        "title": "LOTR The Return of The King",
+        "date": "1955-04-03",
+        "price": "21.29",
+        "id_collection": 1
+    },
+    {
+        "__type__": "Book",
+        "isbn": "9781593080464",
+        "title": "Don Quixote",
+        "date": "1605-05-23",
+        "price": "13",
+        "id_collection": 0
+    }
+]
