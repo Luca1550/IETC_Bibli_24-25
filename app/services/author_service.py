@@ -65,6 +65,18 @@ class AuthorService:
         return AuthorDTO(id_author=author.id, person=person)
     
     def get_all(self):
+        """
+        Retrieves all authors from the repository.
+        :return: A list of AuthorDTO objects containing author details.
+        This method fetches all authors from the AuthorRepo and constructs a list of AuthorDTO objects
+        containing the author's ID and associated Person details.
+        If no authors are found, it returns an empty list.
+        It also initializes the PersonRepo to fetch person details for each author.
+        If an author has no associated person, the PersonDTO will be None.
+        If an error occurs during the retrieval process, it raises an exception with an error message.
+        If the author has no associated person, the PersonDTO will be None.
+        If an error occurs during the retrieval process, it raises an exception with an error message.
+        """
         authors=self.author_repo.get_all()
         authors_dto = []
         self.person_repo = PersonRepo()
