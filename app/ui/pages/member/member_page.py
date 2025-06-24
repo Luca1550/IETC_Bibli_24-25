@@ -455,12 +455,8 @@ class MemberPage(ctk.CTkFrame):
                     self.display_members()  
             except Exception as e:
                 PopUpMessage.pop_up(self, f"Error 2 updating member: {str(e)}")
-                self.update_member_frame.destroy()
-                self.display_members()
         else: 
             PopUpMessage.pop_up(self, "Please fill in all fields.")
-            self.update_member_frame.destroy()
-            self.display_members()
 
     def adding_member(self):
         
@@ -475,39 +471,40 @@ class MemberPage(ctk.CTkFrame):
         street = self.street_entry.get()
         cp = self.cp_entry.get()
         city = self.city_entry.get()
-        membership_entrydate = datetime.now().strftime("%Y-%m-%d")  # Today's date
-        archived = False  # Default value for archived status
-
-        member_added = self.member_service.add_member(
-            id=id, 
-            first_name=first_name,
-            last_name=last_name,
-            national_number=national_number,
-            email=email,
-            street=street,
-            cp=cp,
-            city=city,
-            membership_entrydate=membership_entrydate,
-            archived=archived,
-            subscribed=self.subscribed_checkbox.get()
-        )
-
-        if member_added:
+        membership_entrydate = datetime.now().strftime("%Y-%m-%d") 
+        archived = False 
+        try:
+            if not (first_name and last_name and national_number and email and street and cp and city and membership_entrydate):
+                raise Exception("Please fill in all fields.")
+            self.member_service.add_member(
+                id=id, 
+                first_name=first_name,
+                last_name=last_name,
+                national_number=national_number,
+                email=email,
+                street=street,
+                cp=cp,
+                city=city,
+                membership_entrydate=membership_entrydate,
+                archived=archived,
+                subscribed=self.subscribed_checkbox.get()
+            )
             PopUpMessage.pop_up(self, "Member added successfully.")
             self.add_member_frame.destroy()
             self.display_members()
-        else:
-            PopUpMessage.pop_up(self, "Error adding member.")
-            self.add_member_frame.destroy()
-            self.display_members()
+        except Exception as e:
+            PopUpMessage.pop_up(self, str(e))
 
     def delete_member(self, member_id):
         """
         Deletes a member from the JSON file and updates the display.
         """
-        self.member_service.delete_member(member_id)
-        self.display_members()
-        PopUpMessage.pop_up(self, "Member deleted successfully.")
+        try:
+            self.member_service.delete_member(member_id)
+            self.display_members()
+            PopUpMessage.pop_up(self, "Member deleted successfully.")
+        except Exception as e:
+            PopUpMessage.pop_up(self, str(e))
 
     def display_borrows_by_member(self, member_id):
         """

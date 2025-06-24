@@ -1,6 +1,6 @@
 from repositories import AuthorRepo, PersonRepo, BookAuthorRepo
 from .models import AuthorDTO
-from repositories.models import Person, Author
+from repositories.models import Author
 from .person_service import PersonService
 
 class AuthorService:

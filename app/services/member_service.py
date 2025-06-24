@@ -1,10 +1,8 @@
-import re
-from repositories.models import Member, Person, BorrowMember, Borrow
-from repositories import MemberRepo, PersonRepo, BorrowMemberRepo , BorrowRepo
+from repositories.models import Member, Person
+from repositories import MemberRepo, PersonRepo, BorrowMemberRepo, BorrowRepo, ReservationMemberRepo
 from services import PersonService, BookService, ExemplarService
 from services.models import MemberDTO, BorrowDTO, BookDTO
 from datetime import date
-from typing import Optional
 
 class MemberService:
     """
@@ -16,6 +14,7 @@ class MemberService:
         self._person_repo = PersonRepo()
         self._person_service = PersonService()
         self._borrow_member_repo = BorrowMemberRepo()
+        self._reservation_member_repo = ReservationMemberRepo()
         self._borrow_repo = BorrowRepo()
         self._book_service = BookService()
         self._exemplar_service = ExemplarService()
@@ -27,33 +26,36 @@ class MemberService:
         :param member: Member object to be added.
         :return: True if the member was added successfully, False otherwise.
         """
-        person = self._person_service.add_person(
-            first_name,
-            last_name,
-            national_number,
-            email,
-            street,
-            cp,
-            city
-        )
-        if isinstance(person, Person):
-            member = Member(
-                id=id,
-                id_person=person.id,
-                membership_entrydate=membership_entrydate,
-                subscribed=subscribed,
-                archived=archived
+        try:
+            person = self._person_service.add_person(
+                first_name,
+                last_name,
+                national_number,
+                email,
+                street,
+                cp,
+                city
             )
-            self._member_repo.add_member(member)
-            return MemberDTO(
-                id_member=member.id,
-                person=person,
-                membership_entrydate=member.membership_entrydate,
-                subscribed=member.subscribed,
-                archived=member.archived
-            )
-        else:
-            raise Exception("Failed to add person.")
+            if isinstance(person, Person):
+                member = Member(
+                    id=id,
+                    id_person=person.id,
+                    membership_entrydate=membership_entrydate,
+                    subscribed=subscribed,
+                    archived=archived
+                )
+                self._member_repo.add_member(member)
+                return MemberDTO(
+                    id_member=member.id,
+                    person=person,
+                    membership_entrydate=member.membership_entrydate,
+                    subscribed=member.subscribed,
+                    archived=member.archived
+                )
+            else:
+                raise Exception("Failed to add person.")
+        except Exception as e:
+            raise Exception(f"🛑 Error adding member: {e}")
 
     def update_member(self, id: int, first_name: str, last_name: str, national_number: str, email: str, street: str, cp: str, city: str, membership_entrydate: date, subscribed: bool, archived: bool) -> bool:
        
@@ -109,6 +111,8 @@ class MemberService:
         """
         try:
             member = self._member_repo.get_member_by_id(id)
+            if self._borrow_member_repo.get_borrow_by_member(id) or self._reservation_member_repo.get_reservation_member(id):
+                raise Exception("Cannot delete member with active borrows or reservations.")
             if member:
                 self._member_repo.delete_member(member)
                 self._person_service.delete_person(member.id_person)
@@ -116,8 +120,7 @@ class MemberService:
             else:
                 raise Exception(f"Member with the given ID : {id} was not found.")
         except Exception as e:
-            raise(f"🛑 Error [{e}]")
-            return False
+            raise Exception(f"🛑 Error [{e}]")
         
     def get_all_members(self) -> list[MemberDTO]:
         """

@@ -195,7 +195,7 @@ class BookFrame(ctk.CTkFrame):
             self.right_frame,
             fg_color=None,
             scrollbar_button_color=Color.primary_color(),
-            width=350
+            width=400
         )
         self.exemplars_frame.pack(fill="both", expand=True, padx=15)
         self.exemplars = self.exemplar_service.get_all_by_isbn(self.book.isbn)
@@ -325,13 +325,13 @@ class BookFrame(ctk.CTkFrame):
 
                 ctk.CTkLabel(
                     frame,
-                    text=f"Réf : {exemplar.id} | Localisation : {exemplar.location} | {exemplar.status.name.lower()}",
+                    text=f"Réf : {exemplar.id} | Localisation : {exemplar.location} ",
                     font=self.tag_font
                 ).pack(side="left", pady=5, padx=15)
 
                 ctk.CTkLabel(
                     frame,
-                    text="",
+                    text=f"{exemplar.status.name.lower()}",
                     font=self.tag_font,
                     fg_color=Color.status_color(int(exemplar.status.value)),
                     height=25,

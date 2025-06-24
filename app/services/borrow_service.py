@@ -118,7 +118,10 @@ class BorrowService:
 
             if isinstance(borrow, Borrow):
                 self._borrow_repo.delete_borrow(borrow)
-            self.exemplar_service.update_status(borrow.id_exemplar,1)
+            if self._reservation_service.check_if_reservation_exist(borrow_dto.id_exemplar):
+                self.exemplar_service.update_status(borrow_dto.id_exemplar, 3)
+            else:
+                self.exemplar_service.update_status(borrow.id_exemplar,1)
             if borrow_dto and isinstance(borrow_dto.member, Member):
                 self._borrow_member_repo.delete_borrow_member(
                     id_member=borrow_dto.member.id,
@@ -128,3 +131,9 @@ class BorrowService:
         except Exception as e:
             raise Exception(f"🛑 Error deleting borrow: [{e}]")
         
+    def get_return_date(self, id_exemplar:int):
+        borrows = self.get_all()  
+        for b in borrows:
+            if b.id_exemplar == id_exemplar:
+                return b.return_date
+        return False

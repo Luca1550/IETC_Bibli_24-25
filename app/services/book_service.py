@@ -1,5 +1,5 @@
 from repositories import BookRepo,BookThemeRepo,BookEditorRepo,BookAuthorRepo,CollectionRepo
-from repositories.models import Book,Theme,Author,Editor,Collection
+from repositories.models import Book,Theme,Editor,Collection
 from .models import BookDTO,AuthorDTO
 from services import AuthorService, ExemplarService
 import datetime

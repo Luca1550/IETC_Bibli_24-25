@@ -92,7 +92,7 @@ class HomePage(ctk.CTkFrame):
 # endregion
 
 # region reservation_today
-        self.reservation_today_title = ctk.CTkLabel(self.reservation_today_frame, bg_color=Color.primary_color(),corner_radius=5,text="Reservation Today", font=ctk.CTkFont(weight='bold', size=14))
+        self.reservation_today_title = ctk.CTkLabel(self.reservation_today_frame, bg_color=Color.primary_color(),corner_radius=5,text="Reservations Ready for Pickup Today", font=ctk.CTkFont(weight='bold', size=14))
         self.reservation_today_title.pack(fill="x",padx=5, pady=(5, 10))
         self.reservation_today_scroll_frame = ctk.CTkScrollableFrame(self.reservation_today_frame, scrollbar_button_color=Color.primary_color())
         self.reservation_today_scroll_frame.pack(fill="both", expand=True, padx=12.5, pady=(0,12.5))
@@ -104,12 +104,12 @@ class HomePage(ctk.CTkFrame):
                 )
                 self.reservation_frame.pack(fill="x", pady=5)
         else:
-            self.no_reservation_label = ctk.CTkLabel(self.reservation_today_scroll_frame, text="No reservation today")
+            self.no_reservation_label = ctk.CTkLabel(self.reservation_today_scroll_frame, text="No reservations ready for pickup today.")
             self.no_reservation_label.pack(fill="x", pady=5)
 # endregion
 
 # region borrowed_today
-        self.borrowed_today_title = ctk.CTkLabel(self.borrowed_today_frame,bg_color=Color.primary_color(),corner_radius=5, text="Borrowed Today", font=ctk.CTkFont(weight='bold', size=14))
+        self.borrowed_today_title = ctk.CTkLabel(self.borrowed_today_frame,bg_color=Color.primary_color(),corner_radius=5, text="Expected Returns for Today", font=ctk.CTkFont(weight='bold', size=14))
         self.borrowed_today_title.pack(fill="x",padx=5, pady=(5, 10))
         self.borrowed_today_scroll_frame = ctk.CTkScrollableFrame(self.borrowed_today_frame, scrollbar_button_color=Color.primary_color())
         self.borrowed_today_scroll_frame.pack(fill="both", expand=True, padx=12.5, pady=(0,12.5))
@@ -122,7 +122,7 @@ class HomePage(ctk.CTkFrame):
                 )
                 self.borrow_frame.pack(fill="x", pady=5)
         else:
-            self.no_borrow_label = ctk.CTkLabel(self.borrowed_today_scroll_frame, text="No borrowed today")
+            self.no_borrow_label = ctk.CTkLabel(self.borrowed_today_scroll_frame, text="No expected returns for today.")
             self.no_borrow_label.pack(fill="x", pady=5)
 # endregion
 

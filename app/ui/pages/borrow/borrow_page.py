@@ -36,7 +36,7 @@ class BorrowPage(ctk.CTkFrame):
         
         self.search_entry = ctk.CTkEntry(
             search_frame,
-            placeholder_text="🔍 Search by id...",
+            placeholder_text="🔍 Search by id or member name...",
             height=35
         )
         self.search_entry.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
@@ -80,7 +80,6 @@ class BorrowPage(ctk.CTkFrame):
                 query in self.member_service.get_member_by_id(borrow.member.id).person.first_name.lower() or
                 query in self.member_service.get_member_by_id(borrow.member.id).person.last_name.lower() 
             ]
-        
         self.load_borrow()
 
     def load_borrow(self):

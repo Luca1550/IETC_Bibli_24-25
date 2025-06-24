@@ -58,8 +58,6 @@ class BorrowRepo:
             return True
         return False
     
-    
-    
     def _save_all(self):
         """Saves all borrow data to the JSON file.
         This method is called after adding, updating, or deleting a borrow record to ensure that the changes are persisted."""
@@ -74,5 +72,4 @@ class BorrowRepo:
         returns:
         - True if the value is unique, False otherwise.
         """ 
-        #merci luca pour celle la 
         return not any (getattr(id,attribute,None)== value for id in self.borrow_json)

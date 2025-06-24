@@ -16,10 +16,10 @@ class Color:
         return "#28a745"
     @staticmethod
     def status_borrowed_color():
-        return "#ff9800"
+        return "#dc3545"
     @staticmethod
     def status_reserved_color():
-        return "#dc3545"
+        return "#ff9800"
     
     @staticmethod
     def hover_color(hex_color : str, percent : int):

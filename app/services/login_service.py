@@ -1,4 +1,3 @@
-import re
 from repositories.models import Login
 from repositories import LoginRepo
 

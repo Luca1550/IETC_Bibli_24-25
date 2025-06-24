@@ -89,7 +89,7 @@ class ReservationPage(ctk.CTkFrame):
         for book in self.book_service.get_all():
             exemplars = self.exemplar_service.get_all_by_isbn(book.isbn)
             for exemplar in exemplars:
-                if exemplar.status.value != 3 :
+                if exemplar.status.value != 3 and not exemplar.id in ([res.id_exemplar for res in self.indexbook.values()]):
                     self.all_books.append(book)
                     break
         self.edit_book_button = ctk.CTkButton(self.book_frame, text="✏️", width=30, command=lambda:self.open_selection_frame(
@@ -120,6 +120,7 @@ class ReservationPage(ctk.CTkFrame):
         
         self.submit_button = ctk.CTkButton(self.right_panel, text="Add",command=self.add_reservation)
         self.submit_button.pack(pady=20)
+        
     def add_reservation(self):
         """Handles the addition of a new reservation.
         This method retrieves the selected book and member, validates the reservation date,
@@ -149,7 +150,7 @@ class ReservationPage(ctk.CTkFrame):
                 PopUpMessage.pop_up(self, "reservation added successfully!")
                 self.refresh_listbox()
                 self.clear_form_add()
-
+                self.add_page()
         except ValueError as e:
             PopUpMessage.pop_up(self, f"Input error: {e}")
 
@@ -290,6 +291,7 @@ class ReservationPage(ctk.CTkFrame):
             title=titleisbn.title
             self.reservation_listbox.insert("end", f"{res.reservation_date} | title: {title} | Membre: {member_firstname} {member_name}")
             self.indexbook[idx] = res
+
     def clear_form_add(self):
         """Clears the form fields for adding a new reservation.
         This method resets the title, member, and date entries, and clears the selected book and member lists."""
@@ -299,10 +301,6 @@ class ReservationPage(ctk.CTkFrame):
         self.member_entry.delete(0, tk.END)
         self.member_entry.configure(state="disabled")
         self.book_entry.configure(state="disabled")
-        # self.member_entry = ctk.CTkEntry(self.member_frame, placeholder_text="Member")
-        # self.member_entry.pack(side="right", expand=True, fill="x", padx=(0, 5))
-        # self.book_entry = ctk.CTkEntry(self.book_frame, placeholder_text="title")
-        # self.book_entry.pack(side="right", expand=True, fill="x", padx=(0, 5))
         self.date_entry.delete(0, tk.END)
         self.book_selected.clear()
         self.member_selected.clear()

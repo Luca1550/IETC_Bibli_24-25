@@ -1,37 +1,36 @@
-from repositories.models import Reservation,Member,Exemplar,Library,ReservationMember,ArchiveReservation
-from repositories import ReservationRepo,ExemplarRepo,MemberRepo,ReservationMemberRepo,BookRepo,ArchiveReservationRepo
+from repositories.models import Reservation,Member,Exemplar,ReservationMember,ArchiveReservation
+from repositories import ReservationRepo,ReservationMemberRepo,ArchiveReservationRepo
 from .models import ReservationDTO
 from datetime import date, datetime
-from services import ExemplarService,LibraryService
-
+from services import ExemplarService, LibraryService, BookService
 
 class ReservationService:
     """
-    Service for managing reservations in a library system."""
-
+    Service for managing reservations in a library system.
+    """
+    
     def __init__(self):
         """
         Initializes the ReservationService with repositories for reservations, exemplars, members, and reservation members."""
         self._reservation_repo = ReservationRepo()
-        self._exemplar_repo = ExemplarRepo()
-        self._member_repo = MemberRepo()
-        self._reservation_member_repo= ReservationMemberRepo()
-        self._book_repo = BookRepo()
+        self._reservation_member_repo = ReservationMemberRepo()
         self.archive_reservation_repo = ArchiveReservationRepo()
-        self.exemplar_service = ExemplarService()
-        self.library_service = LibraryService()
+        self._exemplar_service = ExemplarService()
+        self._library_service = LibraryService()
+        self._book_service = BookService()
+        
 
 
     def get_exemplar_by_name(self, title: str):
         """
         Retrieves the exemplar ID by book title."""
         try:
-            books = self._book_repo.get_all()
+            books = self._book_service.get_all()
             for b in books:
                 book_title = b.title 
                 isbn = b.isbn 
                 if book_title.lower() == title.lower():
-                    exemplars = self._exemplar_repo.get_all(isbn)
+                    exemplars = self._exemplar_service.get_all_by_isbn(isbn)
                     if exemplars:
                         return exemplars[0].id
             raise Exception(f"Book with title '{title}' not found.")
@@ -46,7 +45,12 @@ class ReservationService:
         If reservation_date is None, it defaults to today's date.
         If the exemplar is not available, it raises an exception.
         """
+        from services import BorrowService
         try:
+            borrow_service = BorrowService()
+            library = self._library_service.get_library_parameters()[0]
+            if len(self._reservation_member_repo.get_reservation_member(id_member)) >= library.limit_reservation:
+                raise Exception("Reservation limit reached for this member.")
             if reservation_date is None:
                 actual_reservation_date = date.today().isoformat()
             else:
@@ -54,19 +58,25 @@ class ReservationService:
                     actual_reservation_date = datetime.fromisoformat(reservation_date).date().isoformat()
                 else:
                     actual_reservation_date = reservation_date.isoformat()
-            exemplar=self.exemplar_service.get_disponibility(isbn)
+            exemplar=self._exemplar_service.get_disponibility(isbn)
             if not exemplar:
-                id_exemplars=self.exemplar_service.get_all_by_isbn(isbn)
-                exemplar= next((exemplar for exemplar in id_exemplars if exemplar.status.value == 2))
+                id_exemplars=self._exemplar_service.get_all_by_isbn(isbn)
+                exemplar= next((exemplar for exemplar in id_exemplars if exemplar.status.value == 2 and not self._reservation_repo.check("id_exemplar", exemplar.id)))
                 if not exemplar:
-                    raise Exception("🛑 Error no exemplar") 
+                    raise Exception("no exemplar")
+            if exemplar.status.value == 2:
+                return_date = borrow_service.get_return_date(exemplar.id)
+                print(return_date)
+                if date.fromisoformat(return_date) >= date.fromisoformat(reservation_date):
+                    raise Exception(f"The reservation date cannot be before the return date of the book.\nPlease choose a date after {return_date}.")
+
             new_reservation = Reservation(
                 id=None,
                 id_exemplar=exemplar.id,
                 reservation_date=actual_reservation_date
                 )
             if exemplar.status.value == 1:
-                self.exemplar_service.update_status(exemplar.id,3)
+                self._exemplar_service.update_status(exemplar.id,3)
 
             result=self._reservation_repo.add_reservation(new_reservation)
             reservation_member_result = None
@@ -83,6 +93,7 @@ class ReservationService:
         
         except Exception as e:
             return f"🛑 Error [{e}]"
+        
     def get_all(self):
         """
         Retrieves all reservations and returns them as a list of ReservationDTO objects."""
@@ -124,14 +135,14 @@ class ReservationService:
 
     def delete_reservation(self,id_reservation:int):
         """
-        Deletes a reservation by its ID."""
+        Deletes a reservation by its ID.
+        """
         try:
-            
             reservation = self._reservation_repo.get_by_id(id_reservation)
             reservation_dto = self.get_by_id(id_reservation)
+            exemplar = self._exemplar_service.get_by_id(reservation_dto.id_exemplar)
             id_archive=None
-            
-
+    
             archive=ArchiveReservation(
                 id=id_archive,
                 id_reservation=reservation.id,
@@ -147,7 +158,8 @@ class ReservationService:
                     id_member=reservation_dto.member.id,
                     id_reservation=id_reservation
                 )
-            self.exemplar_service.update_status(reservation.id_exemplar, 1)
+            if exemplar.status.value == 3:
+                self._exemplar_service.update_status(reservation.id_exemplar, 1)
             self.archive_reservation_repo.add_archive_reservation(archive)
             return True
         except Exception as e:
@@ -201,11 +213,14 @@ class ReservationService:
         Retrieves the ISBN of a book by its exemplar ID.
         If the exemplar is found, returns its ISBN; otherwise, raises an exception."""
         try:
-            exemplar = self._exemplar_repo.get_by_id(id_exemplar)
+            exemplar = self._exemplar_service.get_by_id(id_exemplar)
             if isinstance(exemplar, Exemplar):
-                book = self._book_repo.get_by_isbn(exemplar.isbn)
+                book = self._book_service.get_by_isbn(exemplar.isbn)
                 if book:
                     return book.isbn
             raise Exception(f"Exemplar with ID {id_exemplar} not found.")
         except Exception as e:
             raise Exception(f"🛑 Error getting ISBN by exemplar ID: [{e}]")
+        
+    def check_if_reservation_exist(self, id_exemplar : int):
+        return self._reservation_repo.check("id_exemplar", id_exemplar)

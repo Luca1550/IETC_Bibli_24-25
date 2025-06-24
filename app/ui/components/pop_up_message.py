@@ -25,6 +25,7 @@ class PopUpMessage(customtkinter.CTkToplevel):
             self.label = customtkinter.CTkLabel(self, text=message, fg_color="red", text_color="white", corner_radius=10)
         else:
             self.label = customtkinter.CTkLabel(self, text=message, fg_color="#1f6aa5", text_color="white", corner_radius=10)
+        self.label.configure(wraplength=500, justify="center")
         self.label.pack(pady=20, padx=20, fill="both", expand=True)
 
         close_button = customtkinter.CTkButton(self, text="OK", command=self.destroy)

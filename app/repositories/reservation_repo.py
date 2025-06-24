@@ -69,6 +69,20 @@ class ReservationRepo():
             self._save_all()
             return True
         return False
+    
+    def check(self, attribute: str, value: object) -> bool:
+        """
+        Checks whether a given attribute with the specified value exists in the repository.
+
+        Arguments:
+        - attribute: The name of the attribute to check.
+        - value: The value to look for in that attribute.
+
+        Returns:
+        - True if any object in the repository has the given value for the attribute; False otherwise.
+        """
+        return any(getattr(reservation, attribute, None) == value for reservation in self.reservation_json)
+
         
     def _save_all(self):
         """ Saves all Reservation data to the JSON file."""
