@@ -54,7 +54,7 @@ class HomePage(ctk.CTkFrame):
 # endregion
 
 # region stat_members
-        self.stat_members_title = ctk.CTkLabel(self.stat_members_frame, bg_color=Color.primary_color(),corner_radius=5,text="Members Statitics", font=ctk.CTkFont(weight='bold', size=14))
+        self.stat_members_title = ctk.CTkLabel(self.stat_members_frame, bg_color=Color.primary_color(),corner_radius=5,text="Members Statistics", font=ctk.CTkFont(weight='bold', size=14))
         self.stat_members_title.pack(fill="x", padx=5, pady=(5, 10))
         self.stat_members_nb_members = ctk.CTkLabel(self.stat_members_frame, bg_color="transparent", corner_radius=5, fg_color="transparent",text=f"✅ {len(self._member_data)} members")
         self.stat_members_nb_members.pack(fill="x", padx=5)
@@ -64,7 +64,7 @@ class HomePage(ctk.CTkFrame):
 # endregion
 
 # region stat_books
-        self.stat_books_title = ctk.CTkLabel(self.stat_books_frame, bg_color=Color.primary_color(),corner_radius=5, text="Books Statitics", font=ctk.CTkFont(weight='bold', size=14))
+        self.stat_books_title = ctk.CTkLabel(self.stat_books_frame, bg_color=Color.primary_color(),corner_radius=5, text="Books Statistics", font=ctk.CTkFont(weight='bold', size=14))
         self.stat_books_title.pack(fill="x", padx=5, pady=(5, 10))
         self.stat_books_nb_books = ctk.CTkLabel(self.stat_books_frame,  bg_color="transparent", corner_radius=5, fg_color="transparent", text=f"📖 {len(self._book_data)} books")
         self.stat_books_nb_books.pack(fill="x", padx=10)
