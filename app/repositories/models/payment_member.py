@@ -1,5 +1,7 @@
 class PaymentMember:
-    """Model representing the association between a payment and a member in the library system."""
+    """
+    Model representing the association between a payment and a member in the library system.
+    """
     def __init__(self,id_payment:int,id_member:int):
         """Initialize a paymentMember instance with the given parameters.
         Args:

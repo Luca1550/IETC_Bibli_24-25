@@ -2,8 +2,10 @@ from .base import Base
 from enums import PaymentType
 from datetime import date
 class Payment (Base):
-    """Class representing a payment record in the library system.
-    This class inherits from Base and includes attributes such as payment type, amount due, and payment date."""
+    """
+    Class representing a payment record in the library system.
+    This class inherits from Base and includes attributes such as payment type, amount due, and payment date.
+    """
     def __init__(self, id:int |None,payment_type:int,payment_due:float, payment_date:date):
         """Initialize a payment instance with the given parameters.
         Args:

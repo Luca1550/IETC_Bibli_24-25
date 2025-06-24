@@ -61,6 +61,20 @@ class PersonService:
             raise Exception(f"🛑 Error {e}")
         
     def update_person(self, id : int, first_name : str, last_name : str | None, national_number: str | None, email : str | None, street : str | None, cp : str | None, city : str | None) -> bool | str:
+        """
+        Updates an existing person's details.
+        arguments:
+        - id: ID of the person to update.
+        - first_name: New first name of the person.
+        - last_name: New last name of the person.
+        - national_number: New national number of the person.
+        - email: New email address of the person.
+        - street: New street address of the person.
+        - cp: New postal code of the person's address.
+        - city: New city of the person's address.
+        returns:
+        - True if the person was updated successfully, False otherwise.
+        """
         try:
             person = self.get_by_id(id)
             if not isinstance(person, Person):
@@ -95,6 +109,15 @@ class PersonService:
             raise Exception(f"🛑 Error {e}")
         
     def _check_person_value(self, national_number: str | None, email: str | None, cp: str | None) -> Exception | bool:
+        """
+        Validates the provided values for a person.
+        arguments:
+        - national_number: National number (NISS) of the person.
+        - email: Email address of the person.
+        - cp: Postal code of the person's address.
+        returns:
+        - Returns True if all values are valid, otherwise raises an exception with an error message.
+        """
         if national_number:
             if len(national_number) != 11 or not national_number.isnumeric():
                 raise Exception("Invalid national number: it must be exactly 11 characters long and numeric value.")

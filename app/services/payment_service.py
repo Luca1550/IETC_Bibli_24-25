@@ -6,6 +6,11 @@ from services import ExemplarService,LibraryService,MemberService,BorrowService,
 from enums import PaymentType
 
 class PaymentService:
+    """
+    Service class for managing payments in the library system.
+    This class provides methods to add payments, calculate fines, and retrieve payment records.
+    It interacts with various repositories and services to perform its operations.
+    """
     def __init__(self):
         """ Initialize the paymentService with necessary repositories and services. """
         self.exemplar_service = ExemplarService()
@@ -150,6 +155,7 @@ class PaymentService:
         except Exception as e:
             raise Exception(f"🛑 Error getting payment by ID: [{e}]")
     def gen_price(self,id_borrow:int,is_it:bool,id_member:int,return_date_planned:date):
+        """ Generate the payment due for a borrow, considering if the book is lost or returned late."""
         date_from_member_return=date.today().isoformat()
         payment=Payment(
             id=None,

@@ -154,7 +154,6 @@ class LoginPage(ctk.CTkFrame):
         Checks the entered username and password against predefined credentials.
         If the credentials match, it calls the `on_login` callback; otherwise, it displays an error message.
         """
-        # Predefined credentials for testing
         userStandart = ""
         passwordStandart = ""
 

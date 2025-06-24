@@ -4,7 +4,8 @@ from tools import JsonStorage
 
 class ArchiveReservationRepo():
     """
-    Repository for managing Reservation objects."""
+    Repository for managing Reservation objects.
+    """
     PATH_ARCHIVE_RESERVATION_JSON=pathlib.Path(__file__).parent.parent.parent / "database" / "archive_reservation.json"
     archive_reservation_json : list[ArchiveReservation] = JsonStorage.load_all(PATH_ARCHIVE_RESERVATION_JSON)
 

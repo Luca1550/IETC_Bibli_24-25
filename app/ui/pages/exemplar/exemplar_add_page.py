@@ -4,6 +4,10 @@ from services import ExemplarService
 from ui.components import PopUpMessage
 
 class AddExemplarPage(ctk.CTkToplevel):
+    """
+    A dialog for adding a new exemplar for a book.
+    It allows the user to enter the location of the exemplar and confirm its addition.
+    """
     def __init__(self, book : BookDTO, exemplar_service : ExemplarService):
         super().__init__()
         self.focus_set()
@@ -30,6 +34,9 @@ class AddExemplarPage(ctk.CTkToplevel):
 
 
     def confirm_and_continue(self):
+        """
+        Adds an exemplar and keeps the dialog open for adding more exemplars.
+        """
         try:
             self.exemplar_service.add_exemplar(
                 isbn=self.book.isbn,
@@ -43,6 +50,9 @@ class AddExemplarPage(ctk.CTkToplevel):
             PopUpMessage.pop_up(self, str(e).lower())
 
     def confirm_action(self):
+        """
+        Adds an exemplar and closes the dialog.
+        """
         try:
             self.exemplar_service.add_exemplar(
                 isbn=self.book.isbn,
