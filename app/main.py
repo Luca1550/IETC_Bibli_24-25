@@ -74,25 +74,43 @@ class MainApp(ctk.CTk):
             self.current_page.destroy()
 
         def home_page():
-            return HomePage(self.page_container)
+            if not self.paramlib:
+                return LibraryPage(self.page_container)
+            else:
+                return HomePage(self.page_container)
 
         def book_page():
-            return BookPage(self.page_container)
+            if not self.paramlib:
+                return LibraryPage(self.page_container)
+            else:
+                return BookPage(self.page_container)
 
         def reservation_page():
-            return ReservationPage(self.page_container)
+            if not self.paramlib:
+                return LibraryPage(self.page_container)
+            else:
+                return ReservationPage(self.page_container)
 
         def borrow_page():
-            return BorrowPage(self.page_container)
+            if not self.paramlib:
+                return LibraryPage(self.page_container)
+            else:
+                return BorrowPage(self.page_container)
 
         def members_page():
-            return MemberPage(self.page_container)
+            if not self.paramlib:
+                return LibraryPage(self.page_container)
+            else:
+                return MemberPage(self.page_container)
 
         def config_page():
             return LibraryPage(self.page_container)
 
         def worker_page():
-            return WorkerPage(self.page_container)
+            if not self.paramlib:
+                return LibraryPage(self.page_container)
+            else:
+                return WorkerPage(self.page_container)
 
         page_switch = {
             "Home": home_page,
