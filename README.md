@@ -131,8 +131,12 @@ Commencez par récupérer le code source sur votre machine :
 
 ### 2️⃣ **Utilisation d'un environement virtuel**
 Il est recommandé d'utiliser un environnement virtuel pour isoler les dépendances du projet (à la racine du clone): 
+#### Windows  :
 
     py -3 -m venv .venv
+#### MacOs/Linux  :
+
+    python3 -m venv .venv
 
 ### 3️⃣ **Activer l'environement virtuel**
 En fonction de l'OS : 
@@ -152,7 +156,10 @@ Une fois l’environnement activé, installez les bibliothèques nécessaires en
 ### 5️⃣ **Lancer l’application**
 Une fois les dépendances installées vous pouvez executer l'application:
 
+#### Windows  :
     python .\app\main.py
+#### MacOs/Linux  :
+    python ./app/main.py
 
 ### 6️⃣ **Se connecter**
     Login : admin
